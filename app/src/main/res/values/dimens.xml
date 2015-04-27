@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="title_text_size">24dp</dimen>
+
+    <!-- Value widget sizes -->
+    <dimen name="rowbot_widget_value_text_padding">5dp</dimen>
 </resources>

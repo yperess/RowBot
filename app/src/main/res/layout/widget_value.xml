@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/rowbot_value_widget_background">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/rowbot_widget_value_text_padding"
+        android:layout_marginLeft="@dimen/rowbot_widget_value_text_padding"
+        style="@style/RowBot.Value"/>
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textStyle="bold"
+        style="@style/RowBot.Value"/>
+
+    <TextView
+        android:id="@+id/units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/rowbot_widget_value_text_padding"
+        android:layout_marginBottom="@dimen/rowbot_widget_value_text_padding"
+        style="@style/RowBot.Value"/>
+
+</RelativeLayout>
