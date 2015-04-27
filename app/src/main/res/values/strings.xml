@@ -35,6 +35,14 @@
     <string name="help_feedback">Feedback</string>
     <string name="help_documents_title">Documentation</string>
 
+    <!-- Settings page -->
+    <string name="settings_name">User Name...</string>
+    <string name="settings_club">Club Name...</string>
+    <string name="settings_share_data_title">Provide use statistics and data.</string>
+    <string name="settings_share_data_description">Send use statistics and gathered data (over WiFi)
+        to the developers. Data collected this way will be used to provide new and more accurate
+        features in future releases of this application.</string>
+
     <string-array name="rowbot_report_ids">
         <item>SMALL</item>
         <item>MEDIUM</item>

@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,6 +91,47 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
     @Override
     public void setActionBarTitle(int resId) {
         getActionBar().setTitle(resId);
+    }
+
+    @Override
+    public boolean isSharingData() {
+        return mPreferences.getBoolean(Constants.SHARED_PREF_SHARING_DATA,
+                Constants.VERSION.isBeta());
+    }
+
+    @Override
+    public void setSharingData(boolean sharing) {
+        mPreferences.edit()
+                .putBoolean(Constants.SHARED_PREF_SHARING_DATA, sharing)
+                .apply();
+    }
+
+    @Override
+    public String getUserName() {
+        return mPreferences.getString(Constants.SHARED_PREF_USER_NAME, null);
+    }
+
+    @Override
+    public void setUserName(String userName) {
+        if (TextUtils.isEmpty(userName)) {
+            mPreferences.edit().remove(Constants.SHARED_PREF_USER_NAME).apply();
+        } else {
+            mPreferences.edit().putString(Constants.SHARED_PREF_USER_NAME, userName).apply();
+        }
+    }
+
+    @Override
+    public String getClubName() {
+        return mPreferences.getString(Constants.SHARED_PREF_CLUB_NAME, null);
+    }
+
+    @Override
+    public void setClubName(String clubName) {
+        if (TextUtils.isEmpty(clubName)) {
+            mPreferences.edit().remove(Constants.SHARED_PREF_CLUB_NAME).apply();
+        } else {
+            mPreferences.edit().putString(Constants.SHARED_PREF_CLUB_NAME, clubName).apply();
+        }
     }
 
     private void initNavigationDrawer() {
