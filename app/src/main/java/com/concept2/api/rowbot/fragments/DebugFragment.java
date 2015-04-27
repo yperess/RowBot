@@ -18,7 +18,7 @@ import com.concept2.api.constants.ReportId;
 import com.concept2.api.model.VirtualPaceMonitorApi;
 import com.concept2.api.rowbot.R;
 
-public class DebugFragment extends Fragment implements View.OnClickListener {
+public class DebugFragment extends BaseFragment implements View.OnClickListener {
 
     public static final String TAG = "DebugFragment";
 
@@ -28,17 +28,24 @@ public class DebugFragment extends Fragment implements View.OnClickListener {
     private Button mExecute;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mParent.setActionBarTitle(R.string.rowbot_frag_debug);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.debug_fragment, container, false);
         mCommand = (EditText) rootView.findViewById(R.id.command_bytes);
         mReportId = (Spinner) rootView.findViewById(R.id.report_id);
         mResult = (TextView) rootView.findViewById(R.id.result);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.report_ids, android.R.layout.simple_spinner_item);
+                R.array.rowbot_report_ids, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mReportId.setAdapter(adapter);
         mExecute = (Button) rootView.findViewById(R.id.execute);
-        mExecute.setEnabled(false);
+        mExecute.setEnabled(Concept2.PaceMonitor.isConnected());
         mExecute.setOnClickListener(this);
         rootView.findViewById(R.id.refresh).setOnClickListener(this);
         return rootView;

@@ -1,8 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
         <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle">@style/RowBot.ActionBar</item>
+        <item name="drawerArrowStyle">@style/RowBot.DrawerArrowStyle</item>
     </style>
 
+    <style name="RowBot"/>
+
+    <style name="RowBot.ActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/rowbot_theme_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RowBot.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
 </resources>

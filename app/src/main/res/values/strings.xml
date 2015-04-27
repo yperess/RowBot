@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">RowBot</string>
-    <string-array name="report_ids">
+
+    <!-- Navigation drawer text -->
+    <string name="rowbot_nav_drawer_home">Home</string>
+    <string name="rowbot_nav_drawer_settings">Settings</string>
+    <string name="rowbot_nav_drawer_help_and_feedback">Help &amp; Feedback</string>
+
+    <!-- Fragment titles -->
+    <string name="rowbot_frag_debug">RowBot - Debug</string>
+    <string name="rowbot_frag_settings">RowBot - Settings</string>
+    <string name="rowbot_frag_help">RowBot - Help &amp; Feedback</string>
+
+    <string-array name="rowbot_report_ids">
         <item>SMALL</item>
         <item>MEDIUM</item>
         <item>LARGE</item>
