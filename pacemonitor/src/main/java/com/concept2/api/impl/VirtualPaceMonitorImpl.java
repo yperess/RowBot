@@ -8,7 +8,6 @@ import com.concept2.api.impl.connection.Authentication;
 import com.concept2.api.impl.connection.Engine;
 import com.concept2.api.impl.connection.USBEngine;
 import com.concept2.api.model.VirtualPaceMonitorApi;
-import com.concept2.api.utils.Preconditions;
 
 public class VirtualPaceMonitorImpl implements VirtualPaceMonitorApi {
 

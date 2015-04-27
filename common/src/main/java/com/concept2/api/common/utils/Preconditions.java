@@ -1,4 +1,6 @@
-package com.concept2.api.utils;
+package com.concept2.api.common.utils;
+
+import java.util.Objects;
 
 public class Preconditions {
 

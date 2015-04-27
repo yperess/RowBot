@@ -15,9 +15,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.concept2.api.rowbot.R;
-import com.concept2.api.rowbot.fragments.DebugFragment;
-import com.concept2.api.rowbot.fragments.HelpAndFeedbackFragment;
-import com.concept2.api.rowbot.fragments.SettingsFragment;
+import com.concept2.api.rowbot.ui.fragments.DebugFragment;
+import com.concept2.api.rowbot.ui.fragments.HelpAndFeedbackFragment;
+import com.concept2.api.rowbot.ui.fragments.SettingsFragment;
 
 import java.util.ArrayList;
 
@@ -170,6 +170,7 @@ public class NavDrawerAdapter implements ListAdapter {
      */
     private void resetBackStack() {
         FragmentManager fragmentManager = mContext.getSupportFragmentManager();
+        fragmentManager.popBackStack("DEBUG", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.popBackStack("SETTINGS", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.popBackStack("HELP", FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }

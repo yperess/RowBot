@@ -1,29 +1,49 @@
 package com.concept2.api.rowbot;
 
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.concept2.api.Concept2;
-import com.concept2.api.rowbot.fragments.DebugFragment;
+import com.concept2.api.common.Constants;
+import com.concept2.api.common.data.Version;
+import com.concept2.api.rowbot.ui.fragments.DebugFragment;
+import com.concept2.api.rowbot.ui.dialogs.WelcomeDialogFragment;
 import com.concept2.api.rowbot.model.RowBotActivity;
 import com.concept2.api.rowbot.ui.adapters.NavDrawerAdapter;
 
-public class MainActivity extends FragmentActivity implements RowBotActivity {
+public class MainActivity extends FragmentActivity implements RowBotActivity,
+        WelcomeDialogFragment.WelcomeDialogListener {
+
+    private static final String TAG = "RowBotActivity";
+
+    private SharedPreferences mPreferences;
+    private Version mLastRunVersion;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    /** Instance of the {@link WelcomeDialogFragment} that is currently showing. */
+    private WelcomeDialogFragment mWelcomeDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        mPreferences = getSharedPreferences(Constants.SHARED_PREF_FILE, MODE_PRIVATE);
+        String lastRunVersion = mPreferences.getString(Constants.SHARED_PREF_LAST_RUN_VERSION,
+                null);
+        mLastRunVersion = lastRunVersion == null ? null : new Version(lastRunVersion);
+
         if (getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE) != null) {
             // Launched from a device connection.
             Concept2.PaceMonitor.start(this);
@@ -42,6 +62,15 @@ public class MainActivity extends FragmentActivity implements RowBotActivity {
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mLastRunVersion == null || mLastRunVersion.compareTo(Constants.VERSION) < 0) {
+            // Either never run or an update was issued. Show the dialog.
+            showWelcomeDialog();
+        }
     }
 
     @Override
@@ -85,5 +114,33 @@ public class MainActivity extends FragmentActivity implements RowBotActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         findViewById(android.R.id.home).setVisibility(View.INVISIBLE);
+    }
+
+    private void showWelcomeDialog() {
+        mWelcomeDialog = new WelcomeDialogFragment();
+        mWelcomeDialog.show(getSupportFragmentManager(), "WelcomeDialogFragment");
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Log.d(TAG, "User accepted welcome dialog");
+        if (dialog == mWelcomeDialog) {
+            mWelcomeDialog.getDialog().dismiss();
+            mWelcomeDialog = null;
+            mLastRunVersion = Constants.VERSION;
+            mPreferences.edit()
+                    .putString(Constants.SHARED_PREF_LAST_RUN_VERSION, mLastRunVersion.toString())
+                    .apply();
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        Log.d(TAG, "User rejected welcome dialog");
+        if (dialog == mWelcomeDialog) {
+            mWelcomeDialog.getDialog().cancel();
+            mWelcomeDialog = null;
+            finish();
+        }
     }
 }

@@ -3,4 +3,5 @@
     <color name="rowbot_theme_primary">#FF007CE9</color>
 
     <color name="rowbot_nav_selected_background">#fff3f3f3</color>
+    <color name="rowbot_dark_gray">#FF666666</color>
 </resources>

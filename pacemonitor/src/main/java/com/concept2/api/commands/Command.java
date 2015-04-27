@@ -22,13 +22,13 @@ public class Command {
 
     public Command(byte... bytes) {
         Preconditions.assertNotNull(bytes);
-        Preconditions.assertValue(bytes.length != 0);
+        Preconditions.assertTrue(bytes.length != 0);
         mBytes = bytes;
     }
 
     public Command(Command command, byte... bytes) {
         Preconditions.assertNotNull(bytes);
-        Preconditions.assertValue(bytes.length != 0);
+        Preconditions.assertTrue(bytes.length != 0);
         mBytes = Arrays.copyOf(command.mBytes, command.mBytes.length + bytes.length);
         System.arraycopy(bytes, 0, mBytes, command.mBytes.length, bytes.length);
     }

@@ -11,6 +11,30 @@
     <string name="rowbot_frag_settings">RowBot - Settings</string>
     <string name="rowbot_frag_help">RowBot - Help &amp; Feedback</string>
 
+    <!-- Welcome dialog -->
+    <string name="welcome_dialog_title">Welcome to RowBot</string>
+    <string name="welcome_dialog_forward">The RowBot app is intended to aid in all things
+        rowing. This app is and always will remain free.</string>
+    <string name="welcome_dialog_message">
+        The current RowBot version you are running is in Beta testing and is used to collect data
+        only. Any data that is collected during the use of this app may be sent to the developers
+        of the app for further analysis. This data will help us provide a better product for you in
+        future releases. Data that may be sent to the developers includes (but is not limited to):
+    </string>
+    <string-array name="welcome_dialog_list">
+        <item>Accelerometer sensor data</item>
+        <item>Gyroscope sensor data</item>
+        <item>Gravity sensor data</item>
+    </string-array>
+
+    <!-- Release notes -->
+    <string name="release_notes_0_0_1"><![CDATA[<p>RowBot\'s first release!</p><p>RowBot is intended to provide a cheap platform for rowers and coaches for a fun and productive practice. The project is currently and is intended to remain free (other costs may include the actual hardware required).</p><p>The current version of RowBot is intended to crowd source sensor data to provide the developers a wide set of sample data. We encourage rowers of all ages, genders, skill levels, and boat types to use this application while exercising. Data collected during the use will be sent to the developers for analysis (over WiFi only to avoid using your data plan). This analysis will be used to generate new algorithms that will provide you, the user, with better and more accurate rowing analysis.</p><p>The data we collect:<br/>&bull; Accelerometer Sensor Data<br/>&bull; Gyroscope Sensor Data<br/>&bull; Gravity Sensor Data<br/>The data gathered can be sent completely anonymously. While anonymity is guaranteed to always be an option, some additional data does help us provide you with better analysis. This data includes:<br/>&bull; Gender<br/>&bull; Age<br/>&bull; Boat type (1x, 2-, 2x, 4-, 4+, 4x, 8+, 8x)</p>]]></string>
+
+    <!-- Help and Feedback page-->
+    <string name="help_contact_us_title">Contact Us</string>
+    <string name="help_feedback">Feedback</string>
+    <string name="help_documents_title">Documentation</string>
+
     <string-array name="rowbot_report_ids">
         <item>SMALL</item>
         <item>MEDIUM</item>

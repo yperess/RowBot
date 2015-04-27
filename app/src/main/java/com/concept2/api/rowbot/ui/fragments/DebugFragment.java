@@ -1,7 +1,6 @@
-package com.concept2.api.rowbot.fragments;
+package com.concept2.api.rowbot.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +27,8 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
     private Button mExecute;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onResume() {
+        super.onResume();
         mParent.setActionBarTitle(R.string.rowbot_frag_debug);
     }
 

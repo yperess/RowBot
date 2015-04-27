@@ -21,6 +21,12 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
+        <activity android:name=".ui.activities.ReleaseNotesActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
