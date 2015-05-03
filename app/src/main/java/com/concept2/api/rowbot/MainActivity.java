@@ -75,6 +75,12 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        Concept2.PaceMonitor.stop();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle
         // If it returns true, then it has handled

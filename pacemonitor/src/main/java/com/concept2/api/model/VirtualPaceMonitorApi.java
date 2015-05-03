@@ -14,6 +14,14 @@ public interface VirtualPaceMonitorApi {
 
     boolean start(Context context);
 
+    /**
+     *
+     * @param context
+     * @param timeout The timeout value in milliseconds.
+     * @return
+     */
+    boolean start(Context context, long timeout);
+
     void stop();
 
     boolean isConnected();

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,13 +19,13 @@ import com.concept2.api.constants.ReportId;
 import com.concept2.api.model.VirtualPaceMonitorApi;
 import com.concept2.api.rowbot.R;
 
+import java.util.HashMap;
+
 public class DebugFragment extends BaseFragment implements View.OnClickListener {
 
     public static final String TAG = "DebugFragment";
 
-    private EditText mCommand;
-    private Spinner mReportId;
-    private TextView mResult;
+    private ArrayAdapter mResultAdapter;
     private Button mExecute;
 
     @Override
@@ -36,13 +38,9 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.debug_fragment, container, false);
-        mCommand = (EditText) rootView.findViewById(R.id.command_bytes);
-        mReportId = (Spinner) rootView.findViewById(R.id.report_id);
-        mResult = (TextView) rootView.findViewById(R.id.result);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.rowbot_report_ids, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mReportId.setAdapter(adapter);
+        mResultAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1);
+        ((ListView) rootView.findViewById(R.id.result)).setAdapter(mResultAdapter);
         mExecute = (Button) rootView.findViewById(R.id.execute);
         mExecute.setEnabled(Concept2.PaceMonitor.isConnected());
         mExecute.setOnClickListener(this);
@@ -76,68 +74,18 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void executeCommand() {
-        if (Concept2.PaceMonitor.isConnected()) {
-            ReportId reportId;
-            switch (mReportId.getSelectedItemPosition()) {
-                case 0:
-                    reportId = ReportId.SMALL;
-                    break;
-                case 1:
-                    reportId = ReportId.MEDIUM;
-                    break;
-                case 2:
-                    reportId = ReportId.LARGE;
-                    break;
-                default:
-                    showToast("Selected report id position unknown: "
-                            + mReportId.getSelectedItemPosition());
-                    return;
-            }
-            String commandString = mCommand.getText().toString().toUpperCase();
-            byte[] bytes = stringToBytes(commandString);
-            if (bytes == null) {
-                return;
-            }
-            try {
-                bytes = Concept2.PaceMonitor.executeCommandBytes(reportId, bytes);
-            } catch (VirtualPaceMonitorApi.ConnectionException e) {
-                showToast(e.getMessage());
-                return;
-            }
-            mResult.setText(bytesToString(bytes));
+        if (!Concept2.PaceMonitor.isConnected()) {
+            showToast("PM not connected");
         }
-    }
-
-    private byte[] stringToBytes(String str) {
-        if (TextUtils.isEmpty(str)) {
-            showToast("Empty input string");
-            return null;
+        // Begin executing commands here...
+        try {
+            byte[] bytes = Concept2.PaceMonitor.executeCommandBytes(ReportId.SMALL,
+                    new byte[] {(byte) 0x80});
+            mResultAdapter.add("GET_STATUS (0x80) - " + bytesToString(bytes));
+        } catch (VirtualPaceMonitorApi.ConnectionException e) {
+            showToast(e.getMessage());
+            return;
         }
-        byte[] bytes = new byte[str.length()];
-        for (int i = 0; i < bytes.length; ++i) {
-            switch (str.charAt(i)) {
-                case '0': bytes[i] = (byte) 0x0; break;
-                case '1': bytes[i] = (byte) 0x1; break;
-                case '2': bytes[i] = (byte) 0x2; break;
-                case '3': bytes[i] = (byte) 0x3; break;
-                case '4': bytes[i] = (byte) 0x4; break;
-                case '5': bytes[i] = (byte) 0x5; break;
-                case '6': bytes[i] = (byte) 0x6; break;
-                case '7': bytes[i] = (byte) 0x7; break;
-                case '8': bytes[i] = (byte) 0x8; break;
-                case '9': bytes[i] = (byte) 0x9; break;
-                case 'A': bytes[i] = (byte) 0xA; break;
-                case 'B': bytes[i] = (byte) 0xB; break;
-                case 'C': bytes[i] = (byte) 0xC; break;
-                case 'D': bytes[i] = (byte) 0xD; break;
-                case 'E': bytes[i] = (byte) 0xE; break;
-                case 'F': bytes[i] = (byte) 0xF; break;
-                default:
-                    showToast("Command string invalid hex: " + str);
-                    return null;
-            }
-        }
-        return bytes;
     }
 
     private String bytesToString(byte[] bytes) {
@@ -146,24 +94,7 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
         }
         StringBuilder sb = new StringBuilder("0x");
         for (int i = 0; i < bytes.length; ++i) {
-            switch (bytes[i]) {
-                case 0x0: sb.append("0"); break;
-                case 0x1: sb.append("1"); break;
-                case 0x2: sb.append("2"); break;
-                case 0x3: sb.append("3"); break;
-                case 0x4: sb.append("4"); break;
-                case 0x5: sb.append("5"); break;
-                case 0x6: sb.append("6"); break;
-                case 0x7: sb.append("7"); break;
-                case 0x8: sb.append("8"); break;
-                case 0x9: sb.append("9"); break;
-                case 0xA: sb.append("A"); break;
-                case 0xB: sb.append("B"); break;
-                case 0xC: sb.append("C"); break;
-                case 0xD: sb.append("D"); break;
-                case 0xE: sb.append("E"); break;
-                case 0xF: sb.append("F"); break;
-            }
+            sb.append(String.format("%02x", bytes[i]));
         }
         return sb.toString();
     }

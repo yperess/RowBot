@@ -22,7 +22,7 @@ import java.util.HashMap;
 public class USBEngine implements Engine {
 
     private static final String TAG = "USBEngine";
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     private static final int CONCEPT2_VENDOR_ID = 6052;
     private static final int MAX_BUFFER_SIZE_OUT = 127;
@@ -46,6 +46,7 @@ public class USBEngine implements Engine {
         UsbManager usbManager = (UsbManager) context.getSystemService(context.USB_SERVICE);
         HashMap<String, UsbDevice> devmap = usbManager.getDeviceList();
 
+        if (DBG) Log.d(TAG, devmap.size() + " usb devices found");
         for (UsbDevice dev : devmap.values()) {
             if (dev.getVendorId() == CONCEPT2_VENDOR_ID) {
                 if (DBG) Log.d(TAG, dev.getDeviceName() + " " + dev.getDeviceId() + " "
@@ -111,11 +112,16 @@ public class USBEngine implements Engine {
 
             if (DBG) Log.d(TAG, "out request " + toString(bufferOut.array()));
 
-            // Initialize the buffer and wair for response.
+            // Initialize the buffer and wait for response.
             mInReq.queue(bufferIn, MAX_BUFFER_SIZE_IN);
             UsbRequest req = mDeviceConnection.requestWait();
+            while (req.getEndpoint().getDirection() == UsbConstants.USB_DIR_OUT) {
+                // Request executed was outbound. Wait for inbound request.
+                req = mDeviceConnection.requestWait();
+            }
 
             if (req == null) {
+                Log.e(TAG, "Could not get an inbound request from USB.");
                 return null;
             }
 

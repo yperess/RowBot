@@ -42,10 +42,4 @@
     <string name="settings_share_data_description">Send use statistics and gathered data (over WiFi)
         to the developers. Data collected this way will be used to provide new and more accurate
         features in future releases of this application.</string>
-
-    <string-array name="rowbot_report_ids">
-        <item>SMALL</item>
-        <item>MEDIUM</item>
-        <item>LARGE</item>
-    </string-array>
 </resources>

@@ -1,6 +1,7 @@
 package com.concept2.api.impl;
 
 import android.content.Context;
+import android.os.SystemClock;
 
 import com.concept2.api.commands.Command;
 import com.concept2.api.constants.ReportId;
@@ -11,35 +12,48 @@ import com.concept2.api.model.VirtualPaceMonitorApi;
 
 public class VirtualPaceMonitorImpl implements VirtualPaceMonitorApi {
 
+    private static final String TAG = "VPM";
+    private static final boolean DBG = true;
+
     private Engine mDataEngine;
+    private boolean mConnectionAuthenticated;
 
     public VirtualPaceMonitorImpl() {
         mDataEngine = new USBEngine();
+        mConnectionAuthenticated = false;
     }
 
     @Override
     public boolean start(Context context) {
+        return start(context, 0L);
+    }
+
+    @Override
+    public synchronized boolean start(Context context, long timeout) {
+        mConnectionAuthenticated = false;
         if (!mDataEngine.start(context)) {
             return false;
         }
-        return authenticatePaceMonitor();
+        authenticatePaceMonitor(timeout);
+        return mConnectionAuthenticated;
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         mDataEngine.stop();
+        mConnectionAuthenticated = false;
     }
 
     @Override
-    public byte[] executeCommandBytes(ReportId reportId, byte[] commandBytes)
+    public synchronized byte[] executeCommandBytes(ReportId reportId, byte[] commandBytes)
             throws ConnectionException {
         verifyConnection();
         return mDataEngine.getPMData(null /* handler */, reportId, commandBytes);
     }
 
     @Override
-    public boolean isConnected() {
-        return mDataEngine != null && mDataEngine.isConnected();
+    public synchronized boolean isConnected() {
+        return mDataEngine != null && mDataEngine.isConnected() && mConnectionAuthenticated;
     }
 
     private void verifyConnection() throws ConnectionException {
@@ -48,15 +62,17 @@ public class VirtualPaceMonitorImpl implements VirtualPaceMonitorApi {
         }
     }
 
-    private boolean authenticatePaceMonitor() {
-        boolean authenticated = false;
+    private void authenticatePaceMonitor(long timeout) {
+        final long timeoutExpire = SystemClock.elapsedRealtime() + timeout;
+        mConnectionAuthenticated = false;
         try {
-            while (!authenticated) {
+            while (!mConnectionAuthenticated
+                    && (timeout <= 0L || SystemClock.elapsedRealtime() < timeoutExpire)) {
                 byte[] returnData = Command.GET_HARDWARE_ADDRESS.execute(mDataEngine,
                         ReportId.SMALL);
-                int hardwareAddress = ((returnData[5] & 0xff) << 6)
-                        | ((returnData[6] & 0xff) << 4)
-                        | ((returnData[7] & 0xff) << 2)
+                int hardwareAddress = ((returnData[5] & 0xff) << 24)
+                        | ((returnData[6] & 0xff) << 16)
+                        | ((returnData[7] & 0xff) << 8)
                         | (returnData[8] & 0xff);
                 byte[] hardwareAddressBytes = new byte[4];
                 System.arraycopy(returnData, 5, hardwareAddressBytes, 0, 4);
@@ -79,10 +95,9 @@ public class VirtualPaceMonitorImpl implements VirtualPaceMonitorApi {
                 returnData = authCommand.execute(mDataEngine, ReportId.SMALL);
                 int value = (returnData[5] & 0xff);
                 if (value == 1) {
-                    authenticated = true;
+                    mConnectionAuthenticated = true;
                 }
             }
         } catch (Exception e) {}
-        return authenticated;
     }
 }

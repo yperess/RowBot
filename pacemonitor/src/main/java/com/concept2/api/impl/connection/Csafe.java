@@ -10,10 +10,15 @@ public class Csafe {
 
     private static final int MAX_BUFFER = 128;
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static byte checksum(byte[] data){
         byte checksum = 0x00;
-        for(byte b : data){
-            checksum ^= b;
+        for(int i = 0; i < data.length; ++i) {
+            checksum ^= data[i];
         }
         return checksum;
     }
@@ -26,17 +31,15 @@ public class Csafe {
     public static byte[] stuff(byte[] data){
         byte[] newData = new byte[MAX_BUFFER-4];//max size
         int idx = 0;
-        for(byte b : data){
-            if((b & 0xFC) == 0xF0){
-                newData[idx] = (byte) 0xF3;
-                newData[idx+1] = (byte) (0x03 & b);
-                idx+=2;
-            }else{
-                newData[idx] = b;
-                idx++;
+        for (int i = 0; i < data.length; ++i) {
+            if ((data[i] & 0xFC) == 0xF0) {
+                newData[idx++] = (byte) 0xF3;
+                newData[idx++] = (byte) (0x03 & data[i]);
+            } else {
+                newData[idx++] = data[i];
             }
-            if(idx >= newData.length){
-                logcate("too much data to stuff");
+            if (idx >= newData.length) {
+                Log.e(TAG, "too much data to stuff");
                 return null;
             }
         }
