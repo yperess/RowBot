@@ -1,4 +1,4 @@
-package com.concept2.api.impl.connection;
+package com.concept2.api.pacemonitor.impl.connection;
 
 import android.content.Context;
 import android.hardware.usb.UsbConstants;
@@ -14,7 +14,7 @@ import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
 
-import com.concept2.api.constants.ReportId;
+import com.concept2.api.pacemonitor.commands.ReportId;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;

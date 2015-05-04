@@ -1,9 +1,8 @@
-package com.concept2.api.commands;
+package com.concept2.api.pacemonitor.commands;
 
 import android.os.Handler;
 
-import com.concept2.api.constants.ReportId;
-import com.concept2.api.impl.connection.Engine;
+import com.concept2.api.pacemonitor.impl.connection.Engine;
 import com.concept2.api.utils.Preconditions;
 
 import java.util.Arrays;

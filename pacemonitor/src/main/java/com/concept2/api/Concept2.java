@@ -1,9 +1,9 @@
 package com.concept2.api;
 
-import com.concept2.api.impl.LogbookImpl;
-import com.concept2.api.impl.VirtualPaceMonitorImpl;
-import com.concept2.api.model.LogbookApi;
-import com.concept2.api.model.VirtualPaceMonitorApi;
+import com.concept2.api.logbook.impl.LogbookImpl;
+import com.concept2.api.pacemonitor.impl.VirtualPaceMonitorImpl;
+import com.concept2.api.logbook.LogbookApi;
+import com.concept2.api.pacemonitor.VirtualPaceMonitorApi;
 
 public final class Concept2 {
 

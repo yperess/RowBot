@@ -1,8 +1,8 @@
-package com.concept2.api.model;
+package com.concept2.api.pacemonitor;
 
 import android.content.Context;
 
-import com.concept2.api.constants.ReportId;
+import com.concept2.api.pacemonitor.commands.ReportId;
 
 public interface VirtualPaceMonitorApi {
 

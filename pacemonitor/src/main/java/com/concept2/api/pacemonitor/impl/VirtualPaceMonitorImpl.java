@@ -1,14 +1,14 @@
-package com.concept2.api.impl;
+package com.concept2.api.pacemonitor.impl;
 
 import android.content.Context;
 import android.os.SystemClock;
 
-import com.concept2.api.commands.Command;
-import com.concept2.api.constants.ReportId;
-import com.concept2.api.impl.connection.Authentication;
-import com.concept2.api.impl.connection.Engine;
-import com.concept2.api.impl.connection.USBEngine;
-import com.concept2.api.model.VirtualPaceMonitorApi;
+import com.concept2.api.pacemonitor.commands.Command;
+import com.concept2.api.pacemonitor.commands.ReportId;
+import com.concept2.api.pacemonitor.impl.connection.Authentication;
+import com.concept2.api.pacemonitor.impl.connection.Engine;
+import com.concept2.api.pacemonitor.impl.connection.USBEngine;
+import com.concept2.api.pacemonitor.VirtualPaceMonitorApi;
 
 public class VirtualPaceMonitorImpl implements VirtualPaceMonitorApi {
 

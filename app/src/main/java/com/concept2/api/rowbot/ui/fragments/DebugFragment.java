@@ -1,25 +1,18 @@
 package com.concept2.api.rowbot.ui.fragments;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.concept2.api.Concept2;
-import com.concept2.api.constants.ReportId;
-import com.concept2.api.model.VirtualPaceMonitorApi;
+import com.concept2.api.pacemonitor.commands.ReportId;
+import com.concept2.api.pacemonitor.VirtualPaceMonitorApi;
 import com.concept2.api.rowbot.R;
-
-import java.util.HashMap;
 
 public class DebugFragment extends BaseFragment implements View.OnClickListener {
 

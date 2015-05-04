@@ -1,4 +1,4 @@
-package com.concept2.api.impl.connection;
+package com.concept2.api.pacemonitor.impl.connection;
 
 import android.util.Log;
 import android.util.Pair;

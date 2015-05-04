@@ -1,9 +1,9 @@
-package com.concept2.api.impl.connection;
+package com.concept2.api.pacemonitor.impl.connection;
 
 import android.content.Context;
 import android.os.Handler;
 
-import com.concept2.api.constants.ReportId;
+import com.concept2.api.pacemonitor.commands.ReportId;
 
 public interface Engine {
 
