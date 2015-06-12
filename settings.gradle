@@ -1,1 +1,1 @@
-include ':app', ':pacemonitor', ':common'
+include ':app', ':common', ':api'

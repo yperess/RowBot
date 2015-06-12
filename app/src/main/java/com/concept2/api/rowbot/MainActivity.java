@@ -47,7 +47,7 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
 
         if (getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE) != null) {
             // Launched from a device connection.
-            Concept2.PaceMonitor.start(this);
+//            Concept2.PaceMonitor.start(this);
         }
 
         initNavigationDrawer();
@@ -77,7 +77,7 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
     @Override
     public void onStop() {
         super.onStop();
-        Concept2.PaceMonitor.stop();
+//        Concept2.PaceMonitor.stop();
     }
 
     @Override

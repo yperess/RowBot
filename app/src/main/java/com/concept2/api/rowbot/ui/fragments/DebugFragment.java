@@ -1,6 +1,7 @@
 package com.concept2.api.rowbot.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +11,23 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.concept2.api.Concept2;
-import com.concept2.api.pacemonitor.commands.ReportId;
-import com.concept2.api.pacemonitor.VirtualPaceMonitorApi;
+import com.concept2.api.Concept2StatusCodes;
+import com.concept2.api.ResultCallback;
+import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.rowbot.R;
 
-public class DebugFragment extends BaseFragment implements View.OnClickListener {
+public class DebugFragment extends BaseFragment implements View.OnClickListener,
+        ResultCallback<PaceMonitor.GetStatusResult> {
 
     public static final String TAG = "DebugFragment";
 
     private ArrayAdapter mResultAdapter;
     private Button mExecute;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onResume() {
@@ -35,7 +43,7 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
                 android.R.layout.simple_list_item_1);
         ((ListView) rootView.findViewById(R.id.result)).setAdapter(mResultAdapter);
         mExecute = (Button) rootView.findViewById(R.id.execute);
-        mExecute.setEnabled(Concept2.PaceMonitor.isConnected());
+//        mExecute.setEnabled(Concept2.PaceMonitor.isConnected());
         mExecute.setOnClickListener(this);
         rootView.findViewById(R.id.refresh).setOnClickListener(this);
         return rootView;
@@ -48,37 +56,38 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
                 executeCommand();
                 break;
             case R.id.refresh:
-                refreshUsbConnection();
+//                refreshUsbConnection();
                 break;
         }
     }
 
-    private void refreshUsbConnection() {
-        if (Concept2.PaceMonitor.isConnected()) {
-            // TODO - Test connection.
-            return;
-        }
-        Concept2.PaceMonitor.start(getActivity());
-        if (Concept2.PaceMonitor.isConnected()) {
-            mExecute.setEnabled(true);
-        } else {
-            showToast("Failed to connect to Pace Monitor");
-        }
-    }
+//    private void refreshUsbConnection() {
+//        if (Concept2.PaceMonitor.isConnected()) {
+//            // TODO - Test connection.
+//            return;
+//        }
+//        Concept2.PaceMonitor.start(getActivity());
+//        if (Concept2.PaceMonitor.isConnected()) {
+//            mExecute.setEnabled(true);
+//        } else {
+//            showToast("Failed to connect to Pace Monitor");
+//        }
+//    }
 
     private void executeCommand() {
-        if (!Concept2.PaceMonitor.isConnected()) {
-            showToast("PM not connected");
-        }
-        // Begin executing commands here...
-        try {
-            byte[] bytes = Concept2.PaceMonitor.executeCommandBytes(ReportId.SMALL,
-                    new byte[] {(byte) 0x80});
-            mResultAdapter.add("GET_STATUS (0x80) - " + bytesToString(bytes));
-        } catch (VirtualPaceMonitorApi.ConnectionException e) {
-            showToast(e.getMessage());
-            return;
-        }
+        Concept2.PaceMonitor.getStatus(getActivity()).setResultCallback(this);
+//        if (!Concept2.PaceMonitor.isConnected()) {
+//            showToast("PM not connected");
+//        }
+//        // Begin executing commands here...
+//        try {
+//            byte[] bytes = Concept2.PaceMonitor.executeCommandBytes(ReportId.SMALL,
+//                    new byte[] {(byte) 0x80});
+//            mResultAdapter.add("GET_STATUS (0x80) - " + bytesToString(bytes));
+//        } catch (VirtualPaceMonitorApi.ConnectionException e) {
+//            showToast(e.getMessage());
+//            return;
+//        }
     }
 
     private String bytesToString(byte[] bytes) {
@@ -94,5 +103,12 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener 
 
     private void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResult(PaceMonitor.GetStatusResult result) {
+        mResultAdapter.add("GET_STATUS (0x80) - " + result.getStatus()
+                + (result.getStatus() == Concept2StatusCodes.OK
+                        ?  " / " + result.getPaceMonitorStatus() : ""));
     }
 }
