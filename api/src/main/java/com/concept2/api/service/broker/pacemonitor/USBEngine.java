@@ -132,6 +132,7 @@ public class USBEngine implements Engine {
             throw new Concept2EngineConnectionException();
         }
 
+        if (DBG) Log.d(TAG, "data: " + toString(returnData));
         return returnData;
     }
 
@@ -163,8 +164,8 @@ public class USBEngine implements Engine {
     private String toString(byte[] bytes) {
         String byteString = "";
         for (byte b : bytes) {
-            byteString += String.format("%02X ", b);
-            if (b== (byte)0xf2) break;
+            byteString += String.format("%02X ", b & 0xFF);
+            if (b == (byte)0xf2) break;
         }
         return byteString;
     }

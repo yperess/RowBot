@@ -2,6 +2,7 @@ package com.concept2.api.service.operations;
 
 import android.content.Context;
 
+import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.service.broker.DataBroker;
 
@@ -16,7 +17,7 @@ public abstract class BaseDataOperation extends BaseOperation {
     @Override
     protected int execute(DataBroker dataBroker, Context context) {
         mDataHolder = getData(dataBroker, context);
-        return mDataHolder.getStatus();
+        return mDataHolder == null ? Concept2StatusCodes.INTERNAL_ERROR : mDataHolder.getStatus();
     }
 
     /**

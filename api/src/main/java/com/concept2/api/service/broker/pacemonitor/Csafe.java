@@ -113,7 +113,7 @@ public class Csafe {
                     }
                 }
             }
-            if ((frame[i]&0xFF) == 0xF1) {
+            if ((frame[i] & 0xFF) == 0xF1) {
                 start = true;
             }
         }

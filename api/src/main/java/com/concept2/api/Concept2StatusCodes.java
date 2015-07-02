@@ -2,12 +2,25 @@ package com.concept2.api;
 
 import android.app.Activity;
 
-public interface Concept2StatusCodes {
-    int OK = Activity.RESULT_OK;
+public class Concept2StatusCodes {
+    public static final int OK = Activity.RESULT_OK;
 
-    int INTERNAL_ERROR = 1;
-    int TIMEOUT = 2;
-    int PACE_MONITOR_NOT_FOUND = 3;
-    int CANCELED = 4;
-    int PACE_MONITOR_COMMUNICATION_ERROR = 5;
+    public static final int INTERNAL_ERROR = 1;
+    public static final int TIMEOUT = 2;
+    public static final int PACE_MONITOR_NOT_FOUND = 3;
+    public static final int CANCELED = 4;
+    public static final int PACE_MONITOR_COMMUNICATION_ERROR = 5;
+    public static final int PACE_MONITOR_DATA_ERROR = 6;
+    public static final int PACE_MONITOR_INTERNAL_ERROR = 7;
+    public static final int PACE_MONITOR_INVALID_REQUEST = 8;
+
+    // Not instantiable
+    private Concept2StatusCodes() {}
+
+    public static String toString(int statusCode) {
+        switch (statusCode) {
+            default:
+                throw new IllegalArgumentException("Status code " + statusCode + " not recognized");
+        }
+    }
 }

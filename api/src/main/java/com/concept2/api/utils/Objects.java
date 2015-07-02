@@ -30,13 +30,12 @@ public class Objects {
 
     /**
      * Build a string to represent an object using the following format:
-     * object_tag (var_name0 = value, var_name1 = value, ...)
+     * (var_name0 = value, var_name1 = value, ...)
      *
-     * @param tag The tag or name used to identify the object being represented.
      * @return A new instance of {@link ObjectsStringBuilder}.
      */
-    public static ObjectsStringBuilder toString(String tag) {
-        return new ObjectsStringBuilder(tag);
+    public static ObjectsStringBuilder stringBuilder() {
+        return new ObjectsStringBuilder();
     }
 
     /**
@@ -56,13 +55,11 @@ public class Objects {
 
         /**
          * Create a string builder for an object.
-         *
-         * @param tag The objects display name.
          */
-        private ObjectsStringBuilder(String tag) {
+        private ObjectsStringBuilder() {
             mHasValues = false;
             mEditable = true;
-            mBuilder = new StringBuilder(tag);
+            mBuilder = new StringBuilder();
         }
 
         /**
@@ -77,7 +74,7 @@ public class Objects {
             if (!mEditable) {
                 return this;
             }
-            mBuilder.append(mHasValues ? ", " : " (")
+            mBuilder.append(mHasValues ? ", " : "(")
                     .append(memberName)
                     .append(" = ")
                     .append(value);

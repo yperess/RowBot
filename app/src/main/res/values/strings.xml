@@ -42,4 +42,50 @@
     <string name="settings_share_data_description">Send use statistics and gathered data (over WiFi)
         to the developers. Data collected this way will be used to provide new and more accurate
         features in future releases of this application.</string>
+
+    <!-- Debug page -->
+    <string-array name="debug_command_list">
+        <item>GET_STATUS</item>
+        <item>GET_ODOMETER</item>
+        <item>GET_WORK_TIME</item>
+        <item>GET_WORK_DISTANCE</item>
+        <item>GET_WORK_CALORIES</item>
+        <item>GET_STORED_WORKOUT_NUMBER</item>
+        <item>GET_PACE</item>
+        <item>GET_STROKE_RATE</item>
+        <item>GET_USER_INFO</item>
+        <item>GET_HEART_RATE</item>
+        <item>GET_POWER</item>
+        <item>SET_TIME</item>
+        <item>SET_DATE</item>
+        <item>SET_TIMEOUT</item>
+        <item>SET_GOAL_TIME</item>
+        <item>SET_GOAL_DISTANCE</item>
+        <item>SET_GOAL_CALORIES</item>
+        <item>SET_GOAL_POWER</item>
+        <item>SET_WORKOUT_NUMBER_0</item>
+        <item>SET_WORKOUT_NUMBER_1</item>
+        <item>GET_WORKOUT_TYPE</item>
+        <item>GET_DRAG_FACTOR</item>
+        <item>GET_STROKE_STATE</item>
+        <item>GET_HIGH_RES_WORK_TIME</item>
+        <item>GET_HIGH_RES_WORK_DISTANCE</item>
+        <item>GET_ERROR_VALUE</item>
+        <item>GET_WORKOUT_STATE</item>
+        <item>GET_WORKOUT_INTERVAL_COUNT</item>
+        <item>GET_INTERVAL_TYPE</item>
+        <item>GET_REST_TIME</item>
+        <item>SET_SPLIT_TIME</item>
+        <item>SET_SPLIT_DISTANCE</item>
+        <item>GET_FORCE_PLOT</item>
+        <item>GET_HEART_RATE_PLOT</item>
+        <item>SET_SCREEN_ERROR_MODE</item>
+        <item>GO_STATE_RESET</item>
+        <item>GO_STATE_IDLE</item>
+        <item>GO_STATE_HAVE_ID</item>
+        <item>GO_STATE_IN_USE</item>
+        <item>GO_STATE_FINISHED</item>
+        <item>GO_STATE_READY</item>
+        <item>GO_STATE_BAD_ID</item>
+    </string-array>
 </resources>

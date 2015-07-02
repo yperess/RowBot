@@ -17,6 +17,8 @@ import com.concept2.api.common.Constants;
 import com.concept2.api.rowbot.R;
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
+    public static final String TAG = "SettingsFragment";
+
     private TextView mUserName;
     private TextView mClubName;
     private CheckBox mSendData;
