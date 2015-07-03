@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetHighResWorkDistanceResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -14,7 +16,7 @@ public class GetHighResWorkDistanceResultRef extends PaceMonitorResultRef implem
         GetHighResWorkDistanceResult {
 
     /** Column containing high resolution work distance. */
-    private static final String COLUMN_METERS = "meters";
+    private static final String COLUMN_DISTANCE = PaceMonitorColumnContract.HIGH_RES_DISTANCE;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetHighResWorkDistanceResult}. Using this method
@@ -23,9 +25,10 @@ public class GetHighResWorkDistanceResultRef extends PaceMonitorResultRef implem
      * @param meters The workout type.
      * @return {@link DataHolder} representing a {@link GetHighResWorkDistanceResult}.
      */
-    public static DataHolder createDataHolder(double meters) {
-        Bundle values = new Bundle();
-        values.putDouble(COLUMN_METERS, meters);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, double meters) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DISTANCE, meters);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 
@@ -40,7 +43,7 @@ public class GetHighResWorkDistanceResultRef extends PaceMonitorResultRef implem
 
     @Override
     public double getDistance() {
-        return getDouble(COLUMN_METERS, 0.0);
+        return getDouble(COLUMN_DISTANCE, 0.0);
     }
 
     @Override

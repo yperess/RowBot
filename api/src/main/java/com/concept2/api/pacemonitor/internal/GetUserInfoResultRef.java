@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,13 +15,13 @@ import com.concept2.api.utils.Objects;
 public class GetUserInfoResultRef extends PaceMonitorResultRef implements PaceMonitor.GetUserInfoResult {
 
     /** Column containing the weight value. */
-    private static final String COLUMN_WEIGHT = "weight";
+    private static final String COLUMN_WEIGHT = PaceMonitorColumnContract.WEIGHT;
 
     /** Column containing the age value. */
-    private static final String COLUMN_AGE = "age";
+    private static final String COLUMN_AGE = PaceMonitorColumnContract.AGE;
 
     /** Column containing the gender value. */
-    private static final String COLUMN_GENDER = "gender";
+    private static final String COLUMN_GENDER = PaceMonitorColumnContract.GENDER;
 
     /**
      * Creates a new {@link DataHolder} for a given user info. Using this method assumes that the
@@ -30,11 +32,13 @@ public class GetUserInfoResultRef extends PaceMonitorResultRef implements PaceMo
      * @param gender The pace monitor user's gender code.
      * @return {@link DataHolder} representing the user's info.
      */
-    public static DataHolder createDataHolder(int weight, int age, int gender) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_WEIGHT, weight);
-        values.putInt(COLUMN_AGE, age);
-        values.putInt(COLUMN_GENDER, gender);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int weight, int age,
+            int gender) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_WEIGHT, weight);
+        values.put(COLUMN_AGE, age);
+        values.put(COLUMN_GENDER, gender);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

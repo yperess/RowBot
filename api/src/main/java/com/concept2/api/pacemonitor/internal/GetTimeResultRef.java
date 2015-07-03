@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetTimeResultRef extends PaceMonitorResultRef implements PaceMonitor.GetTimeResult {
 
     /** Column containing seconds value. */
-    private static final String COLUMN_SECONDS = "seconds";
+    private static final String COLUMN_SECONDS = PaceMonitorColumnContract.SECONDS;
 
     /**
      * Creates a new {@link DataHolder} for a given number of work seconds. Using this method
@@ -22,9 +24,10 @@ public class GetTimeResultRef extends PaceMonitorResultRef implements PaceMonito
      * @param seconds The number of seconds displayed on the pace monitor.
      * @return {@link DataHolder} representing the command status and work time.
      */
-    public static DataHolder createDataHolder(long seconds) {
-        Bundle values = new Bundle();
-        values.putLong(COLUMN_SECONDS, seconds);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, long seconds) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SECONDS, seconds);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

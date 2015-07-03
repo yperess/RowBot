@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetPaceResultRef extends PaceMonitorResultRef implements PaceMonitor.GetPaceResult {
 
     /** Column containing the pace in seconds / km. */
-    private static final String COLUMN_PACE = "pace";
+    private static final String COLUMN_PACE = PaceMonitorColumnContract.PACE;
 
     /**
      * Creates a new {@link DataHolder} for a given pace. Using this method assumes that the
@@ -22,9 +24,10 @@ public class GetPaceResultRef extends PaceMonitorResultRef implements PaceMonito
      * @param pace The pace to store.
      * @return {@link DataHolder} representing the pace.
      */
-    public static DataHolder createDataHolder(int pace) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_PACE, pace);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int pace) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PACE, pace);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetCaloriesResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,18 +15,20 @@ import com.concept2.api.utils.Objects;
 public class GetCaloriesResultRef extends PaceMonitorResultRef implements GetCaloriesResult {
 
     /** Column containing calorie value. */
-    private static final String COLUMN_CALORIES = "calories";
+    private static final String COLUMN_CALORIES = PaceMonitorColumnContract.CALORIES;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetCaloriesResult}. Using this method assumes
      * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
      *
+     * @param status The status returned by the pace monitor.
      * @param calories The calorie value.
      * @return {@link DataHolder} representing a {@link GetCaloriesResult}.
      */
-    public static DataHolder createDataHolder(int calories) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_CALORIES, calories);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int calories) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CALORIES, calories);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetDragFactorResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetDragFactorResultRef extends PaceMonitorResultRef implements GetDragFactorResult {
 
     /** Column containing the drag factor.*/
-    private static final String COLUMN_DRAG_FACTOR = "dragFactor";
+    private static final String COLUMN_DRAG_FACTOR = PaceMonitorColumnContract.DRAG_FACTOR;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetDragFactorResult}. Using this method assumes
@@ -22,9 +24,10 @@ public class GetDragFactorResultRef extends PaceMonitorResultRef implements GetD
      * @param dragFactor The drag factor.
      * @return {@link DataHolder} representing a {@link GetDragFactorResult}.
      */
-    public static DataHolder createDataHolder(int dragFactor) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_DRAG_FACTOR, dragFactor);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int dragFactor) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DRAG_FACTOR, dragFactor);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

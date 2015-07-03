@@ -1,10 +1,12 @@
 package com.concept2.api.service.broker.pacemonitor;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.pacemonitor.PaceMonitorStatus;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
 import com.concept2.api.utils.Objects;
 
 public final class PaceMonitorStatusImpl implements PaceMonitorStatus {
@@ -72,27 +74,17 @@ public final class PaceMonitorStatusImpl implements PaceMonitorStatus {
         return mSlaveStatus;
     }
 
-    public int toConcept2StatusCode() {
-        switch (mPrevFrameStatus) {
-            case PrevFrameStatus.REJECTED:
-            case PrevFrameStatus.NOT_READY:
-                return Concept2StatusCodes.PACE_MONITOR_COMMUNICATION_ERROR;
-            case PrevFrameStatus.BAD:
-                return Concept2StatusCodes.PACE_MONITOR_DATA_ERROR;
-        }
-        // mPrevFrameStatus must be PrevFrameStatus.OK to be here.
-        switch (mSlaveStatus) {
-            case SlaveStatus.ERROR:
-                return Concept2StatusCodes.PACE_MONITOR_INTERNAL_ERROR;
-            case SlaveStatus.OFFLINE:
-                return Concept2StatusCodes.PACE_MONITOR_INVALID_REQUEST;
-
-        }
-        // mPrevFrameStatus == PrevFrameStatus.OK
-        // mSlaveStatus = SlaveStatus.READY | SlaveStatus.IDLE | SlaveStatus.HAVE_ID
-        //         | SlaveStatus.IN_USE | SlaveStatus.PAUSED | SlaveStatus.FINISHED
-        //         | SlaveStatus.MANUAL
-        return Concept2StatusCodes.OK;
+    /**
+     * Create a {@link ContentValues} representation of this object.
+     *
+     * @return The raw data as a {@link ContentValues}.
+     */
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+        values.put(PaceMonitorColumnContract.FRAME_COUNT, mFrameCount);
+        values.put(PaceMonitorColumnContract.PREV_FRAME_STATUS, mPrevFrameStatus);
+        values.put(PaceMonitorColumnContract.SLAVE_STATUS, mSlaveStatus);
+        return values;
     }
 
     @Override
@@ -103,31 +95,4 @@ public final class PaceMonitorStatusImpl implements PaceMonitorStatus {
                 .addVal("SlaveStatus", getSlaveStatusString(mSlaveStatus))
                 .toString();
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mFrameCount);
-        dest.writeInt(mPrevFrameStatus);
-        dest.writeInt(mSlaveStatus);
-    }
-
-    public static final Parcelable.Creator<PaceMonitorStatusImpl> CREATOR =
-            new Creator<PaceMonitorStatusImpl>() {
-                @Override
-                public PaceMonitorStatusImpl createFromParcel(Parcel source) {
-                    return new PaceMonitorStatusImpl(source.readInt() /* frameCount */,
-                            source.readInt() /* prevFrameStatus */,
-                            source.readInt() /* slaveStatus */);
-                }
-
-                @Override
-                public PaceMonitorStatusImpl[] newArray(int size) {
-                    return new PaceMonitorStatusImpl[size];
-                }
-            };
 }

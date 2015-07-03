@@ -197,7 +197,7 @@ public class PaceMonitorAgent {
                 | (bytes[0] & 0xFF);
         int units = bytes[4] & 0xFF;
         distance = CsafeUnitUtil.normalizeInt(distance, units);
-        return GetDistanceResultRef.createDataHolder(distance);
+        return GetDistanceResultRef.createDataHolder(result.getStatus(), distance);
     }
 
     /**
@@ -223,7 +223,7 @@ public class PaceMonitorAgent {
         long seconds = TimeUnit.HOURS.toSeconds(bytes[0] & 0xFF)
                 + TimeUnit.MINUTES.toSeconds(bytes[1] & 0xFF)
                 + (bytes[2] & 0xFF);
-        return GetTimeResultRef.createDataHolder(seconds);
+        return GetTimeResultRef.createDataHolder(result.getStatus(), seconds);
     }
 
     /**
@@ -250,7 +250,7 @@ public class PaceMonitorAgent {
                 | (bytes[0] & 0xFF);
         int units = bytes[2] & 0xFF;
         distance = CsafeUnitUtil.normalizeInt(distance, units);
-        return GetDistanceResultRef.createDataHolder(distance);
+        return GetDistanceResultRef.createDataHolder(result.getStatus(), distance);
     }
 
     /**
@@ -275,7 +275,7 @@ public class PaceMonitorAgent {
         byte[] bytes = result.getData();
         int calories = ((bytes[1] & 0xFF) << 8)
                 | (bytes[0] & 0xFF);
-        return GetCaloriesResultRef.createDataHolder(calories);
+        return GetCaloriesResultRef.createDataHolder(result.getStatus(), calories);
     }
 
     /**
@@ -298,7 +298,7 @@ public class PaceMonitorAgent {
         }
 
         int workoutNumber = result.getData()[0] & 0xFF;
-        return GetWorkoutNumberResultRef.createDataHolder(workoutNumber);
+        return GetWorkoutNumberResultRef.createDataHolder(result.getStatus(), workoutNumber);
     }
 
     /**
@@ -324,7 +324,7 @@ public class PaceMonitorAgent {
                 | (bytes[0] & 0xFF);
         int units = bytes[2] & 0xFF;
         strokePace = CsafeUnitUtil.normalizeInt(strokePace, units);
-        return GetPaceResultRef.createDataHolder(strokePace);
+        return GetPaceResultRef.createDataHolder(result.getStatus(), strokePace);
     }
 
     /**
@@ -350,7 +350,7 @@ public class PaceMonitorAgent {
                 | (bytes[0] & 0xFF);
         int units = bytes[2] & 0xFF;
         strokeCadence = CsafeUnitUtil.normalizeInt(strokeCadence, units);
-        return GetStrokeRateResultRef.createDataHolder(strokeCadence);
+        return GetStrokeRateResultRef.createDataHolder(result.getStatus(), strokeCadence);
     }
 
     /**
@@ -378,7 +378,7 @@ public class PaceMonitorAgent {
         weight = CsafeUnitUtil.normalizeInt(weight, units);
         int age = bytes[3] & 0xFF;
         int gender = bytes[4] & 0xFF;
-        return GetUserInfoResultRef.createDataHolder(weight, age, gender);
+        return GetUserInfoResultRef.createDataHolder(result.getStatus(), weight, age, gender);
     }
 
     /**
@@ -400,7 +400,7 @@ public class PaceMonitorAgent {
         }
 
         int heartRate = result.getData()[0] & 0xFF;
-        return GetHeartRateResultRef.createDataHolder(heartRate);
+        return GetHeartRateResultRef.createDataHolder(result.getStatus(), heartRate);
     }
 
     /**
@@ -426,7 +426,7 @@ public class PaceMonitorAgent {
                 | (bytes[0] & 0xFF);
         int units = bytes[2] & 0xFF;
         power = CsafeUnitUtil.normalizeInt(power, units);
-        return GetPowerResultRef.createDataHolder(power);
+        return GetPowerResultRef.createDataHolder(result.getStatus(), power);
     }
 
     /**
@@ -595,15 +595,17 @@ public class PaceMonitorAgent {
     public DataHolder getWorkoutType(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_WORKOUT_TYPE })
-                .setValidation((byte) 0x01)
+                .setValidation((byte) 0x03)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int workoutType = result.getData()[0];
-        return GetWorkoutTypeResultRef.createDataHolder(workoutType);
+        // [0] is ID Commands.PM_GET_WORKOUT_TYPE
+        // [1] is response length (0x01)
+        int workoutType = result.getData()[2];
+        return GetWorkoutTypeResultRef.createDataHolder(result.getStatus(), workoutType);
     }
 
     /**
@@ -615,15 +617,17 @@ public class PaceMonitorAgent {
     public DataHolder getDragFactor(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_DRAG_FACTOR })
-                .setValidation((byte) 0x01)
+                .setValidation((byte) 0x03)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int dragFactor = result.getData()[0];
-        return GetDragFactorResultRef.createDataHolder(dragFactor);
+        // [0] is ID Commands.PM_GET_DRAG_FACTOR
+        // [1] is response length (0x01)
+        int dragFactor = result.getData()[2];
+        return GetDragFactorResultRef.createDataHolder(result.getStatus(), dragFactor);
     }
 
     /**
@@ -635,15 +639,17 @@ public class PaceMonitorAgent {
     public DataHolder getStrokeState(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_STROKE_STATE })
-                .setValidation((byte) 0x01)
+                .setValidation((byte) 0x03)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int strokeState = result.getData()[0];
-        return GetStrokeStateResultRef.createDataHolder(strokeState);
+        // [0] is ID Commands.PM_GET_STROKE_STATE
+        // [1] is response length (0x01)
+        int strokeState = result.getData()[2];
+        return GetStrokeStateResultRef.createDataHolder(result.getStatus(), strokeState);
     }
 
     /**
@@ -655,16 +661,17 @@ public class PaceMonitorAgent {
     public DataHolder getHighResWorkTime(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_WORK_TIME })
-                .setValidation((byte) 0x05)
+                .setValidation((byte) 0x07)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        double time = read4ByteInt(result.getData(), 0)
-                + (0.01 * toByte(result.getData()[4]));
-        return GetHighResWorkTimeResultRef.createDataHolder(time);
+        // [0] is ID Commands.PM_GET_WORK_TIME
+        // [1] is response length (0x05)
+        double time = 0.01 * (read4ByteInt(result.getData(), 2) + toByte(result.getData()[6]));
+        return GetHighResWorkTimeResultRef.createDataHolder(result.getStatus(), time);
     }
 
     /**
@@ -676,16 +683,17 @@ public class PaceMonitorAgent {
     public DataHolder getHighResWorkDistance(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_WORK_DISTANCE })
-                .setValidation((byte) 0x05)
+                .setValidation((byte) 0x07)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        double meters = read4ByteInt(result.getData(), 0)
-                + (0.1 * toByte(result.getData()[4]));
-        return GetHighResWorkDistanceResultRef.createDataHolder(meters);
+        // [0] is ID Commands.PM_GET_WORK_DISTANCE
+        // [1] is response length (0x05)
+        double meters = 0.1 * (read4ByteInt(result.getData(), 2) + toByte(result.getData()[6]));
+        return GetHighResWorkDistanceResultRef.createDataHolder(result.getStatus(), meters);
     }
 
     /**
@@ -697,15 +705,17 @@ public class PaceMonitorAgent {
     public DataHolder getErrorValue(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_ERROR_VALUE })
-                .setValidation((byte) 0x02)
+                .setValidation((byte) 0x04)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int errorValue = read2ByteInt(result.getData(), 0);
-        return GetErrorValueResultRef.createDataHolder(errorValue);
+        // [0] is ID Commands.PM_GET_ERROR_VALUE
+        // [1] is response length (0x02)
+        int errorValue = read2ByteInt(result.getData(), 2);
+        return GetErrorValueResultRef.createDataHolder(result.getStatus(), errorValue);
     }
 
     /**
@@ -717,15 +727,17 @@ public class PaceMonitorAgent {
     public DataHolder getWorkoutState(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_WORKOUT_STATE })
-                .setValidation((byte) 0x01)
+                .setValidation((byte) 0x03)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int workoutState = result.getData()[0];
-        return GetWorkoutStateResultRef.createDataHolder(workoutState);
+        // [0] is ID Commands.PM_GET_WORKOUT_STATE
+        // [1] is response length (0x01)
+        int workoutState = result.getData()[2];
+        return GetWorkoutStateResultRef.createDataHolder(result.getStatus(), workoutState);
     }
 
     /**
@@ -737,15 +749,17 @@ public class PaceMonitorAgent {
     public DataHolder getWorkoutIntervalCount(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_WORKOUT_INTERVAL_COUNT })
-                .setValidation((byte) 0x01)
+                .setValidation((byte) 0x03)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int intervalCount = result.getData()[0];
-        return GetWorkoutIntervalCountResultRef.createDataHolder(intervalCount);
+        // [0] is ID Commands.PM_GET_WORKOUT_INTERVAL_COUNT
+        // [1] is response length (0x01)
+        int intervalCount = result.getData()[2];
+        return GetWorkoutIntervalCountResultRef.createDataHolder(result.getStatus(), intervalCount);
     }
 
     /**
@@ -757,15 +771,17 @@ public class PaceMonitorAgent {
     public DataHolder getIntervalType(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_INTERVAL_TYPE })
-                .setValidation((byte) 0x02)
+                .setValidation((byte) 0x03)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int intervalType = result.getData()[0];
-        return GetIntervalTypeResultRef.createDataHolder(intervalType);
+        // [0] is ID Commands.PM_GET_INTERVAL_TYPE
+        // [1] is response length (0x01)
+        int intervalType = result.getData()[2];
+        return GetIntervalTypeResultRef.createDataHolder(result.getStatus(), intervalType);
     }
 
     /**
@@ -777,15 +793,17 @@ public class PaceMonitorAgent {
     public DataHolder getRestTime(Context context) {
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[] { 0x01, Commands.PM_GET_REST_TIME })
-                .setValidation((byte) 0x02)
+                .setValidation((byte) 0x04)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int restTime = read2ByteInt(result.getData(), 0);
-        return GetRestTimeResultRef.createDataHolder(restTime);
+        // [0] is ID Commands.PM_GET_REST_TIME
+        // [1] is response length (0x02)
+        int restTime = read2ByteInt(result.getData(), 2);
+        return GetRestTimeResultRef.createDataHolder(result.getStatus(), restTime);
     }
 
     /**
@@ -838,21 +856,24 @@ public class PaceMonitorAgent {
      * @return The force curve as a {@link DataHolder}.
      */
     public DataHolder getForcePlot(Context context, int numSamples) {
+        numSamples = numSamples == 0 ? 16 : numSamples;
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[]{0x03, Commands.PM_GET_FORCE_PLOT_DATA, 0x01,
                         (byte) (numSamples * 2)})
+                .setValidation((byte) 0x23)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int bytesRead = result.getData()[0];
+        // [0] is ID Commands.PM_GET_FORCE_PLOT_DATA
+        int bytesRead = result.getData()[1];
         int[] forcePlot = new int[bytesRead / 2];
         for (int i = 0; i < forcePlot.length; ++i) {
-            forcePlot[i] = read2ByteInt(result.getData(), 1 + (i * 2));
+            forcePlot[i] = read2ByteInt(result.getData(), 2 + (i * 2));
         }
-        return GetForcePlotResultRef.createDataHolder(forcePlot);
+        return GetForcePlotResultRef.createDataHolder(result.getStatus(), forcePlot);
     }
 
     /**
@@ -863,21 +884,25 @@ public class PaceMonitorAgent {
      * @return The heart rate plot as a {@link DataHolder}.
      */
     public DataHolder getHeartRatePlot(Context context, int numSamples) {
+        numSamples = numSamples == 0 ? 16 : numSamples;
         GetPMData set = new GetPMData.Builder(context, mUsbEngine, Commands.USR_CONFIG1)
                 .setData(new byte[]{0x03, Commands.PM_GET_HEART_RATE_DATA, 0x01,
                         (byte) (numSamples * 2)})
+                .setValidation((byte) 0x23)
                 .build();
         GetPMData.DataResult result = set.getData();
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
 
-        int bytesRead = result.getData()[0];
+        // [0] is ID Commands.PM_GET_HEART_RATE_DATA
+        // [1] is response length (0x23)
+        int bytesRead = result.getData()[2];
         int[] heartRatePlot = new int[bytesRead / 2];
         for (int i = 0; i < heartRatePlot.length; ++i) {
-            heartRatePlot[i] = read2ByteInt(result.getData(), 1 + (i * 2));
+            heartRatePlot[i] = read2ByteInt(result.getData(), 3 + (i * 2));
         }
-        return GetHeartRatePlotResultRef.createDataHolder(heartRatePlot);
+        return GetHeartRatePlotResultRef.createDataHolder(result.getStatus(), heartRatePlot);
     }
 
     /**

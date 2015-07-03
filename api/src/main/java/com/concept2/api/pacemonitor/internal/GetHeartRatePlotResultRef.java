@@ -1,21 +1,25 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetHeartRatePlotResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
  * Reference to the {@link GetHeartRatePlotResult} via a {@link DataHolder}.
  */
-public class GetHeartRatePlotResultRef extends PaceMonitorResultRef implements GetHeartRatePlotResult {
+public class GetHeartRatePlotResultRef extends PaceMonitorResultRef implements
+        GetHeartRatePlotResult {
 
     /** Column containing heart rate plot. */
-    private static final String COLUMN_HEART_RATE_PLOT = "heartRatePlot";
+    private static final String COLUMN_HEART_RATE_PLOT = PaceMonitorColumnContract.HEART_RATE_PLOT;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetHeartRatePlotResult}. Using this method
@@ -24,9 +28,13 @@ public class GetHeartRatePlotResultRef extends PaceMonitorResultRef implements G
      * @param heartRatePlot The heart rate plot.
      * @return {@link DataHolder} representing a {@link GetHeartRatePlotResult}.
      */
-    public static DataHolder createDataHolder(int[] heartRatePlot) {
-        Bundle values = new Bundle();
-        values.putIntArray(COLUMN_HEART_RATE_PLOT, heartRatePlot);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int[] heartRatePlot) {
+        ByteBuffer buffer = ByteBuffer.allocate(heartRatePlot.length * 4);
+        buffer.asIntBuffer().put(heartRatePlot);
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_HEART_RATE_PLOT, buffer.array());
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

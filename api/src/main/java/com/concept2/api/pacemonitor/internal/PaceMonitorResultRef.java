@@ -1,11 +1,13 @@
 package com.concept2.api.pacemonitor.internal;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitorResult;
 import com.concept2.api.pacemonitor.PaceMonitorStatus;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
 import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
@@ -15,9 +17,10 @@ import com.concept2.api.utils.Objects;
 public class PaceMonitorResultRef extends DataHolder implements PaceMonitorResult {
 
     /** Column containing the status value. */
-    private static final String COLUMN_FRAME_COUNT = "frameCount";
-    private static final String COLUMN_PREV_FRAME_STATUS = "prevFrameStatus";
-    private static final String COLUMN_SLAVE_STATUS = "slaveStatus";
+    private static final String COLUMN_FRAME_COUNT = PaceMonitorColumnContract.FRAME_COUNT;
+    private static final String COLUMN_PREV_FRAME_STATUS =
+            PaceMonitorColumnContract.PREV_FRAME_STATUS;
+    private static final String COLUMN_SLAVE_STATUS = PaceMonitorColumnContract.SLAVE_STATUS;
 
     /**
      * Creates a new {@link DataHolder} for a given pace monitor status. Using this method
@@ -27,11 +30,7 @@ public class PaceMonitorResultRef extends DataHolder implements PaceMonitorResul
      * @return {@link DataHolder} representing the command and pace monitor status.
      */
     public static DataHolder createDataHolder(PaceMonitorStatusImpl status) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_FRAME_COUNT, status.mFrameCount);
-        values.putInt(COLUMN_PREV_FRAME_STATUS, status.mPrevFrameStatus);
-        values.putInt(COLUMN_SLAVE_STATUS, status.mSlaveStatus);
-        return new DataHolder(Concept2StatusCodes.OK, values);
+        return new DataHolder(Concept2StatusCodes.OK, status.toContentValues());
     }
 
     private final PaceMonitorStatus mPaceMonitorStatus;

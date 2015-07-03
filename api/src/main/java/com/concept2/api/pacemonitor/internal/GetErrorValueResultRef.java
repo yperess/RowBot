@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetErrorValueResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetErrorValueResultRef extends PaceMonitorResultRef implements GetErrorValueResult {
 
     /** Column containing workout type. */
-    private static final String COLUMN_ERROR_VALUE = "errorValue";
+    private static final String COLUMN_ERROR_VALUE = PaceMonitorColumnContract.ERROR_VALUE;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetErrorValueResult}. Using this method assumes
@@ -22,9 +24,10 @@ public class GetErrorValueResultRef extends PaceMonitorResultRef implements GetE
      * @param errorValue The error value.
      * @return {@link DataHolder} representing a {@link GetErrorValueResult}.
      */
-    public static DataHolder createDataHolder(int errorValue) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_ERROR_VALUE, errorValue);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int errorValue) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ERROR_VALUE, errorValue);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetRestTimeResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetRestTimeResultRef extends PaceMonitorResultRef implements GetRestTimeResult {
 
     /** Column containing rest time. */
-    private static final String COLUMN_REST_TIME = "restTime";
+    private static final String COLUMN_REST_TIME = PaceMonitorColumnContract.REST_TIME;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetRestTimeResult}. Using this method assumes
@@ -22,9 +24,10 @@ public class GetRestTimeResultRef extends PaceMonitorResultRef implements GetRes
      * @param restTime The rest time in seconds.
      * @return {@link DataHolder} representing a {@link GetRestTimeResult}.
      */
-    public static DataHolder createDataHolder(int restTime) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_REST_TIME, restTime);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int restTime) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_REST_TIME, restTime);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

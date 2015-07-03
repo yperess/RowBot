@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetDistanceResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetDistanceResultRef extends PaceMonitorResultRef implements GetDistanceResult {
 
     /** Column containing distance value. */
-    private static final String COLUMN_DISTANCE = "distance";
+    private static final String COLUMN_DISTANCE = PaceMonitorColumnContract.METERS;
 
     /**
      * Creates a new {@link DataHolder} for a specified distance. Using this method assumes that the
@@ -22,9 +24,10 @@ public class GetDistanceResultRef extends PaceMonitorResultRef implements GetDis
      * @param distance The distance represented by this result.
      * @return {@link DataHolder} representing the distance.
      */
-    public static DataHolder createDataHolder(int distance) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_DISTANCE, distance);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int distance) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DISTANCE, distance);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

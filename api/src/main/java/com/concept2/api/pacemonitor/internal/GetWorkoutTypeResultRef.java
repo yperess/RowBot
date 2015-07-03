@@ -1,11 +1,13 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.pacemonitor.PaceMonitor.GetWorkoutTypeResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -14,7 +16,7 @@ import com.concept2.api.utils.Objects;
 public class GetWorkoutTypeResultRef extends PaceMonitorResultRef implements GetWorkoutTypeResult {
 
     /** Column containing workout type. */
-    private static final String COLUMN_WORKOUT_TYPE = "workoutType";
+    private static final String COLUMN_WORKOUT_TYPE = PaceMonitorColumnContract.WORKOUT_TYPE;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetWorkoutTypeResult}. Using this method assumes
@@ -23,9 +25,10 @@ public class GetWorkoutTypeResultRef extends PaceMonitorResultRef implements Get
      * @param workoutType The workout type.
      * @return {@link DataHolder} representing a {@link GetWorkoutTypeResult}.
      */
-    public static DataHolder createDataHolder(int workoutType) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_WORKOUT_TYPE, workoutType);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int workoutType) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_WORKOUT_TYPE, workoutType);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

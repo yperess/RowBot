@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetWorkoutIntervalCountResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -14,7 +16,7 @@ public class GetWorkoutIntervalCountResultRef extends PaceMonitorResultRef imple
         GetWorkoutIntervalCountResult {
 
     /** Column containing interval count. */
-    private static final String COLUMN_INTERVAL_COUNT = "intervalCount";
+    private static final String COLUMN_INTERVAL_COUNT = PaceMonitorColumnContract.INTERVAL_COUNT;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetWorkoutIntervalCountResult}. Using this
@@ -24,9 +26,10 @@ public class GetWorkoutIntervalCountResultRef extends PaceMonitorResultRef imple
      * @param intervalCount The interval count.
      * @return {@link DataHolder} representing a {@link GetWorkoutIntervalCountResult}.
      */
-    public static DataHolder createDataHolder(int intervalCount) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_INTERVAL_COUNT, intervalCount);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int intervalCount) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_INTERVAL_COUNT, intervalCount);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

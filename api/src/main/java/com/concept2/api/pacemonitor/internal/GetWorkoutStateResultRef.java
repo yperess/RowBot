@@ -1,11 +1,13 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.pacemonitor.PaceMonitor.GetWorkoutStateResult;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -14,7 +16,7 @@ import com.concept2.api.utils.Objects;
 public class GetWorkoutStateResultRef extends PaceMonitorResultRef implements GetWorkoutStateResult {
 
     /** Column containing workout state. */
-    private static final String COLUMN_WORKOUT_STATE = "workoutState";
+    private static final String COLUMN_WORKOUT_STATE = PaceMonitorColumnContract.WORKOUT_STATE;
 
     /**
      * Create a new {@link DataHolder} for a {@link GetWorkoutStateResult}. Using this method
@@ -23,9 +25,10 @@ public class GetWorkoutStateResultRef extends PaceMonitorResultRef implements Ge
      * @param workoutState The workout state.
      * @return {@link DataHolder} representing a {@link GetWorkoutStateResult}.
      */
-    public static DataHolder createDataHolder(int workoutState) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_WORKOUT_STATE, workoutState);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int workoutState) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_WORKOUT_STATE, workoutState);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 

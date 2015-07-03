@@ -1,11 +1,16 @@
 package com.concept2.api.internal;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.concept2.api.Result;
 import com.concept2.api.utils.Preconditions;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Holder for generic data via either {@link Bundle} or {@link Cursor}.
@@ -19,7 +24,7 @@ public class DataHolder implements Result {
      * @return {@link DataHolder} with no data, just a status code.
      */
     public static DataHolder empty(int statusCode) {
-        return new DataHolder(statusCode, new Bundle());
+        return new DataHolder(statusCode, new ContentValues());
     }
 
     /** The status code of the data. */
@@ -27,13 +32,13 @@ public class DataHolder implements Result {
 
     /**
      * One of two possible ways to store data in the {@link DataHolder}. Only one of
-     * {@link #mBundle} or {@link #mCursor} may be set.
+     * {@link #mValues} or {@link #mCursor} may be set.
      */
-    private final Bundle mBundle;
+    private final ContentValues mValues;
 
     /**
      * One of two possible ways to store data in the {@link DataHolder}. Only one of
-     * {@link #mBundle} or {@link #mCursor} may be set.
+     * {@link #mValues} or {@link #mCursor} may be set.
      */
     private final Cursor mCursor;
 
@@ -43,17 +48,17 @@ public class DataHolder implements Result {
      * @param dataHolder The {@link DataHolder} to copy.
      */
     public DataHolder(DataHolder dataHolder) {
-        this(dataHolder.mStatusCode, dataHolder.mBundle, dataHolder.mCursor);
+        this(dataHolder.mStatusCode, dataHolder.mValues, dataHolder.mCursor);
     }
 
     /**
      * Create a {@link Bundle} {@link DataHolder}.
      *
      * @param statusCode The status code of the holder.
-     * @param bundle The values to hold.
+     * @param values The values to hold.
      */
-    public DataHolder(int statusCode, Bundle bundle) {
-        this(statusCode, bundle, null /* cursor */);
+    public DataHolder(int statusCode, ContentValues values) {
+        this(statusCode, values, null /* cursor */);
     }
 
     /**
@@ -71,13 +76,13 @@ public class DataHolder implements Result {
      * Main constructor, must only use one of {@link Bundle} or {@link Cursor}.
      *
      * @param statusCode The status code of the holder.
-     * @param bundle The values to hold or null.
+     * @param values The values to hold or null.
      * @param cursor The values to hold or null.
      */
-    private DataHolder(int statusCode, Bundle bundle, Cursor cursor) {
-        Preconditions.assertTrue(bundle == null || cursor == null);
+    private DataHolder(int statusCode, ContentValues values, Cursor cursor) {
+        Preconditions.assertTrue(values == null || cursor == null);
         mStatusCode = statusCode;
-        mBundle = bundle;
+        mValues = values;
         mCursor = cursor;
     }
 
@@ -102,7 +107,7 @@ public class DataHolder implements Result {
      * @return True of the column exists, false otherwise.
      */
     protected boolean hasColumn(String columnName) {
-        if (mBundle != null && mBundle.containsKey(columnName)) return true;
+        if (mValues != null && mValues.containsKey(columnName)) return true;
         if (mCursor != null && mCursor.getColumnIndex(columnName) != -1) return true;
         return false;
     }
@@ -119,8 +124,8 @@ public class DataHolder implements Result {
     protected final int getInt(String columnName, int defaultValue) {
         try {
             Integer val;
-            if (mBundle != null) {
-                val = mBundle.containsKey(columnName) ? mBundle.getInt(columnName) : null;
+            if (mValues != null) {
+                val = mValues.getAsInteger(columnName);
             } else {
                 int column = mCursor.getColumnIndex(columnName);
                 val = column == -1 ? null : mCursor.getInt(column);
@@ -143,8 +148,8 @@ public class DataHolder implements Result {
     protected final long getLong(String columnName, long defaultValue) {
         try {
             Long val;
-            if (mBundle != null) {
-                val = mBundle.containsKey(columnName) ? mBundle.getLong(columnName) : null;
+            if (mValues != null) {
+                val = mValues.getAsLong(columnName);
             } else {
                 int column = mCursor.getColumnIndex(columnName);
                 val = column == -1 ? null : mCursor.getLong(column);
@@ -167,8 +172,8 @@ public class DataHolder implements Result {
     protected final double getDouble(String columnName, double defaultValue) {
         try {
             Double val;
-            if (mBundle != null) {
-                val = mBundle.containsKey(columnName) ? mBundle.getDouble(columnName) : null;
+            if (mValues != null) {
+                val = mValues.getAsDouble(columnName);
             } else {
                 int column = mCursor.getColumnIndex(columnName);
                 val = column == -1 ? null : mCursor.getDouble(column);
@@ -189,25 +194,33 @@ public class DataHolder implements Result {
      *         if the value wasn't found.
      */
     protected final int[] getIntArray(String columnName, int[] defaultValue) {
+        Log.d("Data", "Getting int array from: " + columnName);
         try {
-            int[] val;
-            if (mBundle != null) {
-                val = mBundle.containsKey(columnName) ? mBundle.getIntArray(columnName) : null;
+            byte[] bytes;
+            if (mValues != null) {
+                Log.d("Data", "Getting int array from ContentValues");
+                bytes = mValues.getAsByteArray(columnName);
             } else {
+                Log.d("Data", "Getting int array from cursor");
                 int column = mCursor.getColumnIndex(columnName);
-                String csv = column == -1 ? null : mCursor.getString(column);
-                if (!TextUtils.isEmpty(csv)) {
-                    String[] values = csv.split(",");
-                    val = new int[values.length];
-                    for (int i = 0; i < val.length; ++i) {
-                        val[i] = Integer.parseInt(values[i]);
-                    }
-                } else {
-                    val = null;
-                }
+                bytes = column == -1 ? null : mCursor.getBlob(column);
             }
-            return val == null ? defaultValue : val;
+            Log.d("Data", "bytes = " + Arrays.toString(bytes));
+            if (bytes == null) {
+                Log.d("Data", "bytes == null");
+                return null;
+            }
+            if (bytes.length == 0) {
+                Log.d("Data", "bytes.length == 0");
+                return new int[0];
+            }
+            ByteBuffer buffer = ByteBuffer.wrap(bytes);
+            int[] intArray = new int[bytes.length / 4];
+            buffer.asIntBuffer().get(intArray);
+            Log.d("Data", "ints = " + intArray);
+            return intArray;
         } catch (Exception e) {
+            Log.e("Data", "Exception with byte conversion...", e);
             return defaultValue;
         }
     }

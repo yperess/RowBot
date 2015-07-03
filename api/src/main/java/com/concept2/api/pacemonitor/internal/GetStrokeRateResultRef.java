@@ -1,10 +1,12 @@
 package com.concept2.api.pacemonitor.internal;
 
-import android.os.Bundle;
+import android.content.ContentValues;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
+import com.concept2.api.service.broker.pacemonitor.PaceMonitorStatusImpl;
 import com.concept2.api.utils.Objects;
 
 /**
@@ -13,7 +15,7 @@ import com.concept2.api.utils.Objects;
 public class GetStrokeRateResultRef extends PaceMonitorResultRef implements PaceMonitor.GetStrokeRateResult {
 
     /** Column containing the stroke rate value. */
-    private static final String COLUMN_STROKE_RATE = "strokeRate";
+    private static final String COLUMN_STROKE_RATE = PaceMonitorColumnContract.STROKE_RATE;
 
     /**
      * Create a new {@link DataHolder} for a given stroke rate. Using this method assumes that the
@@ -22,9 +24,10 @@ public class GetStrokeRateResultRef extends PaceMonitorResultRef implements Pace
      * @param strokeRate The stroke rating.
      * @return {@link DataHolder} representing the stroke rate.
      */
-    public static DataHolder createDataHolder(int strokeRate) {
-        Bundle values = new Bundle();
-        values.putInt(COLUMN_STROKE_RATE, strokeRate);
+    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int strokeRate) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_STROKE_RATE, strokeRate);
+        values.putAll(status.toContentValues());
         return new DataHolder(Concept2StatusCodes.OK, values);
     }
 
@@ -44,6 +47,6 @@ public class GetStrokeRateResultRef extends PaceMonitorResultRef implements Pace
 
     @Override
     protected void buildString(Objects.ObjectsStringBuilder builder) {
-        builder.addVal("StrokeRate", builder);
+        builder.addVal("StrokeRate", getStrokeRate());
     }
 }

@@ -2,7 +2,7 @@ package com.concept2.api.pacemonitor;
 
 import android.os.Parcelable;
 
-public interface PaceMonitorStatus extends Parcelable {
+public interface PaceMonitorStatus {
 
     int getFrameCount();
 

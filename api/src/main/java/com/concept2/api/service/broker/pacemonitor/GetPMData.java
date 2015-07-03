@@ -104,7 +104,7 @@ public final class GetPMData {
             Preconditions.assertNotNull(bytes);
             Preconditions.assertTrue(bytes.length > 0);
             mStatus = new PaceMonitorStatusImpl(bytes[0]);
-            int statusCode = mStatus.toConcept2StatusCode();
+            int statusCode = Concept2StatusCodes.OK;
             if (bytes.length > 1) {
                 Preconditions.assertTrue(bytes.length >= 3);
                 mId = bytes[1];
