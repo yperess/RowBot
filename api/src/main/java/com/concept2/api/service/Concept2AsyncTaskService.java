@@ -7,10 +7,9 @@ import com.concept2.api.PendingResult;
 import com.concept2.api.Result;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.internal.PendingResultImpl;
-import com.concept2.api.pacemonitor.CommandBatch;
+import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.pacemonitor.PaceMonitorResult;
-import com.concept2.api.pacemonitor.PaceMonitorStatus;
 import com.concept2.api.pacemonitor.internal.GetCaloriesResultRef;
 import com.concept2.api.pacemonitor.internal.GetDistanceResultRef;
 import com.concept2.api.pacemonitor.internal.GetDragFactorResultRef;
@@ -36,7 +35,6 @@ import com.concept2.api.pacemonitor.internal.GetWorkoutTypeResultRef;
 import com.concept2.api.service.broker.DataBroker;
 import com.concept2.api.service.operations.BaseDataOperation;
 import com.concept2.api.service.operations.BaseOperation;
-import com.concept2.api.utils.Objects;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -827,24 +825,50 @@ public class Concept2AsyncTaskService {
 
     /**
      * Execute one or more commands in order as a batch. Commands should be created via the static
-     * methods provided in {@link CommandBatch}.
+     * methods provided in {@link CommandBuilder}.
      *
      * @param context The calling context.
      * @param pendingResult The callback object to report the result to.
      * @param commandList The list of commands to execute.
      */
-    public static void executeCommandBatch(Context context,
-            final PendingResultImpl<PaceMonitor.BatchResult> pendingResult,
-            final List<CommandBatch.Command> commandList) {
+    public static void createCommandBatch(Context context,
+            final PendingResultImpl<PaceMonitor.BatchCreateResult> pendingResult,
+            final List<CommandBuilder.Command> commandList) {
         execute(context, Affinity.PACE_MONITOR, new BaseDataOperation() {
             @Override
             protected DataHolder getData(DataBroker dataBroker, Context context) {
-                return dataBroker.executeCommandBatch(context, commandList);
+                return dataBroker.createPaceMonitorCommandBatch(context, commandList);
+            }
+
+            @Override
+            protected void onResult(final DataHolder data) {
+                // TODO Implement BatchCreateResultRef
+                pendingResult.setResult(new PaceMonitor.BatchCreateResult() {
+                    @Override
+                    public long getBatchId() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int getStatus() {
+                        return data.getStatus();
+                    }
+                });
+            }
+        });
+    }
+
+    public static void executeCommandBatch(Context context,
+            final PendingResultImpl<PaceMonitor.BatchResult> pendingResult, final long id) {
+        execute(context, Affinity.PACE_MONITOR, new BaseDataOperation() {
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.executePaceMonitorCommandBatch(context, id);
             }
 
             @Override
             protected void onResult(DataHolder data) {
-                // TODO Implement BatchResultRef
+                // TODO implement BatchResultRef
                 pendingResult.setResult(null);
             }
         });
