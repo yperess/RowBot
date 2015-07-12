@@ -55,6 +55,17 @@ public class Csafe {
         return stuffed;
     }
 
+    public static int getStuffedLength(byte[] data) {
+        int length = 0;
+        for (int i = 0; i < data.length; ++i) {
+            if ((data[i] & 0xFC) == 0xF0) {
+                ++length;
+            }
+            ++length;
+        }
+        return length;
+    }
+
     /**
      * Wrap a give byte array into a frame as expected by the pace monitor.
      * TEST 01 F1 94 94 F2
@@ -64,7 +75,7 @@ public class Csafe {
      * @param chk The checksum of the unstuffed frame contents
      * @return The csafe frame wraped with checksum and start/stop or null on failure
      */
-    public static byte[] create(byte reportID, byte[] data, int len, byte chk){
+    public static byte[] create(byte[] data, int len, byte chk){
         if (data.length < len) {
             Log.e(TAG, "data.length is smaller than len");
             return null;
@@ -75,13 +86,13 @@ public class Csafe {
         }
 
         byte[] newData = new byte[MAX_BUFFER-1];//max 63
-        newData[0] = reportID;
-        newData[1] = (byte) 0xF1;
+//        newData[0] = reportID;
+        newData[0] = (byte) 0xF1;
         for (int i = 0; i < len; ++i) {
-            newData[i+2] = data[i];
+            newData[i+1] = data[i];
         }
-        newData[len+2] = chk;
-        newData[len+3] = (byte) 0xF2;
+        newData[len+1] = chk;
+        newData[len+2] = (byte) 0xF2;
         return newData;
     }
 

@@ -27,11 +27,10 @@ public interface Engine {
     /**
      * Get data from the Pace Monitor.
      *
-     * @param reportId The report's identifier ({@link ReportId}).
      * @param command The command to send to the Pace Monitor.
      * @return The Pace Monitor response or null if sent to the handler.
      * @throws Concept2EngineConnectionException if a connection wasn't found.
      */
-    byte[] getPMData(ReportId reportId, byte[] command) throws Concept2EngineConnectionException,
+    byte[] getPMData(byte[] command) throws Concept2EngineConnectionException,
             Csafe.CsafeExtractException, Csafe.DestuffResult.DestuffException;
 }

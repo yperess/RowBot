@@ -87,5 +87,6 @@
         <item>GO_STATE_FINISHED</item>
         <item>GO_STATE_READY</item>
         <item>GO_STATE_BAD_ID</item>
+        <item>100m @ 200W</item>
     </string-array>
 </resources>

@@ -27,6 +27,7 @@ public interface PaceMonitorColumnContract {
     String WORKOUT_NUMBER = "workout_number";
     String WORKOUT_STATE = "workout_state";
     String WORKOUT_TYPE = "workout_type";
+    String COMMAND_BATCH_ID = "command_batch_id";
 
     String FRAME_COUNT = "frame_count";
     String PREV_FRAME_STATUS = "prev_frame_status";

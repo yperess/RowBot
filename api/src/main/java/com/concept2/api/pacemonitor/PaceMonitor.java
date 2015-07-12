@@ -192,6 +192,11 @@ public interface PaceMonitor {
         int[] getHeartRatePlot();
     }
 
+    /** Result reporting the creation of a command batch. */
+    interface BatchCreateResult extends Result {
+        long getBatchId();
+    }
+
     /** Result reporting results for a batch of commands. */
     interface BatchResult extends PaceMonitorResult {
         List<Result> getResults();
@@ -512,13 +517,16 @@ public interface PaceMonitor {
     PendingResult<GetHeartRatePlotResult> getHeartRatePlot(Context context, int numSamples);
 
     /**
-     * Execute one or more commands in order as a batch. Commands should be created via the static
-     * methods provided in {@link CommandBatch}.
+     * Creates and caches the communication bytes required to execute a batch of commands. When
+     * successful, this method will return an identifier for the batch that can be executed via
+     * {@link #executeCommandBatch(Context, long}.
      *
      * @param context The calling context.
      * @param commandList The list of commands to execute.
      * @return {@link PendingResult} that will report the result when ready.
      */
-    PendingResult<BatchResult> executeCommandBatch(Context context,
-            List<CommandBatch.Command> commandList);
+    PendingResult<BatchCreateResult> createCommandBatch(Context context,
+            List<CommandBuilder.Command> commandList);
+
+    PendingResult<BatchResult> executeCommandBatch(Context context, long id);
 }

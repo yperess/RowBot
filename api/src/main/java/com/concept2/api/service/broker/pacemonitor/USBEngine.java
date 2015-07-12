@@ -78,12 +78,12 @@ public class USBEngine implements Engine {
     }
 
     @Override
-    public synchronized byte[] getPMData(ReportId reportId, byte[] command)
+    public synchronized byte[] getPMData(byte[] command)
             throws Concept2EngineConnectionException, Csafe.CsafeExtractException, Csafe.DestuffResult.DestuffException {
         byte[] content = command;
         byte checksum = Csafe.checksum(content);
         byte[] stuffed = Csafe.stuff(content);
-        byte[] buffer = Csafe.create(reportId.getValue(), stuffed, stuffed.length, checksum);
+        byte[] buffer = Csafe.create(stuffed, stuffed.length, checksum);
         byte[] returnData;
 
         ByteBuffer bufferOut = ByteBuffer.wrap(buffer);

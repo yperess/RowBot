@@ -5,7 +5,7 @@ import android.content.Context;
 import com.concept2.api.PendingResult;
 import com.concept2.api.Result;
 import com.concept2.api.internal.PendingResultImpl;
-import com.concept2.api.pacemonitor.CommandBatch;
+import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.pacemonitor.PaceMonitorResult;
 import com.concept2.api.pacemonitor.PaceMonitorStatus;
@@ -538,6 +538,24 @@ public class PaceMonitorImpl implements PaceMonitor {
         }
     }
 
+    private static final class BatchCreatePendingResult extends
+            PendingResultImpl<BatchCreateResult> {
+        @Override
+        protected BatchCreateResult getFailedResult(final int statusCode) {
+            return new BatchCreateResult() {
+                @Override
+                public long getBatchId() {
+                    return 0;
+                }
+
+                @Override
+                public int getStatus() {
+                    return statusCode;
+                }
+            };
+        }
+    }
+
     private static final class BatchPendingResult extends PendingResultImpl<BatchResult> {
         @Override
         protected BatchResult getFailedResult(final int statusCode) {
@@ -860,17 +878,26 @@ public class PaceMonitorImpl implements PaceMonitor {
     }
 
     @Override
-    public PendingResult<BatchResult> executeCommandBatch(Context context,
-            List<CommandBatch.Command> commandList) {
+    public PendingResult<BatchCreateResult> createCommandBatch(Context context,
+            List<CommandBuilder.Command> commandList) {
         Preconditions.assertNotNull(context, "Context cannot be null");
         Preconditions.assertNotNull(commandList, "Command list cannot be null");
         Preconditions.assertTrue(!commandList.isEmpty(), "Command list cannot be empty");
-        for (CommandBatch.Command command : commandList) {
+        for (CommandBuilder.Command command : commandList) {
             Preconditions.assertTrue(command instanceof CommandImpl,
                     "Command must be created by CommandBatch static methods");
         }
+        BatchCreatePendingResult pendingResult = new BatchCreatePendingResult();
+        Concept2AsyncTaskService.createCommandBatch(context, pendingResult, commandList);
+        return pendingResult;
+    }
+
+    @Override
+    public PendingResult<BatchResult> executeCommandBatch(Context context, long id) {
+        Preconditions.assertNotNull(context, "Context cannot be null");
+        Preconditions.assertTrue(id >= 0, "Id must be >= 0");
         BatchPendingResult pendingResult = new BatchPendingResult();
-        Concept2AsyncTaskService.executeCommandBatch(context, pendingResult, commandList);
+        Concept2AsyncTaskService.executeCommandBatch(context, pendingResult, id);
         return pendingResult;
     }
 

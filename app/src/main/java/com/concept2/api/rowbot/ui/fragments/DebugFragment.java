@@ -13,9 +13,12 @@ import android.widget.Spinner;
 import com.concept2.api.Concept2;
 import com.concept2.api.Result;
 import com.concept2.api.ResultCallback;
+import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.rowbot.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class DebugFragment extends BaseFragment implements View.OnClickListener, ResultCallback {
@@ -244,6 +247,16 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
                 Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.BAD_ID)
                         .setResultCallback(this);
                 break;
+            case 42: {
+                ArrayList<CommandBuilder.Command> cmdList = new ArrayList<>();
+                cmdList.add(CommandBuilder.setGoalDistanceCmd(null, 100));
+                cmdList.add(CommandBuilder.setSplitDistanceCmd(null, 100));
+                cmdList.add(CommandBuilder.setGoalPowerCmd(null, 200));
+                cmdList.add(CommandBuilder.setStoredWorkoutNumberCmd(null, 0));
+                Concept2.PaceMonitor.createCommandBatch(getActivity(), cmdList)
+                        .setResultCallback(this);
+                break;
+            }
         }
     }
 

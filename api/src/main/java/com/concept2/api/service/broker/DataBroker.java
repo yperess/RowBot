@@ -3,7 +3,7 @@ package com.concept2.api.service.broker;
 import android.content.Context;
 
 import com.concept2.api.internal.DataHolder;
-import com.concept2.api.pacemonitor.CommandBatch;
+import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 
 import java.util.List;
@@ -413,7 +413,12 @@ public class DataBroker {
         return mPaceMonitorAgent.setScreenErrorMode(context, enable);
     }
 
-    public DataHolder executeCommandBatch(Context context, List<CommandBatch.Command> commandList) {
-        return null;
+    public DataHolder createPaceMonitorCommandBatch(Context context,
+            List<CommandBuilder.Command> commandList) {
+        return mPaceMonitorAgent.createCommandBatch(context, commandList);
+    }
+
+    public DataHolder executePaceMonitorCommandBatch(Context context, long id) {
+        return mPaceMonitorAgent.executeCommandBatch(context, id);
     }
 }

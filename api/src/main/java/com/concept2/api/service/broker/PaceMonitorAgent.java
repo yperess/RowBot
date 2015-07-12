@@ -1,12 +1,15 @@
 package com.concept2.api.service.broker;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.common.Constants;
 import com.concept2.api.internal.DataHolder;
-import com.concept2.api.pacemonitor.CommandBatch;
+import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.PaceMonitorResult;
+import com.concept2.api.pacemonitor.internal.CommandImpl;
 import com.concept2.api.pacemonitor.internal.GetDragFactorResultRef;
 import com.concept2.api.pacemonitor.internal.GetErrorValueResultRef;
 import com.concept2.api.pacemonitor.internal.GetForcePlotResultRef;
@@ -29,11 +32,17 @@ import com.concept2.api.pacemonitor.internal.GetWorkoutIntervalCountResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutNumberResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutStateResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutTypeResultRef;
+import com.concept2.api.service.broker.pacemonitor.Csafe;
 import com.concept2.api.service.broker.pacemonitor.Engine;
 import com.concept2.api.service.broker.pacemonitor.GetPMData;
+import com.concept2.api.service.broker.pacemonitor.ReportId;
 import com.concept2.api.service.broker.pacemonitor.USBEngine;
 import com.concept2.api.service.broker.pacemonitor.util.CsafeUnitUtil;
+import com.concept2.api.utils.Objects;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -81,10 +90,10 @@ public class PaceMonitorAgent {
 
         // Custom commands.
         byte USR_CONFIG1 = (byte) 0x1A;
-        byte SET_PM_CGF = (byte) 0x76;
-        byte SET_PM_DATA = (byte) 0x77;
-        byte GET_PM_CFG = (byte) 0x7E;
-        byte GET_PM_DATA = (byte) 0x7F;
+//        byte SET_PM_CGF = (byte) 0x76;
+//        byte SET_PM_DATA = (byte) 0x77;
+//        byte GET_PM_CFG = (byte) 0x7E;
+//        byte GET_PM_DATA = (byte) 0x7F;
 
         byte PM_GET_WORKOUT_TYPE = (byte) 0x89;
         byte PM_GET_DRAG_FACTOR = (byte) 0xC1;
@@ -117,9 +126,8 @@ public class PaceMonitorAgent {
      * @return The status of the pace monitor as a {@link DataHolder}.
      */
     public DataHolder getPaceMonitorStatus(Context context) {
-        GetPMData get = new GetPMData.Builder(context, mUsbEngine, Commands.GET_STATUS)
-                .build();
-        GetPMData.DataResult result = get.getData();
+        GetPMData.DataResult result = GetPMData.executeCommand(context, mUsbEngine,
+                ((CommandImpl) CommandBuilder.getStatusCmd(null)).getCommandBytes());
         if (!result.isSuccess()) {
             return DataHolder.empty(result.getStatusCode());
         }
@@ -924,15 +932,152 @@ public class PaceMonitorAgent {
         return PaceMonitorResultRef.createDataHolder(result.getStatus());
     }
 
+    private static final int MAX_FRAME_SIZE = 96;
+
     /**
      * Execute one or more commands in order as a batch. Commands should be created via the static
-     * methods provided in {@link CommandBatch}.
+     * methods provided in {@link CommandBuilder}.
      *
      * @param context The calling context.
      * @param commandList The list of commands to execute.
      * @return The command results as a {@link DataHolder}.
      */
-    public DataHolder executeCommandBatch(Context context, List<CommandBatch.Command> commandList) {
+    public DataHolder createCommandBatch(Context context, List<CommandBuilder.Command> commandList) {
+        CommandImpl lastCommand = null;
+        ArrayList<byte[]> batchCommands = new ArrayList<>();
+        ByteBuffer buffer = ByteBuffer.allocate(128);
+        int bufferStuffedLength = 0;
+        int customCommandLengthPos = 0;
+        for (int i = 0, size = commandList.size(); i < size; ++i) {
+            CommandImpl command = (CommandImpl) commandList.get(i);
+            byte[] commandBytes = command.getCommandBytes();
+            int stuffedLength = Csafe.getStuffedLength(command.getCommandBytes());
+            Log.d("Batch", "Parsing command " + i + ": " + command);
+            Log.d("Batch", "    bytes: " + Objects.toString(commandBytes));
+            Log.d("Batch", "    stuffedLength: " + stuffedLength);
+            Log.d("Batch", "    bufferStuffedLength: " + bufferStuffedLength);
+            Log.d("Batch", "    customCommandLengthPos: " + customCommandLengthPos);
+            if (!command.isCustomCommand()) {
+                Log.d("Batch", "    * Command is standard");
+                // 1. regular command - check if there's room, add it.
+                if (bufferStuffedLength + stuffedLength + 3 >= 96) {
+                    // Close the current buffer and start a new one.
+                    int curLen = buffer.position();
+                    buffer.rewind();
+                    byte[] bytes = new byte[curLen];
+                    buffer.get(bytes);
+                    batchCommands.add(bytes);
+                    buffer.rewind();
+                    bufferStuffedLength = 0;
+                    Log.d("Batch", "    * overflow, saving current buffer: " + Objects.toString(bytes));
+                }
+                // There's room in the current buffer.
+                buffer.put(commandBytes);
+                bufferStuffedLength += stuffedLength;
+            } else {
+                // 2. custom command
+                Log.d("Batch", "    * custom command, lastCommand = " + lastCommand);
+                if (lastCommand == null || !lastCommand.isCustomCommand()) {
+                    // 2.1. w/ regular previous command or none
+                    int len = commandBytes.length;
+                    commandBytes = new byte[len + 2];
+                    commandBytes[0] = Commands.USR_CONFIG1;
+                    commandBytes[1] = (byte) len;
+                    System.arraycopy(command.getCommandBytes(), 0, commandBytes, 2, len);
+                    stuffedLength = Csafe.getStuffedLength(commandBytes);
+                    Log.d("Batch", "    * commandBytes: " + Objects.toString(commandBytes));
+                    Log.d("Batch", "    * stuffedLength: " + stuffedLength);
+                    if (bufferStuffedLength + stuffedLength + 3 >= 96) {
+                        int curLen = buffer.position();
+                        buffer.rewind();
+                        byte[] bytes = new byte[curLen];
+                        buffer.get(bytes);
+                        batchCommands.add(bytes);
+                        buffer.rewind();
+                        bufferStuffedLength = 0;
+                        Log.d("Batch", "    * overflow, saving current buffer: " + Objects.toString(bytes));
+                    }
+                    customCommandLengthPos = buffer.position() + 1;
+                    Log.d("Batch", "    * customCommandLengthPos: " + customCommandLengthPos);
+                    buffer.put(commandBytes);
+                    bufferStuffedLength += stuffedLength;
+                } else {
+                    // 2.2. previous command is custom.
+                    byte prevCustomLen = buffer.get(customCommandLengthPos);
+                    Log.d("Batch", "    * previous command is also custom, length = " + prevCustomLen);
+                    if (prevCustomLen + commandBytes.length > 0xFF) {
+                        Log.d("Batch", "    * merging commands will overflow length byte - " + (prevCustomLen + commandBytes.length));
+                        // Can't merge commands, length byte overflow.
+                        int curLen = buffer.position();
+                        buffer.rewind();
+                        byte[] bytes = new byte[curLen];
+                        buffer.get(bytes);
+                        batchCommands.add(bytes);
+                        buffer.rewind();
+                        Log.d("Batch", "    * length byte overflow, saving current buffer: " + Objects.toString(bytes));
+
+                        // Create user config 1 prefix.
+                        int len = commandBytes.length;
+                        commandBytes = new byte[len + 2];
+                        commandBytes[0] = Commands.USR_CONFIG1;
+                        commandBytes[1] = (byte) len;
+                        System.arraycopy(command.getCommandBytes(), 0, commandBytes, 2, len);
+                        stuffedLength = Csafe.getStuffedLength(commandBytes);
+                        customCommandLengthPos = 1;
+                        buffer.put(commandBytes);
+                        bufferStuffedLength = stuffedLength;
+                    } else {
+                        // Check if command will overflow buffer.
+                        if (bufferStuffedLength + stuffedLength + 3 >= 96) {
+                            int curLen = buffer.position();
+                            buffer.rewind();
+                            byte[] bytes = new byte[curLen];
+                            buffer.get(bytes);
+                            batchCommands.add(bytes);
+                            buffer.rewind();
+                            Log.d("Batch", "    * overflow, saving current buffer: " + Objects.toString(bytes));
+
+                            // Create user config 1 prefix.
+                            int len = commandBytes.length;
+                            commandBytes = new byte[len + 2];
+                            commandBytes[0] = Commands.USR_CONFIG1;
+                            commandBytes[1] = (byte) len;
+                            System.arraycopy(command.getCommandBytes(), 0, commandBytes, 2, len);
+                            stuffedLength = Csafe.getStuffedLength(commandBytes);
+                            customCommandLengthPos = 1;
+                            buffer.put(commandBytes);
+                            bufferStuffedLength = stuffedLength;
+                        } else {
+                            // Combine commands.
+                            Log.d("Batch", "    * custom command length changed from " + prevCustomLen
+                                    + " to " + (prevCustomLen + commandBytes.length));
+                            byte len = (byte) (prevCustomLen + commandBytes.length);
+                            buffer.put(customCommandLengthPos, len);
+                            buffer.put(commandBytes);
+                            bufferStuffedLength += stuffedLength;
+                        }
+                    }
+                }
+            }
+            lastCommand = command;
+        }
+        if (buffer.position() != 0) {
+            int curLen = buffer.position();
+            buffer.rewind();
+            byte[] bytes = new byte[curLen];
+            buffer.get(bytes);
+            batchCommands.add(bytes);
+            Log.d("Batch", "    * left over buffer: " + Objects.toString(bytes));
+        }
+
+        for (int i = 0, size = batchCommands.size(); i < size; ++i) {
+            byte[] bytes = batchCommands.get(i);
+            Log.d("Batch", i + ". " + Objects.toString(bytes));
+        }
+        return DataHolder.empty(Concept2StatusCodes.INTERNAL_ERROR);
+    }
+
+    public DataHolder executeCommandBatch(Context context, long id) {
         return DataHolder.empty(Concept2StatusCodes.INTERNAL_ERROR);
     }
 

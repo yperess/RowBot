@@ -28,6 +28,19 @@ public class Objects {
         return Arrays.hashCode(objects);
     }
 
+    public static String toString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder("[");
+        if (bytes != null && bytes.length != 0) {
+            for (int i = 0; i < bytes.length; ++i) {
+                if (i != 0) {
+                    sb.append(", ");
+                }
+                sb.append(String.format("0x%02x", bytes[i]));
+            }
+        }
+        return sb.append("]").toString();
+    }
+
     /**
      * Build a string to represent an object using the following format:
      * (var_name0 = value, var_name1 = value, ...)

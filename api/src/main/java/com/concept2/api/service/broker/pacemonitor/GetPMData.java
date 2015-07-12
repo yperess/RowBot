@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.common.Constants;
+import com.concept2.api.pacemonitor.internal.CommandImpl;
 import com.concept2.api.utils.Objects;
 import com.concept2.api.utils.Preconditions;
 
@@ -57,7 +58,7 @@ public final class GetPMData {
     private GetPMData.DataResult getPMData() {
         byte[] bytes;
         try {
-            bytes = mEngine.getPMData(mReportId, getCommandBytes());
+            bytes = mEngine.getPMData(getCommandBytes());
         } catch (Engine.Concept2EngineConnectionException e) {
             Log.e(TAG, "Pace monitor connection error", e);
             return new GetPMData.DataResult(Concept2StatusCodes.PACE_MONITOR_NOT_FOUND);
@@ -92,6 +93,37 @@ public final class GetPMData {
             return new GetPMData.DataResult(Concept2StatusCodes.PACE_MONITOR_DATA_ERROR);
         }
         return dataResult;
+    }
+
+    public static DataResult executeCommand(Context context, Engine engine, byte[] command) {
+        byte[] bytes;
+        try {
+            if (!engine.isConnected()) {
+                engine.start(context);
+            }
+            bytes = engine.getPMData(command);
+        } catch (Csafe.DestuffResult.DestuffException|Csafe.CsafeExtractException e) {
+            Log.e(TAG, "Pace monitor communication error", e);
+            return new GetPMData.DataResult(Concept2StatusCodes.PACE_MONITOR_COMMUNICATION_ERROR);
+        } catch (Engine.Concept2EngineConnectionException e) {
+            Log.e(TAG, "Pace monitor connection error", e);
+            return new GetPMData.DataResult(Concept2StatusCodes.PACE_MONITOR_NOT_FOUND);
+        }
+        if (bytes == null || bytes.length == 0) {
+            return new GetPMData.DataResult(Concept2StatusCodes.INTERNAL_ERROR);
+        }
+
+        return new GetPMData.DataResult(bytes);
+    }
+
+    public static byte[] convertCommandBytes(byte[] bytes) {
+        byte checkSum = Csafe.checksum(bytes);
+        byte[] stuffed = Csafe.stuff(bytes);
+        if (stuffed == null) {
+            return null;
+        }
+        bytes = Csafe.create(stuffed, stuffed.length, checkSum);
+        return bytes;
     }
 
     public static final class DataResult {
