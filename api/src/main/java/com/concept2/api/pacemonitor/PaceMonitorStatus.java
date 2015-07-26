@@ -1,15 +1,30 @@
 package com.concept2.api.pacemonitor;
 
-import android.os.Parcelable;
-
+/**
+ * The pace monitor's status. This value is returned with each command that was executed.
+ */
 public interface PaceMonitorStatus {
 
+    /**
+     * @return The pace monitor frame count. This value should alternate between 0 and 1 for each
+     *         command that executes.
+     */
     int getFrameCount();
 
+    /**
+     * @return The previous frame status detailing the result of the previous frame as one of
+     *         {@link PrevFrameStatus}.
+     */
     int getPrevFrameStatus();
 
+    /**
+     * @return The pace monitor's status as one of {@link SlaveStatus}.
+     */
     int getSlaveStatus();
 
+    /**
+     * The previous frame's status.
+     */
     interface PrevFrameStatus {
         /**
          * Invalid status, something went wrong.
@@ -44,6 +59,9 @@ public interface PaceMonitorStatus {
         int NOT_READY = 3;
     }
 
+    /**
+     * The slave's status after executing a command.
+     */
     interface SlaveStatus {
         /**
          * Invalid status, something went wrong.

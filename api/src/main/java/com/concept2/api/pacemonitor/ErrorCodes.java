@@ -107,6 +107,7 @@ public final class ErrorCodes {
     public static final int APHEADER_INVALIDAPPHDR_ERR = createErrorCode(83,
             "Application information header structure stored in Flash memory does not pass its"
                     + " integrity check");
+    // TODO Finish adding error codes.
 
     private static final SparseArray<String> sErrorStrings = new SparseArray<>();
     private static int createErrorCode(int errorCode, String errorString) {

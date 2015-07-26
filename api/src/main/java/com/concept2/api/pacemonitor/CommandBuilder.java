@@ -1,10 +1,7 @@
 package com.concept2.api.pacemonitor;
 
 import android.content.ContentValues;
-import android.os.Bundle;
-import android.util.Log;
 
-import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.ResultCallback;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.PaceMonitor.GetCaloriesResult;
@@ -52,6 +49,7 @@ import com.concept2.api.pacemonitor.internal.GetWorkoutStateResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutTypeResultRef;
 import com.concept2.api.pacemonitor.internal.PaceMonitorImpl;
 import com.concept2.api.pacemonitor.internal.PaceMonitorResultRef;
+import com.concept2.api.pacemonitor.internal.contracts.CommandContract;
 import com.concept2.api.pacemonitor.internal.contracts.PaceMonitorColumnContract;
 import com.concept2.api.service.broker.pacemonitor.util.CsafeUnitUtil;
 import com.concept2.api.utils.Objects;
@@ -60,66 +58,6 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
 public class CommandBuilder {
-
-    private static final String ARG_NUM_SAMPLES = "numSamples";
-    private static final String ARG_HOURS = "hours";
-    private static final String ARG_MINUTES = "minutes";
-    private static final String ARG_SECONDS = "seconds";
-    private static final String ARG_YEAR = "year";
-    private static final String ARG_MONTH = "month";
-    private static final String ARG_DAY = "day";
-    private static final String ARG_METERS = "meters";
-    private static final String ARG_CALORIES = "calories";
-    private static final String ARG_WATTS = "watts";
-    private static final String ARG_STORED_WORKOUT_NUMBER = "workoutNumber";
-    private static final String ARG_SCREEN_ERROR_MODE = "screenErrorMode";
-
-    private static final byte CMD_GET_STATUS = (byte) 0x80;
-    private static final byte CMD_GO_RESET = (byte) 0x81;
-    private static final byte CMD_GO_IDLE = (byte) 0x82;
-    private static final byte CMD_GO_HAVE_ID = (byte) 0x83;
-    private static final byte CMD_GO_IN_USE = (byte) 0x85;
-    private static final byte CMD_GO_FINISHED = (byte) 0x86;
-    private static final byte CMD_GO_READY = (byte) 0x87;
-    private static final byte CMD_GO_BAD_ID = (byte) 0x88;
-    private static final byte CMD_GET_ODOMETER = (byte) 0x9B;
-    private static final byte CMD_GET_WORK_TIME = (byte) 0xA0;
-    private static final byte CMD_GET_WORK_DISTANCE = (byte) 0xA1;
-    private static final byte CMD_GET_WORK_CALORIES = (byte) 0xA3;
-    private static final byte CMD_GET_STORED_WORKOUT_NUMBER = (byte) 0xA4;
-    private static final byte CMD_GET_PACE = (byte) 0xA6;
-    private static final byte CMD_GET_STROKE_RATE = (byte) 0xA7;
-    private static final byte CMD_GET_USER_INFO = (byte) 0xAB;
-    private static final byte CMD_GET_HEART_RATE = (byte) 0xB0;
-    private static final byte CMD_GET_POWER = (byte) 0xB4;
-
-    // Long commands.
-    private static final byte CMD_SET_TIME = (byte) 0x11;
-    private static final byte CMD_SET_DATE = (byte) 0x12;
-    private static final byte CMD_SET_TIMEOUT = (byte) 0x13;
-    private static final byte CMD_SET_GOAL_TIME = (byte) 0x20;
-    private static final byte CMD_SET_GOAL_DISTANCE = (byte) 0x21;
-    private static final byte CMD_SET_GOAL_CALORIES = (byte) 0x23;
-    private static final byte CMD_SET_STORED_WORKOUT_NUMBER = (byte) 0x24;
-    private static final byte CMD_SET_GOAL_POWER = (byte) 0x34;
-
-    // Custom commands.
-    private static final byte USR_CONFIG1 = (byte) 0x1A;
-
-    private static final byte CMD_GET_WORKOUT_TYPE = (byte) 0x89;
-    private static final byte CMD_GET_DRAG_FACTOR = (byte) 0xC1;
-    private static final byte CMD_GET_STROKE_STATE = (byte) 0xBF;
-    private static final byte CMD_GET_HIGH_RES_WORK_TIME = (byte) 0xA0;
-    private static final byte CMD_GET_HIGH_RES_WORK_DISTANCE = (byte) 0xA3;
-    private static final byte CMD_GET_ERROR_VALUE = (byte) 0xC9;
-    private static final byte CMD_GET_WORKOUT_STATE = (byte) 0x8D;
-    private static final byte CMD_GET_WORKOUT_INTERVAL_COUNT = (byte) 0x9F;
-    private static final byte CMD_GET_INTERVAL_TYPE = (byte) 0x8E;
-    private static final byte CMD_GET_REST_TIME = (byte) 0xCF;
-    private static final byte CMD_SET_SPLIT_DURATION = (byte) 0x05;
-    private static final byte CMD_GET_FORCE_PLOT = (byte) 0x6B;
-    private static final byte CMD_GET_HEART_RATE_PLOT = (byte) 0x6C;
-    private static final byte CMD_SET_SCREEN_ERROR_MODE = (byte) 0x27;
 
     public interface Command<R extends PaceMonitorResult> {
 
@@ -134,7 +72,7 @@ public class CommandBuilder {
      */
     public static Command<PaceMonitorResult> getStatusCmd(
             ResultCallback<PaceMonitorResult> callback) {
-        return new CommandImpl(CMD_GET_STATUS, callback) {
+        return new CommandImpl(CommandContract.CMD_GET_STATUS, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -150,10 +88,10 @@ public class CommandBuilder {
      */
     public static Command<GetDistanceResult> getOdometerCmd(
             ResultCallback<GetDistanceResult> callback) {
-        return new CommandImpl<GetDistanceResult>(CMD_GET_ODOMETER, callback) {
+        return new CommandImpl<GetDistanceResult>(CommandContract.CMD_GET_ODOMETER, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 7 || buffer.get() != CMD_GET_ODOMETER
+                if (buffer.remaining() < 7 || buffer.get() != CommandContract.CMD_GET_ODOMETER
                         || buffer.get() != 0x05) {
                     return null;
                 }
@@ -187,10 +125,10 @@ public class CommandBuilder {
      */
     public static Command<GetTimeResult> getWorkTimeCmd(
             ResultCallback<GetTimeResult> callback) {
-        return new CommandImpl<GetTimeResult>(CMD_GET_WORK_TIME, callback) {
+        return new CommandImpl<GetTimeResult>(CommandContract.CMD_GET_WORK_TIME, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != CMD_GET_WORK_TIME
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.CMD_GET_WORK_TIME
                         || buffer.get() != 0x03) {
                     return null;
                 }
@@ -220,10 +158,10 @@ public class CommandBuilder {
      */
     public static Command<GetDistanceResult> getWorkDistanceCmd(
             ResultCallback<GetDistanceResult> callback) {
-        return new CommandImpl<GetDistanceResult>(CMD_GET_WORK_DISTANCE, callback) {
+        return new CommandImpl<GetDistanceResult>(CommandContract.CMD_GET_WORK_DISTANCE, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != CMD_GET_WORK_DISTANCE
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.CMD_GET_WORK_DISTANCE
                         || buffer.get() != 0x03) {
                     return null;
                 }
@@ -255,10 +193,10 @@ public class CommandBuilder {
      */
     public static Command<GetCaloriesResult> getWorkCaloriesCmd(
             ResultCallback<GetCaloriesResult> callback) {
-        return new CommandImpl<GetCaloriesResult>(CMD_GET_WORK_CALORIES, callback) {
+        return new CommandImpl<GetCaloriesResult>(CommandContract.CMD_GET_WORK_CALORIES, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 4 || buffer.get() != CMD_GET_WORK_CALORIES
+                if (buffer.remaining() < 4 || buffer.get() != CommandContract.CMD_GET_WORK_CALORIES
                         || buffer.get() != 0x02) {
                     return null;
                 }
@@ -286,10 +224,10 @@ public class CommandBuilder {
      */
     public static Command<GetWorkoutNumberResult> getStoredWorkoutNumberCmd(
             ResultCallback<GetWorkoutNumberResult> callback) {
-        return new CommandImpl<GetWorkoutNumberResult>(CMD_GET_STORED_WORKOUT_NUMBER, callback) {
+        return new CommandImpl<GetWorkoutNumberResult>(CommandContract.CMD_GET_STORED_WORKOUT_NUMBER, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 3 || buffer.get() != CMD_GET_STORED_WORKOUT_NUMBER
+                if (buffer.remaining() < 3 || buffer.get() != CommandContract.CMD_GET_STORED_WORKOUT_NUMBER
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -313,10 +251,10 @@ public class CommandBuilder {
      */
     public static Command<GetPaceResult> getPaceCmd(
             ResultCallback<GetPaceResult> callback) {
-        return new CommandImpl<GetPaceResult>(CMD_GET_PACE, callback) {
+        return new CommandImpl<GetPaceResult>(CommandContract.CMD_GET_PACE, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != CMD_GET_PACE
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.CMD_GET_PACE
                         || buffer.get() != 0x03) {
                     return null;
                 }
@@ -349,10 +287,10 @@ public class CommandBuilder {
      */
     public static Command<GetStrokeRateResult> getStrokeRateCmd(
             ResultCallback<GetStrokeRateResult> callback) {
-        return new CommandImpl<GetStrokeRateResult>(CMD_GET_STROKE_RATE, callback) {
+        return new CommandImpl<GetStrokeRateResult>(CommandContract.CMD_GET_STROKE_RATE, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != CMD_GET_STROKE_RATE
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.CMD_GET_STROKE_RATE
                         || buffer.get() != 0x03) {
                     return null;
                 }
@@ -384,10 +322,10 @@ public class CommandBuilder {
      */
     public static Command<GetUserInfoResult> getUserInfoCmd(
             ResultCallback<GetUserInfoResult> callback) {
-        return new CommandImpl<GetUserInfoResult>(CMD_GET_USER_INFO, callback) {
+        return new CommandImpl<GetUserInfoResult>(CommandContract.CMD_GET_USER_INFO, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 7 || buffer.get() != CMD_GET_USER_INFO
+                if (buffer.remaining() < 7 || buffer.get() != CommandContract.CMD_GET_USER_INFO
                         || buffer.get() != 0x05) {
                     return null;
                 }
@@ -423,10 +361,10 @@ public class CommandBuilder {
      */
     public static Command<GetHeartRateResult> getHeartRateCmd(
             ResultCallback<GetHeartRateResult> callback) {
-        return new CommandImpl<GetHeartRateResult>(CMD_GET_HEART_RATE, callback) {
+        return new CommandImpl<GetHeartRateResult>(CommandContract.CMD_GET_HEART_RATE, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 3 || buffer.get() != CMD_GET_HEART_RATE
+                if (buffer.remaining() < 3 || buffer.get() != CommandContract.CMD_GET_HEART_RATE
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -452,10 +390,10 @@ public class CommandBuilder {
      */
     public static Command<GetPowerResult> getPowerCmd(
             ResultCallback<GetPowerResult> callback) {
-        return new CommandImpl<GetPowerResult>(CMD_GET_POWER, callback) {
+        return new CommandImpl<GetPowerResult>(CommandContract.CMD_GET_POWER, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != CMD_GET_POWER
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.CMD_GET_POWER
                         || buffer.get() != 0x03) {
                     return null;
                 }
@@ -486,12 +424,12 @@ public class CommandBuilder {
      */
     public static Command<GetWorkoutTypeResult> getWorkoutTypeCmd(
             ResultCallback<GetWorkoutTypeResult> callback) {
-        return new CommandImpl<GetWorkoutTypeResult>(CMD_GET_WORKOUT_TYPE,
+        return new CommandImpl<GetWorkoutTypeResult>(CommandContract.CMD_GET_WORKOUT_TYPE,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x03 || buffer.get() != CMD_GET_WORKOUT_TYPE
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x03 || buffer.get() != CommandContract.CMD_GET_WORKOUT_TYPE
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -517,12 +455,12 @@ public class CommandBuilder {
      */
     public static Command<GetDragFactorResult> getDragFactorCmd(
             ResultCallback<GetDragFactorResult> callback) {
-        return new CommandImpl<GetDragFactorResult>(CMD_GET_DRAG_FACTOR, true /* isCustomCommand */,
+        return new CommandImpl<GetDragFactorResult>(CommandContract.CMD_GET_DRAG_FACTOR, true /* isCustomCommand */,
                 callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x03 || buffer.get() != CMD_GET_DRAG_FACTOR
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x03 || buffer.get() != CommandContract.CMD_GET_DRAG_FACTOR
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -548,12 +486,12 @@ public class CommandBuilder {
      */
     public static Command<GetStrokeStateResult> getStrokeStateCmd(
             ResultCallback<GetStrokeStateResult> callback) {
-        return new CommandImpl<GetStrokeStateResult>(CMD_GET_STROKE_STATE,
+        return new CommandImpl<GetStrokeStateResult>(CommandContract.CMD_GET_STROKE_STATE,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x03 || buffer.get() != CMD_GET_STROKE_STATE
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x03 || buffer.get() != CommandContract.CMD_GET_STROKE_STATE
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -579,12 +517,12 @@ public class CommandBuilder {
      */
     public static Command<GetHighResWorkTimeResult> getHighResolutionWorkTimeCmd(
             ResultCallback<GetHighResWorkTimeResult> callback) {
-        return new CommandImpl<GetHighResWorkTimeResult>(CMD_GET_HIGH_RES_WORK_TIME,
+        return new CommandImpl<GetHighResWorkTimeResult>(CommandContract.CMD_GET_HIGH_RES_WORK_TIME,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 8 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x07 || buffer.get() != CMD_GET_HIGH_RES_WORK_TIME
+                if (buffer.remaining() < 8 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x07 || buffer.get() != CommandContract.CMD_GET_HIGH_RES_WORK_TIME
                         || buffer.get() != 0x05) {
                     return null;
                 }
@@ -610,12 +548,13 @@ public class CommandBuilder {
      */
     public static Command<GetHighResWorkDistanceResult> getHighResolutionWorkDistanceCmd(
             ResultCallback<GetHighResWorkDistanceResult> callback) {
-        return new CommandImpl<GetHighResWorkDistanceResult>(CMD_GET_HIGH_RES_WORK_DISTANCE,
+        return new CommandImpl<GetHighResWorkDistanceResult>(
+                CommandContract.CMD_GET_HIGH_RES_WORK_DISTANCE,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 8 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x07 || buffer.get() != CMD_GET_HIGH_RES_WORK_DISTANCE
+                if (buffer.remaining() < 8 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x07 || buffer.get() != CommandContract.CMD_GET_HIGH_RES_WORK_DISTANCE
                         || buffer.get() != 0x05) {
                     return null;
                 }
@@ -643,12 +582,12 @@ public class CommandBuilder {
     // TODO enumerate error values.
     public static Command<GetErrorValueResult> getErrorValueCmd(
             ResultCallback<GetErrorValueResult> callback) {
-        return new CommandImpl<GetErrorValueResult>(CMD_GET_ERROR_VALUE, true /* isCustomCommand */,
+        return new CommandImpl<GetErrorValueResult>(CommandContract.CMD_GET_ERROR_VALUE, true /* isCustomCommand */,
                 callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x04 || buffer.get() != CMD_GET_ERROR_VALUE
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x04 || buffer.get() != CommandContract.CMD_GET_ERROR_VALUE
                         || buffer.get() != 0x02) {
                     return null;
                 }
@@ -674,12 +613,12 @@ public class CommandBuilder {
      */
     public static Command<GetWorkoutStateResult> getWorkoutStateCmd(
             ResultCallback<GetWorkoutStateResult> callback) {
-        return new CommandImpl<GetWorkoutStateResult>(CMD_GET_WORKOUT_STATE,
+        return new CommandImpl<GetWorkoutStateResult>(CommandContract.CMD_GET_WORKOUT_STATE,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 4 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x03 || buffer.get() != CMD_GET_WORKOUT_STATE
+                if (buffer.remaining() < 4 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x03 || buffer.get() != CommandContract.CMD_GET_WORKOUT_STATE
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -705,12 +644,13 @@ public class CommandBuilder {
      */
     public static Command<GetWorkoutIntervalCountResult> getWorkoutIntervalCountCmd(
             ResultCallback<GetWorkoutIntervalCountResult> callback) {
-        return new CommandImpl<GetWorkoutIntervalCountResult>(CMD_GET_WORKOUT_INTERVAL_COUNT,
+        return new CommandImpl<GetWorkoutIntervalCountResult>(
+                CommandContract.CMD_GET_WORKOUT_INTERVAL_COUNT,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 4 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x03 || buffer.get() != CMD_GET_WORKOUT_INTERVAL_COUNT
+                if (buffer.remaining() < 4 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x03 || buffer.get() != CommandContract.CMD_GET_WORKOUT_INTERVAL_COUNT
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -736,12 +676,12 @@ public class CommandBuilder {
      */
     public static Command<GetIntervalTypeResult> getIntervalTypeCmd(
             ResultCallback<GetIntervalTypeResult> callback) {
-        return new CommandImpl<GetIntervalTypeResult>(CMD_GET_INTERVAL_TYPE,
+        return new CommandImpl<GetIntervalTypeResult>(CommandContract.CMD_GET_INTERVAL_TYPE,
                 true /* isCustomCommand */, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 4 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x03 || buffer.get() != CMD_GET_INTERVAL_TYPE
+                if (buffer.remaining() < 4 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x03 || buffer.get() != CommandContract.CMD_GET_INTERVAL_TYPE
                         || buffer.get() != 0x01) {
                     return null;
                 }
@@ -767,12 +707,12 @@ public class CommandBuilder {
      */
     public static Command<GetRestTimeResult> getRestTimeCmd(
             ResultCallback<GetRestTimeResult> callback) {
-        return new CommandImpl<GetRestTimeResult>(CMD_GET_REST_TIME, true /* isCustomCommand */,
+        return new CommandImpl<GetRestTimeResult>(CommandContract.CMD_GET_REST_TIME, true /* isCustomCommand */,
                 callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 5 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x04 || buffer.get() != CMD_GET_REST_TIME
+                if (buffer.remaining() < 5 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x04 || buffer.get() != CommandContract.CMD_GET_REST_TIME
                         || buffer.get() != 0x02) {
                     return null;
                 }
@@ -804,12 +744,12 @@ public class CommandBuilder {
             numSamples = 16;
         }
         byte[] data = new byte[] { (byte) (numSamples * 2) };
-        return new CommandImpl<GetForcePlotResult>(CMD_GET_FORCE_PLOT, true /* isCustomCommand */,
+        return new CommandImpl<GetForcePlotResult>(CommandContract.CMD_GET_FORCE_PLOT, true /* isCustomCommand */,
                 data, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 36 || buffer.get() != USR_CONFIG1
-                        || buffer.get() != 0x23 || buffer.get() != CMD_GET_FORCE_PLOT
+                if (buffer.remaining() < 36 || buffer.get() != CommandContract.USR_CONFIG1
+                        || buffer.get() != 0x23 || buffer.get() != CommandContract.CMD_GET_FORCE_PLOT
                         || buffer.get() != 0x21) {
                     return null;
                 }
@@ -843,18 +783,18 @@ public class CommandBuilder {
             numSamples = 16;
         }
         byte[] data = new byte[] { (byte) (numSamples * 2) };
-        return new CommandImpl<GetHeartRatePlotResult>(CMD_GET_HEART_RATE_PLOT,
+        return new CommandImpl<GetHeartRatePlotResult>(CommandContract.CMD_GET_HEART_RATE_PLOT,
                 true /* isCustomCommand */, data, callback) {
             @Override
             public ContentValues handleResult(PaceMonitorStatus status, ByteBuffer buffer) {
-                if (buffer.remaining() < 2 || buffer.get() != USR_CONFIG1) {
+                if (buffer.remaining() < 2 || buffer.get() != CommandContract.USR_CONFIG1) {
                     return null;
                 }
                 int responseLength = buffer.get();
                 if (responseLength == 0) {
                     return super.handleResult(status, buffer);
                 }
-                if (responseLength != 0x23 || buffer.get() != CMD_GET_HEART_RATE_PLOT
+                if (responseLength != 0x23 || buffer.get() != CommandContract.CMD_GET_HEART_RATE_PLOT
                         || buffer.get() != 0x21) {
                     return null;
                 }
@@ -888,7 +828,7 @@ public class CommandBuilder {
             int hours, int minutes, int seconds) {
         PaceMonitorImpl.validateTime(hours, minutes, seconds);
         byte[] data = new byte[] { toByte(hours), toByte(minutes), toByte(seconds) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_TIME, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_TIME, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -910,7 +850,7 @@ public class CommandBuilder {
         PaceMonitorImpl.validateDate(year, month, day);
         year -= 1900;
         byte[] data = new byte[] { toByte(year), toByte(month), toByte(day) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_DATE, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_DATE, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -929,7 +869,7 @@ public class CommandBuilder {
             ResultCallback<PaceMonitorResult> callback, int seconds) {
         PaceMonitorImpl.validateTimeout(seconds);
         byte[] data = new byte[] { toByte(seconds) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_TIMEOUT, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_TIMEOUT, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -954,7 +894,7 @@ public class CommandBuilder {
         seconds -= TimeUnit.MINUTES.toSeconds(minutesByte);
         byte secondsByte = toByte(seconds);
         byte[] data = new byte[] { hoursByte, minutesByte, secondsByte };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_GOAL_TIME, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_GOAL_TIME, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -974,7 +914,7 @@ public class CommandBuilder {
             ResultCallback<PaceMonitorResult> callback, int meters) {
         PaceMonitorImpl.validateGoalDistance(meters);
         byte[] data = new byte[] { getByte(meters, 0), getByte(meters, 1), CsafeUnitUtil.METER };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_GOAL_DISTANCE, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_GOAL_DISTANCE, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -993,7 +933,7 @@ public class CommandBuilder {
             ResultCallback<PaceMonitorResult> callback, int calories) {
         PaceMonitorImpl.validateGoalCalories(calories);
         byte[] data = new byte[] { getByte(calories, 0), getByte(calories, 1) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_GOAL_CALORIES, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_GOAL_CALORIES, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -1012,7 +952,7 @@ public class CommandBuilder {
             ResultCallback<PaceMonitorResult> callback, int watts) {
         PaceMonitorImpl.validateGoalPower(watts);
         byte[] data = new byte[] { getByte(watts, 0), getByte(watts, 1), CsafeUnitUtil.WATTS };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_GOAL_POWER, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_GOAL_POWER, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -1037,7 +977,7 @@ public class CommandBuilder {
             ResultCallback<PaceMonitorResult> callback, int workoutNumber) {
         PaceMonitorImpl.validateWorkoutNumber(workoutNumber);
         byte[] data = new byte[] { toByte(workoutNumber), 0x00 };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_STORED_WORKOUT_NUMBER, data, callback) {
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_STORED_WORKOUT_NUMBER, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
                 return new PaceMonitorResultRef(data, row);
@@ -1059,7 +999,7 @@ public class CommandBuilder {
         int duration = (int) (seconds * 100);
         byte[] data = new byte[] { 0x00 /* time */, getByte(duration, 0),
                 getByte(duration, 1), getByte(duration, 2), getByte(duration, 3) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_SPLIT_DURATION,
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_SPLIT_DURATION,
                 true /* isCustomCommand */, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
@@ -1081,7 +1021,7 @@ public class CommandBuilder {
         PaceMonitorImpl.validateSplitDistance(meters);
         byte[] data = new byte[] { (byte) 0x80 /* distance */, getByte(meters, 0),
                 getByte(meters, 1), getByte(meters, 2), getByte(meters, 3) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_SPLIT_DURATION,
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_SPLIT_DURATION,
                 true /* isCustomCommand */, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
@@ -1100,7 +1040,7 @@ public class CommandBuilder {
     public static Command<PaceMonitorResult> setScreenErrorModeCmd(
             ResultCallback<PaceMonitorResult> callback, boolean enabled) {
         byte[] data = new byte[] { (byte) (enabled ? 0x01 : 0x00) };
-        return new CommandImpl<PaceMonitorResult>(CMD_SET_SCREEN_ERROR_MODE,
+        return new CommandImpl<PaceMonitorResult>(CommandContract.CMD_SET_SCREEN_ERROR_MODE,
                 true /* isCustomCommand */, data, callback) {
             @Override
             public PaceMonitorResult getResult(DataHolder data, int row) {
@@ -1123,25 +1063,25 @@ public class CommandBuilder {
         byte command;
         switch (state) {
             case PaceMonitor.PaceMonitorState.RESET:
-                command = CMD_GO_RESET;
+                command = CommandContract.CMD_GO_RESET;
                 break;
             case PaceMonitor.PaceMonitorState.IDLE:
-                command = CMD_GO_IDLE;
+                command = CommandContract.CMD_GO_IDLE;
                 break;
             case PaceMonitor.PaceMonitorState.HAVE_ID:
-                command = CMD_GO_HAVE_ID;
+                command = CommandContract.CMD_GO_HAVE_ID;
                 break;
             case PaceMonitor.PaceMonitorState.IN_USE:
-                command = CMD_GO_IN_USE;
+                command = CommandContract.CMD_GO_IN_USE;
                 break;
             case PaceMonitor.PaceMonitorState.FINISHED:
-                command = CMD_GO_FINISHED;
+                command = CommandContract.CMD_GO_FINISHED;
                 break;
             case PaceMonitor.PaceMonitorState.READY:
-                command = CMD_GO_READY;
+                command = CommandContract.CMD_GO_READY;
                 break;
             case PaceMonitor.PaceMonitorState.BAD_ID:
-                command = CMD_GO_BAD_ID;
+                command = CommandContract.CMD_GO_BAD_ID;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid pace monitor state " + state);

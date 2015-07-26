@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.concept2.api.PendingResult;
 import com.concept2.api.Result;
+import com.concept2.api.ResultCallback;
 
 import java.util.List;
 
@@ -13,7 +14,8 @@ import java.util.List;
 public interface PaceMonitor {
 
     /**
-     * States of the pace monitor.
+     * States of the pace monitor reported by any {@link PaceMonitorResult}. Or set via
+     * {@link CommandBuilder#setPaceMonitorState(ResultCallback, int)}
      */
     interface PaceMonitorState {
         int RESET = 0;
@@ -27,7 +29,7 @@ public interface PaceMonitor {
 
     /**
      * Gender values reported by {@link GetUserInfoResult}.
-     * @see #getUserInfo(Context)
+     * @see CommandBuilder#getUserInfoCmd(ResultCallback)
      */
     interface Gender {
         /** No gender specified. */
@@ -38,6 +40,10 @@ public interface PaceMonitor {
         int FEMALE = 2;
     }
 
+    /**
+     * The workout types reported by {@link GetWorkoutTypeResult}.
+     * @see CommandBuilder#getWorkoutTypeCmd(ResultCallback)
+     */
     interface WorkoutType {
         int INVALID = Integer.MIN_VALUE;
         int JUST_ROW_NO_SPLITS = 0;
@@ -51,6 +57,10 @@ public interface PaceMonitor {
         int VARIABLE_INTERVAL = 8;
     }
 
+    /**
+     * The current workout type reported by {@link GetWorkoutStateResult}.
+     * @see CommandBuilder#getWorkoutStateCmd(ResultCallback)
+     */
     interface WorkoutState {
         int INVALID = Integer.MIN_VALUE;
         int WAITING = 0;
@@ -69,6 +79,10 @@ public interface PaceMonitor {
         int WORKOUT_REARM = 13;
     }
 
+    /**
+     * The current interval type reported by {@link GetIntervalTypeResult}.
+     * @see CommandBuilder#getIntervalTypeCmd(ResultCallback)
+     */
     interface IntervalType {
         int INVALID = Integer.MIN_VALUE;
         int TIME = 0;
@@ -76,6 +90,10 @@ public interface PaceMonitor {
         int REST = 2;
     }
 
+    /**
+     * The current stroke state reported by {@link GetStrokeStateResult}.
+     * @see CommandBuilder#getStrokeStateCmd(ResultCallback)
+     */
     interface StrokeState {
         int INVALID = Integer.MIN_VALUE;
         int WAITING_FOR_MIN_SPEED = 0;
@@ -201,10 +219,20 @@ public interface PaceMonitor {
     interface BatchResult extends Result {
         List<PaceMonitorResult> getResults();
     }
+
     //////////////////////////////
     // Beginning of API
     //////////////////////////////
 
+    /**
+     * Execute a single command created by {@link CommandBuilder}. If the command's callback object
+     * was set it will be used in the returned {@link PendingResult} by default.
+     *
+     * @param context The calling context.
+     * @param command The command to execute.
+     * @param <R> The return result type matching the executing command.
+     * @return {@link PendingResult} that will report the result when ready.
+     */
     <R extends PaceMonitorResult> PendingResult<R> executeCommand(Context context,
             CommandBuilder.Command<R> command);
     /**
@@ -219,5 +247,13 @@ public interface PaceMonitor {
     PendingResult<CreateBatchCommandResult> createCommandBatch(Context context,
             List<CommandBuilder.Command> commandList);
 
+    /**
+     * Executes a command batch matching the provided id created by
+     * {@link #createCommandBatch(Context, List)}.
+     *
+     * @param context The calling context.
+     * @param id The id of the command batch.
+     * @return {@link PendingResult} that will report the result when ready.
+     */
     PendingResult<BatchResult> executeCommandBatch(Context context, int id);
 }

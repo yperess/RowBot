@@ -174,6 +174,8 @@ public class Concept2AsyncTaskService {
                 CommandBatch batch = CommandBatchCache.getInstance().findCommandBatch(id);
                 if (batch == null) {
                     Log.e(TAG, "Failed to find command batch");
+                    pendingResult.setResult(
+                            new BatchResultRef(Concept2StatusCodes.COMMAND_NOT_FOUND));
                 }
                 int row = 0;
                 ArrayList<PaceMonitorResult> results = new ArrayList<>();
