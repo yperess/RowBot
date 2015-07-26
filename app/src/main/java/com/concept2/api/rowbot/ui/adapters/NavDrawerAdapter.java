@@ -4,29 +4,33 @@ import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.concept2.api.rowbot.MainActivity;
 import com.concept2.api.rowbot.R;
 import com.concept2.api.rowbot.ui.fragments.DebugFragment;
 import com.concept2.api.rowbot.ui.fragments.HelpAndFeedbackFragment;
 import com.concept2.api.rowbot.ui.fragments.SettingsFragment;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
-public class NavDrawerAdapter implements ListAdapter {
+public class NavDrawerAdapter extends BaseAdapter implements ListAdapter {
 
     private static final String TAG = "NavDrawerAdapter";
     private static final boolean DBG = false;
 
-    private FragmentActivity mContext;
+    private MainActivity mContext;
     private DataSetObserver mObserver;
     private ArrayList<LineItem> mItems;
     private int mSelectedIndex = -1;
@@ -35,54 +39,66 @@ public class NavDrawerAdapter implements ListAdapter {
     private final int mDefaultColor;
     private final int mSelectedBackgroundColor;
 
-    public NavDrawerAdapter(FragmentActivity context) {
+    public NavDrawerAdapter(MainActivity context) {
         mContext = context;
         mItems = new ArrayList<>();
         mItems.add(new LineItem(R.string.rowbot_nav_drawer_home, 0 /* icon */, false));
         mItems.add(new LineItem(R.string.rowbot_nav_drawer_settings, R.mipmap.ic_action_settings, true));
         mItems.add(new LineItem(R.string.rowbot_nav_drawer_help_and_feedback, R.mipmap.ic_action_help,
                 false));
-        setSelected(0);
 
         Resources res = context.getResources();
         mSelectedColor = res.getColor(R.color.rowbot_theme_primary);
         mDefaultColor = res.getColor(android.R.color.primary_text_light);
         mSelectedBackgroundColor = res.getColor(R.color.rowbot_nav_selected_background);
+
+        mContext.getSupportFragmentManager().beginTransaction()
+                .add(R.id.content_frame, new DebugFragment(), "DEBUG")
+                .commit();
     }
 
     public void onBackPressed() {
-        setSelected(0);
+        notifyDataSetChanged();
+    }
+
+    public void onNewMainFragment(Class fragmentClass) {
+        if (fragmentClass.equals(DebugFragment.class)) {
+            mSelectedIndex = 0;
+        } else if (fragmentClass.equals(SettingsFragment.class)) {
+            mSelectedIndex = 1;
+        } else if (fragmentClass.equals(HelpAndFeedbackFragment.class)) {
+            mSelectedIndex = 2;
+        } else {
+            return;
+        }
+
+        if (mObserver != null) {
+            mObserver.onChanged();
+        }
     }
 
     public void setSelected(int index) {
         if (mSelectedIndex == index) return;
 
         FragmentManager fragmentManager = mContext.getSupportFragmentManager();
-        resetBackStack();
+        fragmentManager.popBackStackImmediate();
+
+        Fragment fragment;
         switch (index) {
-            case 0:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new DebugFragment())
-                        .addToBackStack("DEBUG")
-                        .commit();
-                break;
             case 1:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new SettingsFragment())
-                        .addToBackStack("SETTINGS")
-                        .commit();
+                fragment = new SettingsFragment();
                 break;
             case 2:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new HelpAndFeedbackFragment())
-                        .addToBackStack("HELP")
-                        .commit();
+                fragment = new HelpAndFeedbackFragment();
                 break;
+            default:
+                fragment = null;
         }
-        Log.d(TAG, "end transaction backstack size: " + fragmentManager.getBackStackEntryCount());
-        mSelectedIndex = index;
-        if (mObserver != null) {
-            mObserver.onChanged();
+        if (fragment != null) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 

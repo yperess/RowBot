@@ -3,6 +3,11 @@ package com.concept2.api.service.broker;
 import android.content.Context;
 
 import com.concept2.api.internal.DataHolder;
+import com.concept2.api.pacemonitor.CommandBuilder;
+import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.internal.CommandImpl;
+
+import java.util.List;
 
 /**
  * Broker for all the data related to Concept2 operations.
@@ -40,13 +45,16 @@ public class DataBroker {
         mPaceMonitorAgent = new PaceMonitorAgent();
     }
 
-    /**
-     * Get the connected Pace Monitor status.
-     *
-     * @param context The calling context.
-     * @return {@link DataHolder} with the requested data or error code.
-     */
-    public DataHolder getPaceMonitorStatus(Context context) {
-        return mPaceMonitorAgent.getPaceMonitorStatus(context);
+    public DataHolder executePaceMonitorCommand(Context context, CommandImpl command) {
+        return mPaceMonitorAgent.executeCommand(context, command);
+    }
+
+    public DataHolder createPaceMonitorCommandBatch(Context context,
+            List<CommandBuilder.Command> commandList) {
+        return mPaceMonitorAgent.createCommandBatch(context, commandList);
+    }
+
+    public DataHolder executePaceMonitorCommandBatch(Context context, int id) {
+        return mPaceMonitorAgent.executeCommandBatch(context, id);
     }
 }

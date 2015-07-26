@@ -1,14 +1,50 @@
 package com.concept2.api.service;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseArray;
 
+import com.concept2.api.Concept2StatusCodes;
+import com.concept2.api.PendingResult;
+import com.concept2.api.Result;
+import com.concept2.api.internal.DataHolder;
 import com.concept2.api.internal.PendingResultImpl;
+import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
+import com.concept2.api.pacemonitor.PaceMonitorResult;
+import com.concept2.api.pacemonitor.internal.BatchResultRef;
+import com.concept2.api.pacemonitor.internal.CommandImpl;
+import com.concept2.api.pacemonitor.internal.CreateCommandBatchResultRef;
+import com.concept2.api.pacemonitor.internal.GetCaloriesResultRef;
+import com.concept2.api.pacemonitor.internal.GetDistanceResultRef;
+import com.concept2.api.pacemonitor.internal.GetDragFactorResultRef;
+import com.concept2.api.pacemonitor.internal.GetErrorValueResultRef;
+import com.concept2.api.pacemonitor.internal.GetForcePlotResultRef;
+import com.concept2.api.pacemonitor.internal.GetHeartRatePlotResultRef;
+import com.concept2.api.pacemonitor.internal.GetHeartRateResultRef;
+import com.concept2.api.pacemonitor.internal.GetHighResWorkDistanceResultRef;
+import com.concept2.api.pacemonitor.internal.GetHighResWorkTimeResultRef;
+import com.concept2.api.pacemonitor.internal.GetIntervalTypeResultRef;
+import com.concept2.api.pacemonitor.internal.GetPaceResultRef;
+import com.concept2.api.pacemonitor.internal.GetPowerResultRef;
+import com.concept2.api.pacemonitor.internal.GetRestTimeResultRef;
+import com.concept2.api.pacemonitor.internal.PaceMonitorResultRef;
+import com.concept2.api.pacemonitor.internal.GetStrokeRateResultRef;
+import com.concept2.api.pacemonitor.internal.GetStrokeStateResultRef;
+import com.concept2.api.pacemonitor.internal.GetTimeResultRef;
+import com.concept2.api.pacemonitor.internal.GetUserInfoResultRef;
+import com.concept2.api.pacemonitor.internal.GetWorkoutIntervalCountResultRef;
+import com.concept2.api.pacemonitor.internal.GetWorkoutNumberResultRef;
+import com.concept2.api.pacemonitor.internal.GetWorkoutStateResultRef;
+import com.concept2.api.pacemonitor.internal.GetWorkoutTypeResultRef;
 import com.concept2.api.service.broker.DataBroker;
+import com.concept2.api.service.broker.pacemonitor.CommandBatch;
+import com.concept2.api.service.broker.pacemonitor.CommandBatchCache;
+import com.concept2.api.service.operations.BaseDataOperation;
 import com.concept2.api.service.operations.BaseOperation;
-import com.concept2.api.service.operations.GetPaceMonitorStatusOperation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -82,14 +118,77 @@ public class Concept2AsyncTaskService {
         }
     }
 
+    public static<R extends PaceMonitorResult> void executePaceMonitorCommand(Context context,
+            final PendingResultImpl<R> pendingResult, final CommandImpl<R> command) {
+        execute(context, Affinity.PACE_MONITOR, new BaseDataOperation() {
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.executePaceMonitorCommand(context, command);
+            }
+
+            @Override
+            protected void onResult(DataHolder data) {
+                pendingResult.setResult(command.getResult(data, 0 /* row */));
+            }
+        });
+    }
+
     /**
-     * Get the status of the pace monitor.
+     * Execute one or more commands in order as a batch. Commands should be created via the static
+     * methods provided in {@link CommandBuilder}.
      *
      * @param context The calling context.
      * @param pendingResult The callback object to report the result to.
+     * @param commandList The list of commands to execute.
      */
-    public static void getPaceMonitorStatus(Context context,
-            PendingResultImpl<PaceMonitor.GetStatusResult> pendingResult) {
-        execute(context, Affinity.PACE_MONITOR, new GetPaceMonitorStatusOperation(pendingResult));
+    public static void createCommandBatch(Context context,
+            final PendingResultImpl<PaceMonitor.CreateBatchCommandResult> pendingResult,
+            final List<CommandBuilder.Command> commandList) {
+        execute(context, Affinity.PACE_MONITOR, new BaseDataOperation() {
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.createPaceMonitorCommandBatch(context, commandList);
+            }
+
+            @Override
+            protected void onResult(final DataHolder data) {
+                pendingResult.setResult(new CreateCommandBatchResultRef(data));
+            }
+        });
+    }
+
+    public static void executeCommandBatch(Context context,
+            final PendingResultImpl<PaceMonitor.BatchResult> pendingResult, final int id) {
+        execute(context, Affinity.PACE_MONITOR, new BaseDataOperation() {
+            private static final String TAG = "ExecCmdBatchOp";
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.executePaceMonitorCommandBatch(context, id);
+            }
+
+            @Override
+            protected void onResult(DataHolder data) {
+                if (data.getStatus() != Concept2StatusCodes.OK) {
+                    pendingResult.setResult(new BatchResultRef(data.getStatus()));
+                }
+                CommandBatch batch = CommandBatchCache.getInstance().findCommandBatch(id);
+                if (batch == null) {
+                    Log.e(TAG, "Failed to find command batch");
+                    pendingResult.setResult(
+                            new BatchResultRef(Concept2StatusCodes.COMMAND_NOT_FOUND));
+                }
+                int row = 0;
+                ArrayList<PaceMonitorResult> results = new ArrayList<>();
+                for (int i = 0; i < batch.size(); ++i) {
+                    Log.d(TAG, "Creating results for batch " + i);
+                    ArrayList<CommandImpl> commandArray = batch.getCommandArray(i);
+                    for (int j = 0, size = commandArray.size(); j < size; ++j) {
+                        Log.d(TAG, "  creating result for command " + i + "." + j);
+                        results.add(commandArray.get(j).getResult(data, row++));
+                    }
+                }
+                pendingResult.setResult(new BatchResultRef(results));
+            }
+        });
     }
 }

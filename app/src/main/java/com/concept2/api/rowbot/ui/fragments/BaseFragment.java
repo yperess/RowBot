@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.concept2.api.rowbot.model.RowBotActivity;
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     protected RowBotActivity mParent;
 
@@ -13,5 +13,11 @@ public class BaseFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mParent = (RowBotActivity) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mParent.onNewMainFragment(this.getClass());
     }
 }

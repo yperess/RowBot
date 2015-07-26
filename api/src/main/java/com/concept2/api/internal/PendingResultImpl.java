@@ -9,8 +9,6 @@ import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.PendingResult;
 import com.concept2.api.Result;
 import com.concept2.api.ResultCallback;
-import com.concept2.api.common.*;
-import com.concept2.api.common.Constants;
 import com.concept2.api.utils.Preconditions;
 
 import java.util.concurrent.TimeUnit;

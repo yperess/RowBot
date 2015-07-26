@@ -1,5 +1,8 @@
 package com.concept2.api.utils;
 
+import android.content.ContentValues;
+
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -28,15 +31,45 @@ public class Objects {
         return Arrays.hashCode(objects);
     }
 
+    public static byte[] toByteArray(int[] array) {
+        ByteBuffer buffer = ByteBuffer.allocate(array.length * 4);
+        buffer.asIntBuffer().put(array);
+        return buffer.array();
+    }
+
+    public static String toString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder("[");
+        if (bytes != null && bytes.length != 0) {
+            for (int i = 0; i < bytes.length; ++i) {
+                if (i != 0) {
+                    sb.append(", ");
+                }
+                sb.append(String.format("0x%02x", bytes[i]));
+            }
+        }
+        return sb.append("]").toString();
+    }
+
+    public static String toString(ContentValues values) {
+        if (values == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder("[");
+        for (String key : values.keySet()) {
+            if (sb.length() != 1) sb.append(",");
+            sb.append(key).append("='").append(values.get(key)).append("'");
+        }
+        return sb.append("]").toString();
+    }
+
     /**
      * Build a string to represent an object using the following format:
-     * object_tag (var_name0 = value, var_name1 = value, ...)
+     * (var_name0 = value, var_name1 = value, ...)
      *
-     * @param tag The tag or name used to identify the object being represented.
      * @return A new instance of {@link ObjectsStringBuilder}.
      */
-    public static ObjectsStringBuilder toString(String tag) {
-        return new ObjectsStringBuilder(tag);
+    public static ObjectsStringBuilder stringBuilder() {
+        return new ObjectsStringBuilder();
     }
 
     /**
@@ -56,13 +89,11 @@ public class Objects {
 
         /**
          * Create a string builder for an object.
-         *
-         * @param tag The objects display name.
          */
-        private ObjectsStringBuilder(String tag) {
+        private ObjectsStringBuilder() {
             mHasValues = false;
             mEditable = true;
-            mBuilder = new StringBuilder(tag);
+            mBuilder = new StringBuilder();
         }
 
         /**
@@ -77,7 +108,7 @@ public class Objects {
             if (!mEditable) {
                 return this;
             }
-            mBuilder.append(mHasValues ? ", " : " (")
+            mBuilder.append(mHasValues ? ", " : "(")
                     .append(memberName)
                     .append(" = ")
                     .append(value);

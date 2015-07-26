@@ -32,6 +32,7 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private NavDrawerAdapter mNavDrawerAdapter;
 
     /** Instance of the {@link WelcomeDialogFragment} that is currently showing. */
     private WelcomeDialogFragment mWelcomeDialog;
@@ -52,11 +53,15 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
 
         initNavigationDrawer();
         initActionBar();
+        if (savedInstanceState == null) {
+            mNavDrawerAdapter.setSelected(0);
+        }
+    }
 
-        // TODO - do not default to debug fragment.
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_frame, new DebugFragment(), DebugFragment.TAG)
-                .commit();
+    @Override
+    public void onBackPressed() {
+        mNavDrawerAdapter.onBackPressed();
+        super.onBackPressed();
     }
 
     @Override
@@ -72,12 +77,6 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
             // Either never run or an update was issued. Show the dialog.
             showWelcomeDialog();
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        Concept2.PaceMonitor.stop();
     }
 
     @Override
@@ -140,18 +139,23 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
         }
     }
 
+    @Override
+    public void onNewMainFragment(Class fragmentClass) {
+        mNavDrawerAdapter.onNewMainFragment(fragmentClass);
+    }
+
     private void initNavigationDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        final NavDrawerAdapter navDrawerAdapter = new NavDrawerAdapter(this);
+        mNavDrawerAdapter = new NavDrawerAdapter(this);
         ListView drawerList = (ListView) findViewById(R.id.left_drawer);
-        drawerList.setAdapter(navDrawerAdapter);
+        drawerList.setAdapter(mNavDrawerAdapter);
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                navDrawerAdapter.setSelected(position);
+                mNavDrawerAdapter.setSelected(position);
                 mDrawerLayout.closeDrawers();
             }
         });

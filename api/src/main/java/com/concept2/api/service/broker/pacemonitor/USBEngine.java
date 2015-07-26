@@ -78,12 +78,12 @@ public class USBEngine implements Engine {
     }
 
     @Override
-    public synchronized byte[] getPMData(ReportId reportId, byte[] command)
+    public synchronized byte[] getPMData(byte[] command)
             throws Concept2EngineConnectionException, Csafe.CsafeExtractException, Csafe.DestuffResult.DestuffException {
         byte[] content = command;
         byte checksum = Csafe.checksum(content);
         byte[] stuffed = Csafe.stuff(content);
-        byte[] buffer = Csafe.create(reportId.getValue(), stuffed, stuffed.length, checksum);
+        byte[] buffer = Csafe.create(stuffed, stuffed.length, checksum);
         byte[] returnData;
 
         ByteBuffer bufferOut = ByteBuffer.wrap(buffer);
@@ -132,6 +132,7 @@ public class USBEngine implements Engine {
             throw new Concept2EngineConnectionException();
         }
 
+        if (DBG) Log.d(TAG, "data: " + toString(returnData));
         return returnData;
     }
 
@@ -163,8 +164,8 @@ public class USBEngine implements Engine {
     private String toString(byte[] bytes) {
         String byteString = "";
         for (byte b : bytes) {
-            byteString += String.format("%02X ", b);
-            if (b== (byte)0xf2) break;
+            byteString += String.format("%02X ", b & 0xFF);
+            if (b == (byte)0xf2) break;
         }
         return byteString;
     }
