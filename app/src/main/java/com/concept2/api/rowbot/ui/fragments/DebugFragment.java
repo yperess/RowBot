@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.concept2.api.Concept2;
+import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.Result;
 import com.concept2.api.ResultCallback;
 import com.concept2.api.pacemonitor.CommandBuilder;
@@ -33,6 +34,8 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
     private Button mExecute;
     private Spinner mCommands;
     private ArrayAdapter<String> mResultAdapter;
+
+    int mLastCommandBatchId = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,167 +97,215 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
     private void executeCommand() {
         switch (mCommands.getSelectedItemPosition()) {
             case 0:
-                Concept2.PaceMonitor.getStatus(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getStatusCmd(this));
                 break;
             case 1:
-                Concept2.PaceMonitor.getOdometer(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getOdometerCmd(this));
                 break;
             case 2:
-                Concept2.PaceMonitor.getWorkTime(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getWorkTimeCmd(this));
                 break;
             case 3:
-                Concept2.PaceMonitor.getWorkDistance(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getWorkDistanceCmd(this));
                 break;
             case 4:
-                Concept2.PaceMonitor.getWorkCalories(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getWorkCaloriesCmd(this));
                 break;
             case 5:
-                Concept2.PaceMonitor.getStoredWorkoutNumber(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getStoredWorkoutNumberCmd(this));
                 break;
             case 6:
-                Concept2.PaceMonitor.getPace(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getPaceCmd(this));
                 break;
             case 7:
-                Concept2.PaceMonitor.getStrokeRate(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getStrokeRateCmd(this));
                 break;
             case 8:
-                Concept2.PaceMonitor.getUserInfo(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getUserInfoCmd(this));
                 break;
             case 9:
-                Concept2.PaceMonitor.getHeartRate(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getHeartRateCmd(this));
                 break;
             case 10:
-                Concept2.PaceMonitor.getPower(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getPowerCmd(this));
                 break;
             case 11: {
                 Calendar cal = Calendar.getInstance();
-                Concept2.PaceMonitor.setTime(getActivity(), cal.get(Calendar.HOUR_OF_DAY),
-                        cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND))
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setTimeCmd(this, cal.get(Calendar.HOUR_OF_DAY),
+                                cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND)));
                 break;
             }
             case 12: {
                 Calendar cal = Calendar.getInstance();
-                Concept2.PaceMonitor.setDate(getActivity(), cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setDateCmd(this, cal.get(Calendar.YEAR),
+                                cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)));
                 break;
             }
             case 13:
-                Concept2.PaceMonitor.setTimeout(getActivity(), 15 /* seconds */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setTimeoutCmd(this, 15 /* seconds */));
                 break;
             case 14:
-                Concept2.PaceMonitor.setGoalTime(getActivity(), 20 /* seconds */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setGoalTimeCmd(this, 20 /* seconds */));
                 break;
             case 15:
-                Concept2.PaceMonitor.setGoalDistance(getActivity(), 100 /* meters */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setGoalDistanceCmd(this, 100 /* meters */));
                 break;
             case 16:
-                Concept2.PaceMonitor.setGoalCalories(getActivity(), 5 /* calories */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setGoalCaloriesCmd(this, 5 /* calories */));
                 break;
             case 17:
-                Concept2.PaceMonitor.setGoalPower(getActivity(), 100 /* watts */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setGoalPowerCmd(this, 100 /* watts */));
                 break;
             case 18:
-                Concept2.PaceMonitor.setStoredWorkoutNumber(getActivity(), 0 /* workoutNumber */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setStoredWorkoutNumberCmd(this, 0 /* workoutNumber */));
                 break;
             case 19:
-                Concept2.PaceMonitor.setStoredWorkoutNumber(getActivity(), 0 /* workoutNumber */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setStoredWorkoutNumberCmd(this, 1 /* workoutNumber */));
                 break;
             case 20:
-                Concept2.PaceMonitor.getWorkoutType(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getWorkoutTypeCmd(this));
                 break;
             case 21:
-                Concept2.PaceMonitor.getDragFactor(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getDragFactorCmd(this));
                 break;
             case 22:
-                Concept2.PaceMonitor.getStrokeState(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getStrokeStateCmd(this));
                 break;
             case 23:
-                Concept2.PaceMonitor.getHighResWorkTime(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getHighResolutionWorkTimeCmd(this));
                 break;
             case 24:
-                Concept2.PaceMonitor.getHighResWorkDistance(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getHighResolutionWorkDistanceCmd(this));
                 break;
             case 25:
-                Concept2.PaceMonitor.getErrorValue(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getErrorValueCmd(this));
                 break;
             case 26:
-                Concept2.PaceMonitor.getWorkoutState(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getWorkoutStateCmd(this));
                 break;
             case 27:
-                Concept2.PaceMonitor.getWorkoutIntervalCount(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getWorkoutIntervalCountCmd(this));
                 break;
             case 28:
-                Concept2.PaceMonitor.getIntervalType(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getIntervalTypeCmd(this));
                 break;
             case 29:
-                Concept2.PaceMonitor.getRestTime(getActivity()).setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getRestTimeCmd(this));
                 break;
             case 30:
-                Concept2.PaceMonitor.setSplitTime(getActivity(), 60.0 /* seconds */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setSplitTimeCmd(this, 60.0 /* seconds */));
                 break;
             case 31:
-                Concept2.PaceMonitor.setSplitDistance(getActivity(), 100 /* meters */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setSplitDistanceCmd(this, 100 /* meters */));
                 break;
             case 32:
-                Concept2.PaceMonitor.getForcePlot(getActivity(), 0 /* numSamples */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getForcePlotCmd(this, 0 /* numSamples */));
                 break;
             case 33:
-                Concept2.PaceMonitor.getHeartRatePlot(getActivity(), 0 /* numSamples */)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.getHeartRatePlotCmd(this, 0 /* numSamples */));
                 break;
             case 34:
                 sErrorMode = !sErrorMode;
-                Concept2.PaceMonitor.setScreenErrorMode(getActivity(), sErrorMode)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setScreenErrorModeCmd(this, sErrorMode));
                 break;
             case 35:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.RESET)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.RESET));
                 break;
             case 36:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.IDLE)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.IDLE));
                 break;
             case 37:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.HAVE_ID)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.HAVE_ID));
                 break;
             case 38:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.IN_USE)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.IN_USE));
                 break;
             case 39:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.FINISHED)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.FINISHED));
                 break;
             case 40:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.READY)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.READY));
                 break;
             case 41:
-                Concept2.PaceMonitor.setState(getActivity(), PaceMonitor.PaceMonitorState.BAD_ID)
-                        .setResultCallback(this);
+                Concept2.PaceMonitor.executeCommand(getActivity(),
+                        CommandBuilder.setPaceMonitorState(this,
+                                PaceMonitor.PaceMonitorState.BAD_ID));
                 break;
-            case 42: {
+            case 42:
+                if (mLastCommandBatchId != -1) {
+                    Concept2.PaceMonitor.executeCommandBatch(getActivity(), mLastCommandBatchId)
+                            .setResultCallback(this);
+                } else {
+                    mResultAdapter.add("No batch found");
+                }
+                break;
+            case 43: {
                 ArrayList<CommandBuilder.Command> cmdList = new ArrayList<>();
-                cmdList.add(CommandBuilder.setGoalDistanceCmd(null, 100));
-                cmdList.add(CommandBuilder.setSplitDistanceCmd(null, 100));
-                cmdList.add(CommandBuilder.setGoalPowerCmd(null, 200));
-                cmdList.add(CommandBuilder.setStoredWorkoutNumberCmd(null, 0));
+                cmdList.add(CommandBuilder.setGoalDistanceCmd(this, 100));
+                cmdList.add(CommandBuilder.setSplitDistanceCmd(this, 100));
+                cmdList.add(CommandBuilder.setGoalPowerCmd(this, 200));
+                cmdList.add(CommandBuilder.setStoredWorkoutNumberCmd(this, 0));
+                cmdList.add(CommandBuilder.setPaceMonitorState(this,
+                        PaceMonitor.PaceMonitorState.IN_USE));
+                ResultCallback<PaceMonitor.CreateBatchCommandResult> callback =
+                        new ResultCallback<PaceMonitor.CreateBatchCommandResult>() {
+                            @Override
+                            public void onResult(PaceMonitor.CreateBatchCommandResult result) {
+                                DebugFragment.this.onResult(result);
+                                if (result.getStatus() == Concept2StatusCodes.OK) {
+                                    mLastCommandBatchId = result.getBatchId();
+                                }
+                            }
+                        };
                 Concept2.PaceMonitor.createCommandBatch(getActivity(), cmdList)
-                        .setResultCallback(this);
+                        .setResultCallback(callback);
                 break;
             }
         }
@@ -263,6 +314,5 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onResult(Result result) {
         mResultAdapter.add(result.toString());
-
     }
 }

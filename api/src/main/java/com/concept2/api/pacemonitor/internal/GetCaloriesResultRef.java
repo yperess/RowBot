@@ -18,27 +18,13 @@ public class GetCaloriesResultRef extends PaceMonitorResultRef implements GetCal
     private static final String COLUMN_CALORIES = PaceMonitorColumnContract.CALORIES;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetCaloriesResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param status The status returned by the pace monitor.
-     * @param calories The calorie value.
-     * @return {@link DataHolder} representing a {@link GetCaloriesResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int calories) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_CALORIES, calories);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new calorie result reference around the given data.
      *
      * @param dataHolder The data needed to report the calories.
+     * @param row The row of data to read.
      */
-    public GetCaloriesResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetCaloriesResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

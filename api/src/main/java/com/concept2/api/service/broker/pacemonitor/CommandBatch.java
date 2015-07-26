@@ -14,12 +14,15 @@ import java.util.List;
 public class CommandBatch {
 
     private final byte[][] mCommands;
+    private final ArrayList<ArrayList<CommandImpl>> mCommandArray;
 
-    private CommandBatch(ArrayList<byte[]> commands) {
+    private CommandBatch(ArrayList<byte[]> commands,
+            ArrayList<ArrayList<CommandImpl>> commandArray) {
         mCommands = new byte[commands.size()][];
         for (int i = 0; i < mCommands.length; ++i) {
             mCommands[i] = commands.get(i);
         }
+        mCommandArray = commandArray;
     }
 
     public int size() {
@@ -30,9 +33,13 @@ public class CommandBatch {
         return mCommands[index];
     }
 
+    public ArrayList<CommandImpl> getCommandArray(int index) {
+        return mCommandArray.get(index);
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(mCommands);
+        return Objects.hash((Object[]) mCommands);
     }
 
     @Override
@@ -78,6 +85,7 @@ public class CommandBatch {
 
         private final List<CommandBuilder.Command> mCommandList;
         private final ArrayList<byte[]> mBatchCommands = new ArrayList<>();
+        private final ArrayList<ArrayList<CommandImpl>> mCommandImplArray = new ArrayList<>();
         private final ByteBuffer mBuffer = ByteBuffer.allocate(BUFFER_SIZE);
         private CommandImpl mLastCommand;
         private int mBufferStuffedLength = 0;
@@ -88,6 +96,7 @@ public class CommandBatch {
         }
 
         public CommandBatch build() {
+            mCommandImplArray.add(new ArrayList<CommandImpl>());
             for (int i = 0, size = mCommandList.size(); i < size; ++i) {
                 CommandImpl command = (CommandImpl) mCommandList.get(i);
                 byte[] commandBytes = command.getCommandBytes();
@@ -105,29 +114,24 @@ public class CommandBatch {
                     if (willOverflowFrame(mBufferStuffedLength + stuffedLength)) {
                         flushBuffer();
                     }
-                    // There's room in the current buffer.
-                    mBuffer.put(commandBytes);
-                    mBufferStuffedLength += stuffedLength;
                 } else {
                     // 2. custom command
                     if (DBG) Log.d(TAG, "Custom command, lastCommand = " + mLastCommand);
                     if (mLastCommand == null || !mLastCommand.isCustomCommand()) {
                         // 2.1. w/ regular previous command or none
                         int len = commandBytes.length;
-                        commandBytes = new byte[len + 2];
-                        commandBytes[0] = USR_CONFIG1;
-                        commandBytes[1] = (byte) len;
-                        System.arraycopy(command.getCommandBytes(), 0, commandBytes, 2, len);
+                        commandBytes = new byte[len];
+                        System.arraycopy(command.getCommandBytes(), 0, commandBytes, 0, len);
                         stuffedLength = Csafe.getStuffedLength(commandBytes);
-                        Log.d("Batch", "    * commandBytes: " + Objects.toString(commandBytes));
-                        Log.d("Batch", "    * stuffedLength: " + stuffedLength);
+                        if (DBG) {
+                            Log.d(TAG, "CommandBytes: " + Objects.toString(commandBytes));
+                            Log.d(TAG, "StuffedLength: " + stuffedLength);
+                        }
                         if (willOverflowFrame(mBufferStuffedLength + stuffedLength)) {
                             flushBuffer();
                         }
                         mCustomCommandLengthPos = mBuffer.position() + 1;
                         if (DBG) Log.d(TAG, "CustomCommandLengthPos: " + mCustomCommandLengthPos);
-                        mBuffer.put(commandBytes);
-                        mBufferStuffedLength += stuffedLength;
                     } else {
                         // 2.2. previous command is custom.
                         byte prevCustomLen = mBuffer.get(mCustomCommandLengthPos);
@@ -138,27 +142,26 @@ public class CommandBatch {
                             flushBuffer();
                             // Create user config 1 prefix.
                             int len = commandBytes.length;
-                            commandBytes = new byte[len + 2];
-                            commandBytes[0] = USR_CONFIG1;
-                            commandBytes[1] = (byte) len;
-                            System.arraycopy(command.getCommandBytes(), 0, commandBytes, 2, len);
+                            commandBytes = new byte[len];
+                            System.arraycopy(command.getCommandBytes(), 0, commandBytes, 0, len);
                             stuffedLength = Csafe.getStuffedLength(commandBytes);
                             mCustomCommandLengthPos = 1;
-                            mBuffer.put(commandBytes);
-                            mBufferStuffedLength = stuffedLength;
                         } else {
                             // Combine commands.
                             if (DBG) Log.d(TAG, "Custom command length changed from "
                                     + prevCustomLen + " to "
-                                    + (prevCustomLen + commandBytes.length));
-                            byte len = (byte) (prevCustomLen + commandBytes.length);
+                                    + (prevCustomLen + commandBytes.length - 2));
+                            byte len = (byte) (prevCustomLen + commandBytes.length - 2);
                             mBuffer.put(mCustomCommandLengthPos, len);
-                            mBuffer.put(commandBytes);
-                            mBufferStuffedLength += stuffedLength;
+                            // Remove custom command flag and length from current command.
+                            commandBytes = Arrays.copyOfRange(commandBytes, 2, commandBytes.length);
                         }
                     }
                 }
+                mBuffer.put(commandBytes);
+                mBufferStuffedLength += stuffedLength;
                 mLastCommand = command;
+                mCommandImplArray.get(mCommandImplArray.size()-1).add(command);
             }
             flushBuffer();
 
@@ -166,7 +169,7 @@ public class CommandBatch {
                 byte[] bytes = mBatchCommands.get(i);
                 Log.d("Batch", i + ". " + Objects.toString(bytes));
             }
-            return new CommandBatch(mBatchCommands);
+            return new CommandBatch(mBatchCommands, mCommandImplArray);
         }
 
         private boolean willOverflowFrame(int size) {
@@ -185,6 +188,7 @@ public class CommandBatch {
             mBatchCommands.add(bytes);
             mBuffer.rewind();
             mBufferStuffedLength = 0;
+            mCommandImplArray.add(new ArrayList<CommandImpl>());
             Log.d(TAG, "Saving new buffer line: " + Objects.toString(bytes));
         }
     }

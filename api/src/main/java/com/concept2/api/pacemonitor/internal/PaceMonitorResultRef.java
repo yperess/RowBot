@@ -22,28 +22,36 @@ public class PaceMonitorResultRef extends DataHolder implements PaceMonitorResul
             PaceMonitorColumnContract.PREV_FRAME_STATUS;
     private static final String COLUMN_SLAVE_STATUS = PaceMonitorColumnContract.SLAVE_STATUS;
 
-    /**
-     * Creates a new {@link DataHolder} for a given pace monitor status. Using this method
-     * assumes that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param status The current status of the pace monitor.
-     * @return {@link DataHolder} representing the command and pace monitor status.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status) {
-        return new DataHolder(Concept2StatusCodes.OK, status.toContentValues());
-    }
-
+    private final int mRow;
     private final PaceMonitorStatus mPaceMonitorStatus;
 
     /**
      * Create a new status result reference around the given data.
      *
      * @param data The data needed to report the pace monitor result.
+     * @param row The row of data to read.
      */
-    public PaceMonitorResultRef(DataHolder data) {
+    public PaceMonitorResultRef(DataHolder data, int row) {
         super(data);
+        mRow = row;
         mPaceMonitorStatus = new PaceMonitorStatusImpl(getInt(COLUMN_FRAME_COUNT, 0),
                 getInt(COLUMN_PREV_FRAME_STATUS, 0), getInt(COLUMN_SLAVE_STATUS, 0));
+    }
+
+    protected final int getInt(String columnName, int defaultValue) {
+        return getInt(mRow, columnName, defaultValue);
+    }
+
+    protected final long getLong(String columnName, long defaultValue) {
+        return getLong(mRow, columnName, defaultValue);
+    }
+
+    protected final double getDouble(String columnName, double defaultValue) {
+        return getDouble(mRow, columnName, defaultValue);
+    }
+
+    protected int[] getIntArray(String columnName, int[] defaultValue) {
+        return getIntArray(mRow, columnName, defaultValue);
     }
 
     @Override

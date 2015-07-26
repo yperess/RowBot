@@ -18,26 +18,13 @@ public class GetHighResWorkTimeResultRef extends PaceMonitorResultRef implements
     private static final String COLUMN_SECONDS = PaceMonitorColumnContract.HIGH_RES_SECONDS;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetHighResWorkTimeResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param seconds The high resolution work time.
-     * @return {@link DataHolder} representing a {@link GetHighResWorkTimeResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, double seconds) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_SECONDS, seconds);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new high resolution work time result reference around the given data.
      *
      * @param dataHolder The data needed to report the high resolution work time.
+     * @param row The row of data to read.
      */
-    public GetHighResWorkTimeResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetHighResWorkTimeResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

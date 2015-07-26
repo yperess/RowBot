@@ -19,27 +19,13 @@ public class GetWorkoutIntervalCountResultRef extends PaceMonitorResultRef imple
     private static final String COLUMN_INTERVAL_COUNT = PaceMonitorColumnContract.INTERVAL_COUNT;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetWorkoutIntervalCountResult}. Using this
-     * method assumes that the communication returned a status code of
-     * {@link Concept2StatusCodes#OK}.
-     *
-     * @param intervalCount The interval count.
-     * @return {@link DataHolder} representing a {@link GetWorkoutIntervalCountResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int intervalCount) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_INTERVAL_COUNT, intervalCount);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new interval count result reference around the given data.
      *
      * @param dataHolder The data needed to report the interval count.
+     * @param row The row of data to read.
      */
-    public GetWorkoutIntervalCountResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetWorkoutIntervalCountResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

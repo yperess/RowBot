@@ -18,26 +18,13 @@ public class GetErrorValueResultRef extends PaceMonitorResultRef implements GetE
     private static final String COLUMN_ERROR_VALUE = PaceMonitorColumnContract.ERROR_VALUE;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetErrorValueResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param errorValue The error value.
-     * @return {@link DataHolder} representing a {@link GetErrorValueResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int errorValue) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ERROR_VALUE, errorValue);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new error value result reference around the given data.
      *
      * @param dataHolder The data needed to report the error value.
+     * @param row The row of data to read.
      */
-    public GetErrorValueResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetErrorValueResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.concept2.api.utils;
 
+import android.content.ContentValues;
+
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -28,6 +31,12 @@ public class Objects {
         return Arrays.hashCode(objects);
     }
 
+    public static byte[] toByteArray(int[] array) {
+        ByteBuffer buffer = ByteBuffer.allocate(array.length * 4);
+        buffer.asIntBuffer().put(array);
+        return buffer.array();
+    }
+
     public static String toString(byte[] bytes) {
         StringBuilder sb = new StringBuilder("[");
         if (bytes != null && bytes.length != 0) {
@@ -37,6 +46,18 @@ public class Objects {
                 }
                 sb.append(String.format("0x%02x", bytes[i]));
             }
+        }
+        return sb.append("]").toString();
+    }
+
+    public static String toString(ContentValues values) {
+        if (values == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder("[");
+        for (String key : values.keySet()) {
+            if (sb.length() != 1) sb.append(",");
+            sb.append(key).append("='").append(values.get(key)).append("'");
         }
         return sb.append("]").toString();
     }

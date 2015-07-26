@@ -11,8 +11,7 @@ public class Concept2StatusCodes {
     public static final int CANCELED = 4;
     public static final int PACE_MONITOR_COMMUNICATION_ERROR = 5;
     public static final int PACE_MONITOR_DATA_ERROR = 6;
-    public static final int PACE_MONITOR_INTERNAL_ERROR = 7;
-    public static final int PACE_MONITOR_INVALID_REQUEST = 8;
+    public static final int COMMAND_NOT_FOUND = 7;
 
     // Not instantiable
     private Concept2StatusCodes() {}

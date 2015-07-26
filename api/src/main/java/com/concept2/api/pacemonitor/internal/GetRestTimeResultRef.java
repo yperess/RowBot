@@ -18,26 +18,13 @@ public class GetRestTimeResultRef extends PaceMonitorResultRef implements GetRes
     private static final String COLUMN_REST_TIME = PaceMonitorColumnContract.REST_TIME;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetRestTimeResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param restTime The rest time in seconds.
-     * @return {@link DataHolder} representing a {@link GetRestTimeResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int restTime) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_REST_TIME, restTime);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new rest time result reference around the given data.
      *
      * @param dataHolder The data needed to report the rest time.
+     * @param row The row of data to read.
      */
-    public GetRestTimeResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetRestTimeResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

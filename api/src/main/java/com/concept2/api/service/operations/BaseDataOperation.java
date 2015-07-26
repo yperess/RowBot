@@ -1,6 +1,7 @@
 package com.concept2.api.service.operations;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.internal.DataHolder;

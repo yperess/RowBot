@@ -18,26 +18,13 @@ public class GetWorkoutNumberResultRef extends PaceMonitorResultRef implements G
     private static final String COLUMN_WORKOUT_NUMBER = PaceMonitorColumnContract.WORKOUT_NUMBER;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetWorkoutNumberResult}. Using this method
-     * assumes that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param workoutNumber The workout type.
-     * @return {@link DataHolder} representing a {@link GetWorkoutNumberResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int workoutNumber) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_WORKOUT_NUMBER, workoutNumber);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new workout number result reference around the given data.
      *
      * @param dataHolder The data needed to report the workout number.
+     * @param row The row of data to read.
      */
-    public GetWorkoutNumberResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetWorkoutNumberResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

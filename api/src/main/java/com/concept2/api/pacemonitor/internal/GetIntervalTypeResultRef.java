@@ -19,26 +19,13 @@ public class GetIntervalTypeResultRef extends PaceMonitorResultRef implements Ge
     private static final String COLUMN_INTERVAL_TYPE = PaceMonitorColumnContract.INTERVAL_TYPE;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetIntervalTypeResult}. Using this method
-     * assumes that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param intervalType The interval type.
-     * @return {@link DataHolder} representing a {@link GetIntervalTypeResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int intervalType) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_INTERVAL_TYPE, intervalType);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new interval type result reference around the given data.
      *
      * @param dataHolder The data needed to report the interval type.
+     * @param row The row of data to read.
      */
-    public GetIntervalTypeResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetIntervalTypeResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

@@ -18,26 +18,12 @@ public class GetHeartRateResultRef extends PaceMonitorResultRef implements PaceM
     private static final String COLUMN_HEART_RATE = PaceMonitorColumnContract.HEART_RATE;
 
     /**
-     * Creates a new {@link DataHolder} a given heart rate. Using this method assumes that the
-     * communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param heartRate The heart rate to store.
-     * @return {@link DataHolder} representing this result.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int heartRate) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_HEART_RATE, heartRate);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new heart rate result reference around the given data.
      *
      * @param dataHolder The data needed to report the heart rate.
      */
-    public GetHeartRateResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetHeartRateResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

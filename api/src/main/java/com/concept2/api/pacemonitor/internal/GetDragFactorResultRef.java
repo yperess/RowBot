@@ -18,26 +18,13 @@ public class GetDragFactorResultRef extends PaceMonitorResultRef implements GetD
     private static final String COLUMN_DRAG_FACTOR = PaceMonitorColumnContract.DRAG_FACTOR;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetDragFactorResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param dragFactor The drag factor.
-     * @return {@link DataHolder} representing a {@link GetDragFactorResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int dragFactor) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DRAG_FACTOR, dragFactor);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new drag factor result reference around the given data.
      *
      * @param dataHolder The data needed to report the drag factor.
+     * @param row The row of data to read.
      */
-    public GetDragFactorResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetDragFactorResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

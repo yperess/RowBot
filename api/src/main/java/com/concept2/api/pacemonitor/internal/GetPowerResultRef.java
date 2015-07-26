@@ -18,26 +18,13 @@ public class GetPowerResultRef extends PaceMonitorResultRef implements GetPowerR
     private static final String COLUMN_POWER = PaceMonitorColumnContract.POWER;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetPowerResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param power The power in watts.
-     * @return {@link DataHolder} representing a {@link GetPowerResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int power) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_POWER, power);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new power result reference around the given data.
      *
      * @param dataHolder The data needed to report the current power.
+     * @param row The row of data to read.
      */
-    public GetPowerResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetPowerResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

@@ -18,26 +18,13 @@ public class GetPaceResultRef extends PaceMonitorResultRef implements PaceMonito
     private static final String COLUMN_PACE = PaceMonitorColumnContract.PACE;
 
     /**
-     * Creates a new {@link DataHolder} for a given pace. Using this method assumes that the
-     * communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param pace The pace to store.
-     * @return {@link DataHolder} representing the pace.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int pace) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_PACE, pace);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new pace result reference around the given data.
      *
      * @param dataHolder The data needed to report the pace.
+     * @param row The row of data to read.
      */
-    public GetPaceResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetPaceResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

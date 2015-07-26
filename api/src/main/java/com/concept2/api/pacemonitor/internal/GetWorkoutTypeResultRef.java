@@ -19,26 +19,13 @@ public class GetWorkoutTypeResultRef extends PaceMonitorResultRef implements Get
     private static final String COLUMN_WORKOUT_TYPE = PaceMonitorColumnContract.WORKOUT_TYPE;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetWorkoutTypeResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param workoutType The workout type.
-     * @return {@link DataHolder} representing a {@link GetWorkoutTypeResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int workoutType) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_WORKOUT_TYPE, workoutType);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new workout type result reference around the given data.
      *
      * @param dataHolder The data needed to report the workout type.
+     * @param row The row of data to read.
      */
-    public GetWorkoutTypeResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetWorkoutTypeResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override

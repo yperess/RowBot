@@ -22,36 +22,18 @@ public class GetForcePlotResultRef extends PaceMonitorResultRef implements GetFo
     private static final String COLUMN_FORCE_PLOT = PaceMonitorColumnContract.FORCE_PLOT;
 
     /**
-     * Create a new {@link DataHolder} for a {@link GetForcePlotResult}. Using this method assumes
-     * that the communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param forcePlot The force plot.
-     * @return {@link DataHolder} representing a {@link GetForcePlotResult}.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int[] forcePlot) {
-        Log.d("Plot", "Raw force plot: " + Arrays.toString(forcePlot));
-        ByteBuffer buffer = ByteBuffer.allocate(forcePlot.length * 4);
-        buffer.asIntBuffer().put(forcePlot);
-        Log.d("Plot", "Byte value: " + Arrays.toString(buffer.array()));
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_FORCE_PLOT, buffer.array());
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new force plot result reference around the given data.
      *
      * @param dataHolder The data needed to report the force plot.
+     * @param row The row of data to read.
      */
-    public GetForcePlotResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetForcePlotResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override
     public int[] getForcePlot() {
-        return getIntArray(COLUMN_FORCE_PLOT, null /* defaultValue */);
+        return getIntArray(COLUMN_FORCE_PLOT, new int[0] /* defaultValue */);
     }
 
     @Override

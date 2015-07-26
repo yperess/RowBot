@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.concept2.api.PendingResult;
 import com.concept2.api.Result;
+import com.concept2.api.internal.DataHolder;
 import com.concept2.api.internal.PendingResultImpl;
 import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
@@ -539,13 +540,13 @@ public class PaceMonitorImpl implements PaceMonitor {
     }
 
     private static final class BatchCreatePendingResult extends
-            PendingResultImpl<BatchCreateResult> {
+            PendingResultImpl<CreateBatchCommandResult> {
         @Override
-        protected BatchCreateResult getFailedResult(final int statusCode) {
-            return new BatchCreateResult() {
+        protected CreateBatchCommandResult getFailedResult(final int statusCode) {
+            return new CreateBatchCommandResult() {
                 @Override
-                public long getBatchId() {
-                    return 0;
+                public int getBatchId() {
+                    return -1;
                 }
 
                 @Override
@@ -560,13 +561,9 @@ public class PaceMonitorImpl implements PaceMonitor {
         @Override
         protected BatchResult getFailedResult(final int statusCode) {
             return new BatchResult() {
-                @Override
-                public PaceMonitorStatus getPaceMonitorStatus() {
-                    return null;
-                }
 
                 @Override
-                public List<Result> getResults() {
+                public List<PaceMonitorResult> getResults() {
                     return null;
                 }
 
@@ -579,306 +576,27 @@ public class PaceMonitorImpl implements PaceMonitor {
     }
 
     @Override
-    public PendingResult<PaceMonitorResult> getStatus(Context context) {
+    public <R extends PaceMonitorResult> PendingResult<R> executeCommand(Context context,
+            final CommandBuilder.Command<R> command) {
         Preconditions.assertNotNull(context, "Context cannot be null");
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorStatus(context, pendingResult);
+        Preconditions.assertNotNull(command, "Command cannot be null");
+        Preconditions.assertTrue(command instanceof CommandImpl);
+        final CommandImpl<R> cmd = (CommandImpl) command;
+        PendingResultImpl<R>  pendingResult = new PendingResultImpl<R>() {
+            @Override
+            protected R getFailedResult(int statusCode) {
+                return cmd.getResult(DataHolder.empty(statusCode), 0 /* row */);
+            }
+        };
+        if (command.getResultCallback() != null) {
+            pendingResult.setResultCallback(command.getResultCallback());
+        }
+        Concept2AsyncTaskService.executePaceMonitorCommand(context, pendingResult, cmd);
         return pendingResult;
     }
 
     @Override
-    public PendingResult<PaceMonitorResult> setState(Context context, int state) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validatePaceMonitorState(state);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorState(context, pendingResult, state);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetDistanceResult> getOdometer(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetDistancePendingResult pendingResult = new GetDistancePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorOdometer(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetTimeResult> getWorkTime(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetTimePendingResult pendingResult = new GetTimePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorWorkTime(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetDistanceResult> getWorkDistance(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetDistancePendingResult pendingResult = new GetDistancePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorWorkDistance(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetCaloriesResult> getWorkCalories(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetCaloriesPendingResult pendingResult = new GetCaloriesPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorWorkCalories(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetWorkoutNumberResult> getStoredWorkoutNumber(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetWorkoutNumberPendingResult pendingResult = new GetWorkoutNumberPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorStoredWorkoutNumber(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetPaceResult> getPace(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetPacePendingResult pendingResult = new GetPacePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorPace(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetStrokeRateResult> getStrokeRate(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetCadencePendingResult pendingResult = new GetCadencePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorStrokeRate(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetUserInfoResult> getUserInfo(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetUserInfoPendingResult pendingResult = new GetUserInfoPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorUserInfo(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetHeartRateResult> getHeartRate(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetHeartRatePendingResult pendingResult = new GetHeartRatePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorHeartRate(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetPowerResult> getPower(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        GetPowerPendingResult pendingResult = new GetPowerPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorPower(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setTime(Context context, int hours, int minutes,
-            int seconds) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateTime(hours, minutes, seconds);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorTime(context, pendingResult, hours, minutes,
-                seconds);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setDate(Context context, int year, int month, int day) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateDate(year, month, day);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorDate(context, pendingResult, year, month, day);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setTimeout(Context context, int seconds) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateTimeout(seconds);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorTimeout(context, pendingResult, seconds);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setGoalTime(Context context, int seconds) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateGoalTime(seconds);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorGoalTime(context, pendingResult, seconds);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setGoalDistance(Context context, int meters) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateGoalDistance(meters);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorGoalDistance(context, pendingResult, meters);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setGoalCalories(Context context, int calories) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateGoalCalories(calories);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorGoalCalories(context, pendingResult, calories);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setStoredWorkoutNumber(Context context,
-            int workoutNumber) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateWorkoutNumber(workoutNumber);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorStoredWorkoutNumber(context, pendingResult,
-                workoutNumber);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setGoalPower(Context context, int watts) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateGoalPower(watts);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorGoalPower(context, pendingResult, watts);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetWorkoutTypeResult> getWorkoutType(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        WorkoutTypePendingResult pendingResult = new WorkoutTypePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorWorkoutType(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetDragFactorResult> getDragFactor(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        DragFactorPendingResult pendingResult = new DragFactorPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorDragFactor(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetStrokeStateResult> getStrokeState(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        StrokeStatePendingResult pendingResult = new StrokeStatePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorStrokeState(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetHighResWorkTimeResult> getHighResWorkTime(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        HighResWorkTimePendingResult pendingResult = new HighResWorkTimePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorHighResWorkTime(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetHighResWorkDistanceResult> getHighResWorkDistance(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        HighResWorkDistancePendingResult pendingResult = new HighResWorkDistancePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorHighResWorkDistance(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetErrorValueResult> getErrorValue(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        ErrorValuePendingResult pendingResult = new ErrorValuePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorErrorValue(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetWorkoutStateResult> getWorkoutState(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        WorkoutStatePendingResult pendingResult = new WorkoutStatePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorWorkoutState(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetWorkoutIntervalCountResult> getWorkoutIntervalCount(
-            Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        WorkoutIntervalCountPendingResult pendingResult = new WorkoutIntervalCountPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorWorkoutIntervalCount(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetIntervalTypeResult> getIntervalType(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        IntervalTypePendingResult pendingResult = new IntervalTypePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorIntervalType(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetRestTimeResult> getRestTime(Context context) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        RestTimePendingResult pendingResult = new RestTimePendingResult();
-        Concept2AsyncTaskService.getPaceMonitorRestTime(context, pendingResult);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setSplitTime(Context context, double seconds) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateSplitTime(seconds);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorSplitTime(context, pendingResult, seconds);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setSplitDistance(Context context, int meters) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateSplitDistance(meters);
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorSplitDistance(context, pendingResult, meters);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetForcePlotResult> getForcePlot(Context context, int numSamples) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateNumSamples(numSamples);
-        ForcePlotPendingResult pendingResult = new ForcePlotPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorForcePlot(context, pendingResult, numSamples);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<PaceMonitorResult> setScreenErrorMode(Context context, boolean enable) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        PaceMonitorStatusPendingResult pendingResult = new PaceMonitorStatusPendingResult();
-        Concept2AsyncTaskService.setPaceMonitorScreenErrorMode(context, pendingResult, enable);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<GetHeartRatePlotResult> getHeartRatePlot(Context context,
-            int numSamples) {
-        Preconditions.assertNotNull(context, "Context cannot be null");
-        validateNumSamples(numSamples);
-        HeartRatePlotPendingResult pendingResult = new HeartRatePlotPendingResult();
-        Concept2AsyncTaskService.getPaceMonitorHeartRatePlot(context, pendingResult, numSamples);
-        return pendingResult;
-    }
-
-    @Override
-    public PendingResult<BatchCreateResult> createCommandBatch(Context context,
+    public PendingResult<CreateBatchCommandResult> createCommandBatch(Context context,
             List<CommandBuilder.Command> commandList) {
         Preconditions.assertNotNull(context, "Context cannot be null");
         Preconditions.assertNotNull(commandList, "Command list cannot be null");
@@ -893,7 +611,7 @@ public class PaceMonitorImpl implements PaceMonitor {
     }
 
     @Override
-    public PendingResult<BatchResult> executeCommandBatch(Context context, long id) {
+    public PendingResult<BatchResult> executeCommandBatch(Context context, int id) {
         Preconditions.assertNotNull(context, "Context cannot be null");
         Preconditions.assertTrue(id >= 0, "Id must be >= 0");
         BatchPendingResult pendingResult = new BatchPendingResult();

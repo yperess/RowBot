@@ -1,14 +1,17 @@
 package com.concept2.api.service.broker.pacemonitor;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
 import com.concept2.api.Concept2StatusCodes;
 import com.concept2.api.common.Constants;
+import com.concept2.api.pacemonitor.PaceMonitorStatus;
 import com.concept2.api.pacemonitor.internal.CommandImpl;
 import com.concept2.api.utils.Objects;
 import com.concept2.api.utils.Preconditions;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public final class GetPMData {
@@ -116,6 +119,26 @@ public final class GetPMData {
         return new GetPMData.DataResult(bytes);
     }
 
+    public static ValueResult executeCommandRaw(Context context, Engine engine, byte[] command) {
+        byte[] bytes;
+        try {
+            if (!engine.isConnected()) {
+                engine.start(context);
+            }
+            bytes = engine.getPMData(command);
+        } catch (Csafe.DestuffResult.DestuffException|Csafe.CsafeExtractException e) {
+            Log.e(TAG, "Pace monitor communication error", e);
+            return new ValueResult(Concept2StatusCodes.PACE_MONITOR_COMMUNICATION_ERROR);
+        } catch (Engine.Concept2EngineConnectionException e) {
+            Log.e(TAG, "Pace monitor connection error", e);
+            return new ValueResult(Concept2StatusCodes.PACE_MONITOR_NOT_FOUND);
+        }
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
+        return new ValueResult(bytes);
+    }
+
     public static byte[] convertCommandBytes(byte[] bytes) {
         byte checkSum = Csafe.checksum(bytes);
         byte[] stuffed = Csafe.stuff(bytes);
@@ -126,6 +149,41 @@ public final class GetPMData {
         return bytes;
     }
 
+    public static final class ValueResult {
+        private final int mStatusCode;
+        private final PaceMonitorStatusImpl mPaceMonitorStatus;
+        private final ByteBuffer mData;
+
+        public ValueResult(byte[] bytes) {
+            Preconditions.assertNotNull(bytes);
+            Preconditions.assertTrue(bytes.length > 0);
+            mStatusCode = Concept2StatusCodes.OK;
+            mData = ByteBuffer.wrap(bytes);
+            mPaceMonitorStatus = new PaceMonitorStatusImpl(mData.get());
+        }
+
+        public ValueResult(int statusCode) {
+            mStatusCode = statusCode;
+            mPaceMonitorStatus = null;
+            mData = null;
+        }
+
+        public int getStatusCode() {
+            return mStatusCode;
+        }
+
+        public boolean isSuccess() {
+            return mStatusCode == Concept2StatusCodes.OK;
+        }
+
+        public PaceMonitorStatus getPaceMonitorStatus() {
+            return mPaceMonitorStatus;
+        }
+
+        public ByteBuffer getData() {
+            return mData;
+        }
+    }
     public static final class DataResult {
         private final int mStatusCode;
         private final PaceMonitorStatusImpl mStatus;

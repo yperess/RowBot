@@ -24,31 +24,13 @@ public class GetUserInfoResultRef extends PaceMonitorResultRef implements PaceMo
     private static final String COLUMN_GENDER = PaceMonitorColumnContract.GENDER;
 
     /**
-     * Creates a new {@link DataHolder} for a given user info. Using this method assumes that the
-     * communication returned a status code of {@link Concept2StatusCodes#OK}.
-     *
-     * @param weight The pace monitor user's weight in Kg.
-     * @param age The pace monitor user's age in years.
-     * @param gender The pace monitor user's gender code.
-     * @return {@link DataHolder} representing the user's info.
-     */
-    public static DataHolder createDataHolder(PaceMonitorStatusImpl status, int weight, int age,
-            int gender) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_WEIGHT, weight);
-        values.put(COLUMN_AGE, age);
-        values.put(COLUMN_GENDER, gender);
-        values.putAll(status.toContentValues());
-        return new DataHolder(Concept2StatusCodes.OK, values);
-    }
-
-    /**
      * Create a new user info result reference around the given data.
      *
      * @param dataHolder The data needed to report the pace monitor's user info.
+     * @param row The row of data to read.
      */
-    public GetUserInfoResultRef(DataHolder dataHolder) {
-        super(dataHolder);
+    public GetUserInfoResultRef(DataHolder dataHolder, int row) {
+        super(dataHolder, row);
     }
 
     @Override
