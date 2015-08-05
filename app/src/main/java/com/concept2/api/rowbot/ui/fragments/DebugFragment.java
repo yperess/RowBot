@@ -1,6 +1,7 @@
 package com.concept2.api.rowbot.ui.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.concept2.api.Concept2;
 import com.concept2.api.Concept2StatusCodes;
@@ -36,6 +38,10 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
     private ArrayAdapter<String> mResultAdapter;
 
     int mLastCommandBatchId = -1;
+    boolean mCollectingData = false;
+
+
+    private int mDataCollectBatchId = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,26 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
                 mResultAdapter.add(results[i]);
             }
         }
+
+
+        ArrayList<CommandBuilder.Command> cmdList = new ArrayList<>();
+        cmdList.add(CommandBuilder.getPaceCmd(null));
+        cmdList.add(CommandBuilder.getStrokeRateCmd(null));
+        cmdList.add(CommandBuilder.getHighResolutionWorkTimeCmd(null));
+        cmdList.add(CommandBuilder.getHighResolutionWorkDistanceCmd(null));
+        cmdList.add(CommandBuilder.getStrokeStateCmd(null));
+        Concept2.PaceMonitor.createCommandBatch(getActivity(), cmdList).setResultCallback(
+                new ResultCallback<PaceMonitor.CreateBatchCommandResult>() {
+                    @Override
+                    public void onResult(PaceMonitor.CreateBatchCommandResult result) {
+                        if (result.getStatus() == Concept2StatusCodes.OK) {
+                            mDataCollectBatchId = result.getBatchId();
+                        } else {
+                            Toast.makeText(getActivity(), "Failed to create command batch!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -308,11 +334,28 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
                         .setResultCallback(callback);
                 break;
             }
+            case 44: {
+                if (mCollectingData || mDataCollectBatchId < 0) {
+                    break;
+                }
+                Concept2.PaceMonitor.executeCommandBatch(getActivity(), mDataCollectBatchId)
+                        .setResultCallback(this);
+            }
         }
     }
 
     @Override
     public void onResult(Result result) {
         mResultAdapter.add(result.toString());
+        if (result.getStatus() == Concept2StatusCodes.OK
+                && result instanceof PaceMonitor.BatchResult && mCollectingData) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Concept2.PaceMonitor.executeCommandBatch(getActivity(), mDataCollectBatchId)
+                            .setResultCallback(DebugFragment.this);
+                }
+            }, 100);
+        }
     }
 }

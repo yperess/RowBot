@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Focus -->
+    <item android:state_focused="true" android:state_window_focused="true">
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+            android:insetLeft="@dimen/button_inset_horizontal_material"
+            android:insetTop="@dimen/button_inset_vertical_material"
+            android:insetRight="@dimen/button_inset_horizontal_material"
+            android:insetBottom="@dimen/button_inset_vertical_material">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/control_corner_material" />
+                <solid android:color="?attr/colorControlHighlight" />
+                <padding android:left="@dimen/button_padding_horizontal_material"
+                    android:top="@dimen/button_padding_vertical_material"
+                    android:right="@dimen/button_padding_horizontal_material"
+                    android:bottom="@dimen/button_padding_vertical_material" />
+            </shape>
+        </inset>
+    </item>
+
+    <!-- Pressed & Enabled -->
+    <item android:state_pressed="true" android:state_enabled="true">
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+            android:insetLeft="@dimen/button_inset_horizontal_material"
+            android:insetTop="@dimen/button_inset_vertical_material"
+            android:insetRight="@dimen/button_inset_horizontal_material"
+            android:insetBottom="@dimen/button_inset_vertical_material">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/control_corner_material" />
+                <solid android:color="?attr/colorControlActivated" />
+                <padding android:left="@dimen/button_padding_horizontal_material"
+                    android:top="@dimen/button_padding_vertical_material"
+                    android:right="@dimen/button_padding_horizontal_material"
+                    android:bottom="@dimen/button_padding_vertical_material" />
+            </shape>
+        </inset>
+    </item>
+
+    <!-- Checked -->
+    <item android:state_checked="true">
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+            android:insetLeft="@dimen/button_inset_horizontal_material"
+            android:insetTop="@dimen/button_inset_vertical_material"
+            android:insetRight="@dimen/button_inset_horizontal_material"
+            android:insetBottom="@dimen/button_inset_vertical_material">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/control_corner_material" />
+                <solid android:color="?attr/colorControlActivated" />
+                <padding android:left="@dimen/button_padding_horizontal_material"
+                    android:top="@dimen/button_padding_vertical_material"
+                    android:right="@dimen/button_padding_horizontal_material"
+                    android:bottom="@dimen/button_padding_vertical_material" />
+            </shape>
+        </inset>
+    </item>
+
+    <item>
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+            android:insetLeft="@dimen/button_inset_horizontal_material"
+            android:insetTop="@dimen/button_inset_vertical_material"
+            android:insetRight="@dimen/button_inset_horizontal_material"
+            android:insetBottom="@dimen/button_inset_vertical_material">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/control_corner_material" />
+                <solid android:color="?attr/colorControlNormal" />
+                <padding android:left="@dimen/button_padding_horizontal_material"
+                    android:top="@dimen/button_padding_vertical_material"
+                    android:right="@dimen/button_padding_horizontal_material"
+                    android:bottom="@dimen/button_padding_vertical_material" />
+            </shape>
+        </inset>
+    </item>
+</selector>

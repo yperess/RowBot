@@ -31,7 +31,6 @@ public class NavDrawerAdapter extends BaseAdapter implements ListAdapter {
     private static final boolean DBG = false;
 
     private MainActivity mContext;
-    private DataSetObserver mObserver;
     private ArrayList<LineItem> mItems;
     private int mSelectedIndex = -1;
 
@@ -43,63 +42,41 @@ public class NavDrawerAdapter extends BaseAdapter implements ListAdapter {
         mContext = context;
         mItems = new ArrayList<>();
         mItems.add(new LineItem(R.string.rowbot_nav_drawer_home, 0 /* icon */, false));
+        mItems.add(new LineItem(R.string.rowbot_nav_drawer_debug, 0 /* icon */, false));
         mItems.add(new LineItem(R.string.rowbot_nav_drawer_settings, R.mipmap.ic_action_settings, true));
-        mItems.add(new LineItem(R.string.rowbot_nav_drawer_help_and_feedback, R.mipmap.ic_action_help,
-                false));
+        mItems.add(new LineItem(R.string.rowbot_nav_drawer_help_and_feedback,
+                R.mipmap.ic_action_help, false));
 
         Resources res = context.getResources();
         mSelectedColor = res.getColor(R.color.rowbot_theme_primary);
         mDefaultColor = res.getColor(android.R.color.primary_text_light);
         mSelectedBackgroundColor = res.getColor(R.color.rowbot_nav_selected_background);
-
-        mContext.getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_frame, new DebugFragment(), "DEBUG")
-                .commit();
-    }
-
-    public void onBackPressed() {
-        notifyDataSetChanged();
-    }
-
-    public void onNewMainFragment(Class fragmentClass) {
-        if (fragmentClass.equals(DebugFragment.class)) {
-            mSelectedIndex = 0;
-        } else if (fragmentClass.equals(SettingsFragment.class)) {
-            mSelectedIndex = 1;
-        } else if (fragmentClass.equals(HelpAndFeedbackFragment.class)) {
-            mSelectedIndex = 2;
-        } else {
-            return;
-        }
-
-        if (mObserver != null) {
-            mObserver.onChanged();
-        }
     }
 
     public void setSelected(int index) {
-        if (mSelectedIndex == index) return;
+//        if (mSelectedIndex == index) return;
 
         FragmentManager fragmentManager = mContext.getSupportFragmentManager();
-        fragmentManager.popBackStackImmediate();
 
         Fragment fragment;
         switch (index) {
             case 1:
-                fragment = new SettingsFragment();
+                fragment = new DebugFragment();
                 break;
             case 2:
+                fragment = new SettingsFragment();
+                break;
+            case 3:
                 fragment = new HelpAndFeedbackFragment();
                 break;
             default:
-                fragment = null;
+                return;
         }
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
+//        mSelectedIndex = index;
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -110,16 +87,6 @@ public class NavDrawerAdapter extends BaseAdapter implements ListAdapter {
     @Override
     public boolean isEnabled(int position) {
         return true;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-        mObserver = observer;
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-        mObserver = null;
     }
 
     @Override

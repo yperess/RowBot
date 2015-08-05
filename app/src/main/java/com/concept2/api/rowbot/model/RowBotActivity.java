@@ -15,6 +15,4 @@ public interface RowBotActivity {
     void setSharingData(boolean sharingData);
 
     boolean isSharingData();
-
-    void onNewMainFragment(Class fragmentClass);
 }

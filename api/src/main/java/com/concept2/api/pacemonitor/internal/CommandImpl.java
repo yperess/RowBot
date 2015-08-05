@@ -48,7 +48,7 @@ public abstract class CommandImpl<R extends PaceMonitorResult> implements
         ByteBuffer buffer = ByteBuffer.allocate(commandTotalByteLength);
         if (mIsCustomCommand) {
             buffer.put((byte) 0x1A);
-            buffer.put((byte) (((mData == null) ? 0 : mData.length) + 2));
+            buffer.put((byte) (((mData == null) ? 0 : (mData.length + 1)) + 1));
         }
         buffer.put(mCommandId);
         if (mData != null) {

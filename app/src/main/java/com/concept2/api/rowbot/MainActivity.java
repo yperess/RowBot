@@ -4,9 +4,9 @@ import android.content.SharedPreferences;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,15 +14,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.concept2.api.Concept2;
 import com.concept2.api.common.Constants;
 import com.concept2.api.common.data.Version;
-import com.concept2.api.rowbot.ui.fragments.DebugFragment;
 import com.concept2.api.rowbot.ui.dialogs.WelcomeDialogFragment;
 import com.concept2.api.rowbot.model.RowBotActivity;
 import com.concept2.api.rowbot.ui.adapters.NavDrawerAdapter;
+import com.concept2.api.rowbot.ui.fragments.HomePagerFragment;
 
-public class MainActivity extends FragmentActivity implements RowBotActivity,
+public class MainActivity extends AppCompatActivity implements RowBotActivity,
         WelcomeDialogFragment.WelcomeDialogListener {
 
     private static final String TAG = "RowBotActivity";
@@ -53,15 +52,18 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
 
         initNavigationDrawer();
         initActionBar();
+
         if (savedInstanceState == null) {
-            mNavDrawerAdapter.setSelected(0);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, new HomePagerFragment(), "HOME")
+                    .commit();
         }
     }
 
     @Override
-    public void onBackPressed() {
-        mNavDrawerAdapter.onBackPressed();
-        super.onBackPressed();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     @Override
@@ -89,13 +91,18 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
         }
 
         // Handle your other action bar items...
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void setActionBarTitle(int resId) {
-        getActionBar().setTitle(resId);
+        getSupportActionBar().setTitle(resId);
     }
 
     @Override
@@ -140,8 +147,11 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
     }
 
     @Override
-    public void onNewMainFragment(Class fragmentClass) {
-        mNavDrawerAdapter.onNewMainFragment(fragmentClass);
+    public void onBackPressed() {
+        if (!mDrawerToggle.isDrawerIndicatorEnabled()) {
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+        }
+        super.onBackPressed();
     }
 
     private void initNavigationDrawer() {
@@ -156,16 +166,16 @@ public class MainActivity extends FragmentActivity implements RowBotActivity,
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mNavDrawerAdapter.setSelected(position);
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
                 mDrawerLayout.closeDrawers();
             }
         });
     }
 
     private void initActionBar() {
-        getActionBar().setTitle(R.string.app_name);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        findViewById(android.R.id.home).setVisibility(View.INVISIBLE);
+        getSupportActionBar().setTitle(R.string.app_name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private void showWelcomeDialog() {

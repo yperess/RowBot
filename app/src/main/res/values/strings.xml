@@ -3,6 +3,7 @@
 
     <!-- Navigation drawer text -->
     <string name="rowbot_nav_drawer_home">Home</string>
+    <string name="rowbot_nav_drawer_debug">Debug</string>
     <string name="rowbot_nav_drawer_settings">Settings</string>
     <string name="rowbot_nav_drawer_help_and_feedback">Help &amp; Feedback</string>
 
@@ -89,5 +90,13 @@
         <item>GO_STATE_BAD_ID</item>
         <item>Execute Last Batch</item>
         <item>100m @ 200W</item>
+        <item>Get Data</item>
     </string-array>
+
+    <!-- Profile card -->
+    <string name="profile_default_user_name">Your Name</string>
+    <string name="profile_default_team_name">Team Name</string>
+    <string name="profile_season_meters_label">Season Meters:</string>
+    <string name="profile_lifetime_meters_label">Lifetime Meters:</string>
+    <string name="profile_details_button">Details</string>
 </resources>
