@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.concept2.api.rowbot">
+    package="com.rowbot">
 
     <application android:allowBackup="true"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher_beta"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity"
+        <activity android:name="com.rowbot.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -22,7 +22,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
-        <activity android:name=".ui.activities.ReleaseNotesActivity">
+        <activity android:name="com.rowbot.ui.activities.ReleaseNotesActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>

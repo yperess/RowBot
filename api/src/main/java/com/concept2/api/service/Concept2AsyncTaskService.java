@@ -37,6 +37,7 @@ import com.concept2.api.pacemonitor.internal.GetWorkoutIntervalCountResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutNumberResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutStateResultRef;
 import com.concept2.api.pacemonitor.internal.GetWorkoutTypeResultRef;
+import com.concept2.api.rowbot.RowBot;
 import com.concept2.api.service.broker.DataBroker;
 import com.concept2.api.service.broker.pacemonitor.CommandBatch;
 import com.concept2.api.service.broker.pacemonitor.CommandBatchCache;
@@ -62,6 +63,7 @@ public class Concept2AsyncTaskService {
         int DEFAULT = 0;
         int PACE_MONITOR = 1;
         int LOGBOOK = 2;
+        int ROW_BOT = 3;
     }
 
     /**
@@ -157,6 +159,12 @@ public class Concept2AsyncTaskService {
         });
     }
 
+    /**
+     *
+     * @param context
+     * @param pendingResult
+     * @param id
+     */
     public static void executeCommandBatch(Context context,
             final PendingResultImpl<PaceMonitor.BatchResult> pendingResult, final int id) {
         execute(context, Affinity.PACE_MONITOR, new BaseDataOperation() {
@@ -191,4 +199,10 @@ public class Concept2AsyncTaskService {
             }
         });
     }
+
+    public static void loadProfile(Context context,
+            final PendingResultImpl<RowBot.LoadProfileResult> pendingResult) {}
+
+    public static void updateProfile(Context context,
+            final PendingResultImpl<Result> pendingResult) {}
 }

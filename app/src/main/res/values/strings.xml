@@ -96,7 +96,14 @@
     <!-- Profile card -->
     <string name="profile_default_user_name">Your Name</string>
     <string name="profile_default_team_name">Team Name</string>
-    <string name="profile_season_meters_label">Season Meters:</string>
-    <string name="profile_lifetime_meters_label">Lifetime Meters:</string>
-    <string name="profile_details_button">Details</string>
+    <string name="profile_season_meters">Season Meters: %1$sm</string>
+    <string name="profile_lifetime_meters">Lifetime Meters: %1$sm</string>
+
+    <!-- Profile page -->
+    <string name="profile_page_title">Profile Details</string>
+
+    <!-- PR list item -->
+    <string name="pr_item_hour_time">HH:mm:ss.S</string>
+    <string name="pr_item_minute_time">mm:ss.S</string>
+    <string name="pr_item_value">%1$s @ %2$d SR</string>
 </resources>

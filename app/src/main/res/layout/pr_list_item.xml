@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/pr_list_item_image_size"
+        android:layout_height="@dimen/pr_list_item_image_size"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_2k"/>
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textSize="20sp"
+        android:text="7:41 @ 34 SR"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/pr_list_item_image_size"
+        android:layout_weight="2"
+        android:paddingRight="10dp"
+        android:textSize="20sp"
+        android:text="10/04/14"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical|right"
+        android:background="@drawable/bg_pr_date"/>
+</LinearLayout>

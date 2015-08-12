@@ -21,4 +21,10 @@
 
     <!-- Profile card -->
     <dimen name="profile_card_image_size">80dp</dimen>
+
+    <!-- Profile page -->
+    <dimen name="profile_page_image_size">120dp</dimen>
+
+    <!-- PR list item-->
+    <dimen name="pr_list_item_image_size">60dp</dimen>
 </resources>

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/help_feedback"
-        android:drawableLeft="@mipmap/ic_feedback"
+        android:drawableLeft="@drawable/ic_feedback"
         android:drawablePadding="15dp"
         android:paddingLeft="15dp"/>
 

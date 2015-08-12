@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="profile_summary_card"/>
+    <item type="id" name="pr_summary_card"/>
+    <item type="id" name="workout_summary_card"/>
+    <item type="id" name="more_workout_history_card"/>
+</resources>

@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="Article..."
-        android:drawableLeft="@mipmap/ic_article"
+        android:drawableLeft="@drawable/ic_article"
         android:drawablePadding="15dp"/>
 
 </LinearLayout>
