@@ -37,20 +37,20 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         mUserName = (TextView) rootView.findViewById(R.id.user_name);
         mUserName.setOnClickListener(this);
-        setUserName(mParent.getUserName());
+//        setUserName(mParent.getUserName());
 
         mClubName = (TextView) rootView.findViewById(R.id.club_name);
         mClubName.setOnClickListener(this);
-        setClubName(mParent.getClubName());
+//        setClubName(mParent.getClubName());
 
         mSendData = (CheckBox) rootView.findViewById(R.id.send_data);
-        mSendData.setChecked(Constants.VERSION.isBeta() || mParent.isSharingData());
+//        mSendData.setChecked(Constants.VERSION.isBeta() || mParent.isSharingData());
         mSendData.setEnabled(!Constants.VERSION.isBeta());
         mSendData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!Constants.VERSION.isBeta()) {
-                    mParent.setSharingData(isChecked);
+//                    mParent.setSharingData(isChecked);
                 }
             }
         });
@@ -68,38 +68,38 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void showAlertDialogForName(final boolean isUserName) {
-        final EditText input = new EditText(getActivity());
-        input.setHint(isUserName ? "User Name" : "Club Name");
-        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        if (isUserName && !TextUtils.isEmpty(mParent.getUserName())) {
-            input.setText(mParent.getUserName());
-        } else if (!isUserName && !TextUtils.isEmpty(mParent.getClubName())) {
-            input.setText(mParent.getClubName());
-        }
-
-        new AlertDialog.Builder(getActivity())
-                .setTitle(isUserName ? "Set User Name" : "Set Club Name")
-                .setView(input)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = input.getText().toString();
-                        if (isUserName) {
-                            mParent.setUserName(name);
-                            setUserName(name);
-                        } else {
-                            mParent.setClubName(name);
-                            setClubName(name);
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .show();
+//        final EditText input = new EditText(getActivity());
+//        input.setHint(isUserName ? "User Name" : "Club Name");
+//        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+//        if (isUserName && !TextUtils.isEmpty(mParent.getUserName())) {
+//            input.setText(mParent.getUserName());
+//        } else if (!isUserName && !TextUtils.isEmpty(mParent.getClubName())) {
+//            input.setText(mParent.getClubName());
+//        }
+//
+//        new AlertDialog.Builder(getActivity())
+//                .setTitle(isUserName ? "Set User Name" : "Set Club Name")
+//                .setView(input)
+//                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        String name = input.getText().toString();
+//                        if (isUserName) {
+//                            mParent.setUserName(name);
+//                            setUserName(name);
+//                        } else {
+//                            mParent.setClubName(name);
+//                            setClubName(name);
+//                        }
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                })
+//                .show();
     }
 
     private void setUserName(String userName) {

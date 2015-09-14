@@ -5,24 +5,32 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.concept2.api.utils.Objects;
 import com.rowbot.R;
-import com.rowbot.api.RowBot;
 import com.rowbot.internal.PersonalRecordRef;
 import com.rowbot.model.PersonalRecord;
 import com.concept2.api.rowbot.profile.Profile;
+import com.rowbot.model.RowBotActivity;
 import com.rowbot.ui.adapters.BasePrAdapter;
+import com.rowbot.ui.dialogs.ProfileEditDialogFragment;
+import com.rowbot.utils.StockImageUtils;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
-public class ProfileDetailsFragment extends BaseFragment {
+public class ProfileDetailsFragment extends BaseFragment implements Observer {
 
     private Profile mProfile;
 
@@ -57,6 +65,18 @@ public class ProfileDetailsFragment extends BaseFragment {
     };
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mParent.getSupportActionBar().setTitle(R.string.profile_page_title);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.profile_details_fragment, null);
@@ -71,16 +91,50 @@ public class ProfileDetailsFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mParent.getSupportActionBar().setTitle(R.string.profile_page_title);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_details_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                // Launch edit dialog for this profile.
+                ProfileEditDialogFragment.createInstance(true /* isEdit */,
+                        true /* cancelable */).show(getChildFragmentManager(), "ProfileEditDialog");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mProfile = RowBot.getProfile(getActivity());
-        mProfileImageView.setImageURI(mProfile.getImageUri());
+        RowBotActivity.CURRENT_PROFILE.addObserver(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        RowBotActivity.CURRENT_PROFILE.deleteObserver(this);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        setProfile((Profile) data);
+    }
+
+    private void setProfile(Profile profile) {
+        if (Objects.equals(mProfile, profile)) {
+            return;
+        }
+
+        mProfile = profile;
+        if (mProfile == null) {
+            return;
+        }
+        mProfileImageView.setImageResource(StockImageUtils.getStockImageResId(mProfile));
         mNameView.setText(mProfile.getName());
         mTeamNameView.setText(mProfile.getTeamName());
         mSeasonMetersView.setText(getString(R.string.profile_season_meters,

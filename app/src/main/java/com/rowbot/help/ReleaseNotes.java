@@ -19,7 +19,7 @@ public class ReleaseNotes {
         if (!sReleaseVersions.isEmpty()) return;
 
         // Add Release notes here.
-        addReleaseNotes(new Version(true, 0, 1), res.getString(R.string.release_notes_0_0_1));
+        addReleaseNotes(new Version("1.0.0", 1), res.getString(R.string.release_notes_0_0_1));
 
         // Sort the release note versions in descending order.
         Collections.sort(sReleaseVersions, new Comparator<Version>() {

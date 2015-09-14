@@ -1,4 +1,4 @@
-package com.rowbot.model;
+package com.concept2.api.rowbot.logbook;
 
 import java.util.List;
 

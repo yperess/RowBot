@@ -1,32 +1,34 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimaryDark">#cc0986ff</item>
-        <item name="colorPrimary">#ff0c84e8</item>
-        <item name="android:textColorPrimary">#fdfff2</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:editTextColor">@android:color/background_dark</item>
         <item name="android:textColor">@android:color/background_dark</item>
-        <item name="colorControlNormal">@android:color/transparent</item>
-        <item name="colorControlActivated">#ff0043c5</item>
-        <item name="colorControlHighlight">#ffcb6345</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/control_activated</item>
+        <item name="colorControlHighlight">@color/control_highlighted</item>
         <item name="drawerArrowStyle">@style/RowBot.DrawerArrowStyle</item>
         <item name="android:buttonStyle">@style/RowBot.ButtonStyle</item>
+        <item name="alertDialogTheme">@style/RowBot.AlertDialogTheme</item>
     </style>
 
     <style name="RowBot"/>
 
     <style name="RowBot.ActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/rowbot_theme_primary</item>
+        parent="style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/primary</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="RowBot.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
     </style>
 
     <style name="RowBot.ButtonStyle" parent="Base.Widget.AppCompat.Button">
@@ -42,7 +44,7 @@
     </style>
 
     <style name="RowBot.Value">
-        <item name="android:textColor">@color/rowbot_theme_primary</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
     <style name="RowBot.CardTitle">
@@ -65,4 +67,13 @@
         <item name="android:layout_marginLeft">24dp</item>
         <item name="android:layout_marginTop">12dp</item>
     </style>
+
+    <style name="RowBot.ProfileDialog"/>
+
+    <style name="RowBot.ProfileDialog.Image">
+        <item name="android:layout_margin">@dimen/profile_edit_image_margin</item>
+        <item name="android:padding">@dimen/profile_edit_image_grow_size</item>
+        <item name="android:alpha">0.6</item>
+    </style>
+
 </resources>

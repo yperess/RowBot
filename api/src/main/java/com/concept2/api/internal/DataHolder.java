@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import com.concept2.api.Releaseable;
 import com.concept2.api.Result;
 import com.concept2.api.utils.Preconditions;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Holder for generic data via either {@link Bundle} or {@link Cursor}.
  */
-public class DataHolder implements Result {
+public class DataHolder implements Result, Releaseable {
 
     /**
      * Create an empty data holder for a given status code.
@@ -82,6 +83,7 @@ public class DataHolder implements Result {
     /**
      * Release the data in this holder.
      */
+    @Override
     public void release() {
         if (mCursor != null) {
             mCursor.close();
@@ -100,6 +102,30 @@ public class DataHolder implements Result {
         return 0;
     }
 
+    private final boolean containsRow(int row) {
+        if (mValues != null) {
+            return row >= 0 && row < mValues.size();
+        } else {
+            return mCursor.moveToPosition(row);
+        }
+    }
+
+    protected final boolean getBoolean(int row, String columnName, boolean defaultValue) {
+        if (!containsRow(row)) return defaultValue;
+        try {
+            Boolean val;
+            if (mValues != null) {
+                val = mValues.get(row).getAsBoolean(columnName);
+            } else {
+                int column = mCursor.getColumnIndex(columnName);
+                val = column == -1 ? null : mCursor.getInt(column) == 1;
+            }
+            return val == null ? defaultValue : val;
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
     /**
      * Gets an integer value from this holder.
      *
@@ -111,13 +137,12 @@ public class DataHolder implements Result {
      *         the value wasn't found.
      */
     protected final int getInt(int row, String columnName, int defaultValue) {
+        if (!containsRow(row)) return defaultValue;
         try {
             Integer val;
             if (mValues != null) {
-                if (mValues.size() <= row || row < 0) return defaultValue;
                 val = mValues.get(row).getAsInteger(columnName);
             } else {
-                if (!mCursor.moveToPosition(row)) return  defaultValue;
                 int column = mCursor.getColumnIndex(columnName);
                 val = column == -1 ? null : mCursor.getInt(column);
             }
@@ -138,15 +163,30 @@ public class DataHolder implements Result {
      *         value wasn't found.
      */
     protected final long getLong(int row, String columnName, long defaultValue) {
+        if (!containsRow(row)) return defaultValue;
         try {
             Long val;
             if (mValues != null) {
-                if (mValues.size() <= row || row < 0) return defaultValue;
                 val = mValues.get(row).getAsLong(columnName);
             } else {
-                if (!mCursor.moveToPosition(row)) return  defaultValue;
                 int column = mCursor.getColumnIndex(columnName);
                 val = column == -1 ? null : mCursor.getLong(column);
+            }
+            return val == null ? defaultValue : val;
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    protected final float getFloat(int row, String columnName, float defaultValue) {
+        if (!containsRow(row)) return defaultValue;
+        try {
+            Float val;
+            if (mValues != null) {
+                val = mValues.get(row).getAsFloat(columnName);
+            } else {
+                int column = mCursor.getColumnIndex(columnName);
+                val = column == -1 ? null : mCursor.getFloat(column);
             }
             return val == null ? defaultValue : val;
         } catch (Exception e) {
@@ -165,13 +205,12 @@ public class DataHolder implements Result {
      *         the value wasn't found.
      */
     protected final double getDouble(int row, String columnName, double defaultValue) {
+        if (!containsRow(row)) return defaultValue;
         try {
             Double val;
             if (mValues != null) {
-                if (mValues.size() <= row || row < 0) return defaultValue;
                 val = mValues.get(row).getAsDouble(columnName);
             } else {
-                if (!mCursor.moveToPosition(row)) return  defaultValue;
                 int column = mCursor.getColumnIndex(columnName);
                 val = column == -1 ? null : mCursor.getDouble(column);
             }
@@ -192,13 +231,12 @@ public class DataHolder implements Result {
      *         if the value wasn't found.
      */
     protected final int[] getIntArray(int row, String columnName, int[] defaultValue) {
+        if (!containsRow(row)) return defaultValue;
         try {
             byte[] bytes;
             if (mValues != null) {
-                if (mValues.size() <= row || row < 0) return defaultValue;
                 bytes = mValues.get(row).getAsByteArray(columnName);
             } else {
-                if (!mCursor.moveToPosition(row)) return  defaultValue;
                 int column = mCursor.getColumnIndex(columnName);
                 bytes = column == -1 ? null : mCursor.getBlob(column);
             }
@@ -212,6 +250,22 @@ public class DataHolder implements Result {
             int[] intArray = new int[bytes.length / 4];
             buffer.asIntBuffer().get(intArray);
             return intArray;
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    protected final String getString(int row, String columnName, String defaultValue) {
+        if (!containsRow(row)) return defaultValue;
+        try {
+            String val;
+            if (mValues != null) {
+                val = mValues.get(row).getAsString(columnName);
+            } else {
+                int column = mCursor.getColumnIndex(columnName);
+                val = column == -1 ? null : mCursor.getString(column);
+            }
+            return val == null ? defaultValue : val;
         } catch (Exception e) {
             return defaultValue;
         }

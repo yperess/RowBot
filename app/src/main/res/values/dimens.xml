@@ -3,6 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="nav_drawer_width">240dp</dimen>
+    <dimen name="nav_drawer_profile_image_size">60dp</dimen>
+    <dimen name="nav_drawer_margin">16dp</dimen>
+    <dimen name="nav_drawer_item_margin">5dp</dimen>
+    <dimen name="nav_drawer_profile_select_image_size">32dp</dimen>
+
     <dimen name="button_inset_horizontal_material">4dp</dimen>
     <dimen name="button_inset_vertical_material">6dp</dimen>
     <dimen name="button_padding_horizontal_material">4dp</dimen>
@@ -24,6 +30,13 @@
 
     <!-- Profile page -->
     <dimen name="profile_page_image_size">120dp</dimen>
+
+    <!-- Profile edit dialog -->
+    <dimen name="profile_edit_image_margin">3dp</dimen>
+    <dimen name="profile_edit_image_size">72dp</dimen>
+    <dimen name="profile_edit_image_grow_size">6dp</dimen>
+    <dimen name="profile_edit_image_secondary_grow_size">3dp</dimen>
+    <dimen name="profile_edit_icon_size">24dp</dimen>
 
     <!-- PR list item-->
     <dimen name="pr_list_item_image_size">60dp</dimen>

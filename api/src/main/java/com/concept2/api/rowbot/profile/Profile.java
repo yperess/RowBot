@@ -1,17 +1,16 @@
 package com.concept2.api.rowbot.profile;
 
-import android.net.Uri;
-
+import com.concept2.api.Releaseable;
 import com.concept2.api.pacemonitor.PaceMonitor;
 
 import java.util.Calendar;
 
-public interface Profile {
+public interface Profile extends Releaseable {
 
     interface Gender extends PaceMonitor.Gender {}
 
     String getProfileId();
-    Uri getImageUri();
+    int getImageId();
     String getName();
     String getTeamName();
     int getGender();

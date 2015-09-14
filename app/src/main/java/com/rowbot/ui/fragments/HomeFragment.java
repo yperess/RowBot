@@ -6,11 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.concept2.api.rowbot.profile.Profile;
 import com.rowbot.R;
-import com.rowbot.api.RowBot;
+import com.rowbot.model.RowBotActivity;
 import com.rowbot.ui.adapters.HomePageAdapter;
 
-public class HomeFragment extends BasePageFragment {
+import java.util.Observable;
+import java.util.Observer;
+
+public class HomeFragment extends BasePageFragment implements Observer {
 
     private RecyclerView mRecyclerView;
     private HomePageAdapter mHomePageAdapter;
@@ -28,11 +32,18 @@ public class HomeFragment extends BasePageFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mHomePageAdapter.updateProfile(RowBot.getProfile(getActivity()));
+        RowBotActivity.CURRENT_PROFILE.addObserver(this);
     }
 
     @Override
     public String getPageTitle() {
         return "HOME";
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if (RowBotActivity.CURRENT_PROFILE.equals(observable)) {
+            mHomePageAdapter.updateProfile((Profile) data);
+        }
     }
 }

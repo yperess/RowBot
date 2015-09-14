@@ -13,8 +13,9 @@ import com.rowbot.MainActivity;
 import com.rowbot.R;
 import com.rowbot.model.PersonalRecord;
 import com.concept2.api.rowbot.profile.Profile;
-import com.rowbot.model.Workout;
+import com.concept2.api.rowbot.logbook.Workout;
 import com.rowbot.ui.fragments.ProfileDetailsFragment;
+import com.rowbot.utils.StockImageUtils;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -163,7 +164,8 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
         }
 
         public void setProfile(Profile profile) {
-            mProfileImageView.setImageURI(profile.getImageUri());
+            if (profile == null) return;
+            mProfileImageView.setImageResource(StockImageUtils.getStockImageResId(profile));
             mUserNameView.setText(profile.getName());
             mTeamNameView.setText(profile.getTeamName());
             mSeasonMetersView.setText(mActivity.getString(R.string.profile_season_meters,

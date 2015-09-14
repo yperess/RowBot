@@ -5,8 +5,6 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.concept2.api.Concept2StatusCodes;
-import com.concept2.api.PendingResult;
-import com.concept2.api.Result;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.internal.PendingResultImpl;
 import com.concept2.api.pacemonitor.CommandBuilder;
@@ -15,29 +13,9 @@ import com.concept2.api.pacemonitor.PaceMonitorResult;
 import com.concept2.api.pacemonitor.internal.BatchResultRef;
 import com.concept2.api.pacemonitor.internal.CommandImpl;
 import com.concept2.api.pacemonitor.internal.CreateCommandBatchResultRef;
-import com.concept2.api.pacemonitor.internal.GetCaloriesResultRef;
-import com.concept2.api.pacemonitor.internal.GetDistanceResultRef;
-import com.concept2.api.pacemonitor.internal.GetDragFactorResultRef;
-import com.concept2.api.pacemonitor.internal.GetErrorValueResultRef;
-import com.concept2.api.pacemonitor.internal.GetForcePlotResultRef;
-import com.concept2.api.pacemonitor.internal.GetHeartRatePlotResultRef;
-import com.concept2.api.pacemonitor.internal.GetHeartRateResultRef;
-import com.concept2.api.pacemonitor.internal.GetHighResWorkDistanceResultRef;
-import com.concept2.api.pacemonitor.internal.GetHighResWorkTimeResultRef;
-import com.concept2.api.pacemonitor.internal.GetIntervalTypeResultRef;
-import com.concept2.api.pacemonitor.internal.GetPaceResultRef;
-import com.concept2.api.pacemonitor.internal.GetPowerResultRef;
-import com.concept2.api.pacemonitor.internal.GetRestTimeResultRef;
-import com.concept2.api.pacemonitor.internal.PaceMonitorResultRef;
-import com.concept2.api.pacemonitor.internal.GetStrokeRateResultRef;
-import com.concept2.api.pacemonitor.internal.GetStrokeStateResultRef;
-import com.concept2.api.pacemonitor.internal.GetTimeResultRef;
-import com.concept2.api.pacemonitor.internal.GetUserInfoResultRef;
-import com.concept2.api.pacemonitor.internal.GetWorkoutIntervalCountResultRef;
-import com.concept2.api.pacemonitor.internal.GetWorkoutNumberResultRef;
-import com.concept2.api.pacemonitor.internal.GetWorkoutStateResultRef;
-import com.concept2.api.pacemonitor.internal.GetWorkoutTypeResultRef;
 import com.concept2.api.rowbot.RowBot;
+import com.concept2.api.rowbot.profile.Profile;
+import com.concept2.api.rowbot.profile.internal.LoadProfilesResultRef;
 import com.concept2.api.service.broker.DataBroker;
 import com.concept2.api.service.broker.pacemonitor.CommandBatch;
 import com.concept2.api.service.broker.pacemonitor.CommandBatchCache;
@@ -200,9 +178,49 @@ public class Concept2AsyncTaskService {
         });
     }
 
-    public static void loadProfile(Context context,
-            final PendingResultImpl<RowBot.LoadProfileResult> pendingResult) {}
+    public static void loadProfiles(Context context,
+            final PendingResultImpl<RowBot.LoadProfilesResult> pendingResult,
+            final String profileId) {
+        execute(context, Affinity.ROW_BOT, new BaseDataOperation() {
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.loadProfiles(context, profileId);
+            }
 
+            @Override
+            protected void onResult(DataHolder data) {
+                pendingResult.setResult(new LoadProfilesResultRef(data));
+            }
+        });
+    }
+
+    public static void createProfile(Context context,
+            final PendingResultImpl<RowBot.LoadProfilesResult> pendingResult,
+            final Profile newProfile) {
+        execute(context, Affinity.ROW_BOT, new BaseDataOperation() {
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.createProfile(context, newProfile);
+            }
+
+            @Override
+            protected void onResult(DataHolder data) {
+                pendingResult.setResult(new LoadProfilesResultRef(data));
+            }
+        });
+    }
     public static void updateProfile(Context context,
-            final PendingResultImpl<Result> pendingResult) {}
+            final PendingResultImpl<RowBot.LoadProfilesResult> pendingResult,
+            final Profile newProfile) {
+        execute(context, Affinity.ROW_BOT, new BaseDataOperation() {
+            @Override
+            protected DataHolder getData(DataBroker dataBroker, Context context) {
+                return dataBroker.updateProfile(context, newProfile);
+            }
+
+            @Override
+            protected void onResult(DataHolder data) {
+                pendingResult.setResult(new LoadProfilesResultRef(data));
+            }
+        });}
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RowBot.AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:windowTitleStyle">@style/RowBot.AlertDialogTheme.Title</item>
+    </style>
+
+    <style name="RowBot.AlertDialogTheme.Title">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textAppearance">@style/RowBot.AlertDialogTheme.Title.TextAppearance</item>
+    </style>
+
+    <style name="RowBot.AlertDialogTheme.Title.TextAppearance" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

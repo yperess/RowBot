@@ -8,20 +8,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Toast;
 
+import com.concept2.api.Concept2;
+import com.concept2.api.Concept2StatusCodes;
+import com.concept2.api.ResultCallback;
 import com.concept2.api.common.Constants;
-import com.concept2.api.common.data.Version;
-import com.rowbot.R;
+import com.concept2.api.rowbot.RowBot;
+import com.concept2.api.rowbot.profile.Profile;
+import com.rowbot.ui.dialogs.ProfileEditDialogFragment;
 import com.rowbot.ui.dialogs.WelcomeDialogFragment;
 import com.rowbot.model.RowBotActivity;
 import com.rowbot.ui.adapters.NavDrawerAdapter;
 import com.rowbot.ui.fragments.HomePagerFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RowBotActivity,
         WelcomeDialogFragment.WelcomeDialogListener {
@@ -29,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     private static final String TAG = "RowBotActivity";
 
     private SharedPreferences mPreferences;
-    private Version mLastRunVersion;
+    private int mLastRunVersion;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -42,14 +50,13 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        Constants.VERSION.update(this);
         mPreferences = getSharedPreferences(Constants.SHARED_PREF_FILE, MODE_PRIVATE);
-        String lastRunVersion = mPreferences.getString(Constants.SHARED_PREF_LAST_RUN_VERSION,
-                null);
-        mLastRunVersion = lastRunVersion == null ? null : new Version(lastRunVersion);
+        int lastRunVersion = mPreferences.getInt(Constants.SHARED_PREF_LAST_RUN_VERSION, -1);
+        mLastRunVersion = lastRunVersion;
 
         if (getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE) != null) {
             // Launched from a device connection.
-//            Concept2.PaceMonitor.start(this);
         }
 
         initNavigationDrawer();
@@ -77,10 +84,68 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     @Override
     public void onResume() {
         super.onResume();
-        if (mLastRunVersion == null || mLastRunVersion.compareTo(Constants.VERSION) < 0) {
+
+        if (mLastRunVersion == -1 || mLastRunVersion < Constants.VERSION.getVersionCode()) {
             // Either never run or an update was issued. Show the dialog.
             showWelcomeDialog();
+        } else {
+            onReady();
         }
+    }
+
+    protected void onReady() {
+        Concept2.RowBot.loadProfiles(this, null /* profileId */).setResultCallback(
+                new ResultCallback<RowBot.LoadProfilesResult>() {
+                    @Override
+                    public void onResult(RowBot.LoadProfilesResult result) {
+                        if (result.getStatus() == Concept2StatusCodes.OK) {
+                            if (result.getProfiles().isEmpty()) {
+                                // Force the user to create a profile.
+                                if (getSupportFragmentManager()
+                                        .findFragmentByTag(ProfileEditDialogFragment.TAG) == null) {
+                                    // Only show the fragment if not already showing.
+                                    ProfileEditDialogFragment.createInstance(false /* isEdit */,
+                                            false /* cancelable */)
+                                            .show(getSupportFragmentManager(),
+                                                    ProfileEditDialogFragment.TAG);
+                                }
+                            } else {
+                                // TODO add freeze concept to profile then release the loaded
+                                // profile.
+                                NavDrawerAdapter.setProfiles(
+                                        sortLoadedProfiles(result.getProfiles()));
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Error loading profiles",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private List<Profile> sortLoadedProfiles(List<Profile> profiles) {
+        String profilesStr = mPreferences.getString(Constants.SHARED_PREF_SELECTED_PROFILE_IDS,
+                null);
+        if (TextUtils.isEmpty(profilesStr)) {
+            return profiles;
+        }
+        String[] profileIds = profilesStr.split(",");
+        ArrayList<Profile> sorted = new ArrayList<>(profiles);
+        final int size = sorted.size();
+        for (int i = 0; i < profileIds.length; ++i) {
+            if (!profileIds[i].equals(sorted.get(i).getProfileId())) {
+                // Find the correct profile for this slot.
+                for (int j = i + 1; j < size; ++j) {
+                    if (profileIds[i].equals(sorted.get(j).getProfileId())) {
+                        Profile temp = sorted.get(i);
+                        sorted.set(i, sorted.get(j));
+                        sorted.set(j, temp);
+                        break;
+                    }
+                }
+            }
+        }
+        return sorted;
     }
 
     @Override
@@ -108,47 +173,6 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     }
 
     @Override
-    public boolean isSharingData() {
-        return mPreferences.getBoolean(Constants.SHARED_PREF_SHARING_DATA,
-                Constants.VERSION.isBeta());
-    }
-
-    @Override
-    public void setSharingData(boolean sharing) {
-        mPreferences.edit()
-                .putBoolean(Constants.SHARED_PREF_SHARING_DATA, sharing)
-                .apply();
-    }
-
-    @Override
-    public String getUserName() {
-        return mPreferences.getString(Constants.SHARED_PREF_USER_NAME, null);
-    }
-
-    @Override
-    public void setUserName(String userName) {
-        if (TextUtils.isEmpty(userName)) {
-            mPreferences.edit().remove(Constants.SHARED_PREF_USER_NAME).apply();
-        } else {
-            mPreferences.edit().putString(Constants.SHARED_PREF_USER_NAME, userName).apply();
-        }
-    }
-
-    @Override
-    public String getClubName() {
-        return mPreferences.getString(Constants.SHARED_PREF_CLUB_NAME, null);
-    }
-
-    @Override
-    public void setClubName(String clubName) {
-        if (TextUtils.isEmpty(clubName)) {
-            mPreferences.edit().remove(Constants.SHARED_PREF_CLUB_NAME).apply();
-        } else {
-            mPreferences.edit().putString(Constants.SHARED_PREF_CLUB_NAME, clubName).apply();
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         if (!mDrawerToggle.isDrawerIndicatorEnabled()) {
             mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -162,6 +186,15 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
                 .addToBackStack(null)
                 .commit();
         mDrawerToggle.setDrawerIndicatorEnabled(hasNavDrawer);
+        mDrawerLayout.closeDrawers();
+    }
+
+    public void closeDrawers() {
+        mDrawerLayout.closeDrawers();
+    }
+
+    public SharedPreferences.Editor editSharedPreferences() {
+        return mPreferences.edit();
     }
 
     private void initNavigationDrawer() {
@@ -169,19 +202,15 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mNavDrawerAdapter = new NavDrawerAdapter(this);
-        ListView drawerList = (ListView) findViewById(R.id.left_drawer);
+        mNavDrawerAdapter = NavDrawerAdapter.getInstance(this);
+        RecyclerView drawerList = (RecyclerView) findViewById(R.id.left_drawer);
+        drawerList.setHasFixedSize(true);
         drawerList.setAdapter(mNavDrawerAdapter);
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mNavDrawerAdapter.setSelected(position);
-                mDrawerLayout.closeDrawers();
-            }
-        });
+        drawerList.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void initActionBar() {
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -198,10 +227,11 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         if (dialog == mWelcomeDialog) {
             mWelcomeDialog.getDialog().dismiss();
             mWelcomeDialog = null;
-            mLastRunVersion = Constants.VERSION;
+            mLastRunVersion = Constants.VERSION.getVersionCode();
             mPreferences.edit()
-                    .putString(Constants.SHARED_PREF_LAST_RUN_VERSION, mLastRunVersion.toString())
+                    .putInt(Constants.SHARED_PREF_LAST_RUN_VERSION, mLastRunVersion)
                     .apply();
+            onReady();
         }
     }
 

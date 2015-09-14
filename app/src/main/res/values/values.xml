@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="stock_image_primary_alpha" format="float" type="dimen">1.0</item>
+    <item name="stock_image_secondary_alpha" format="float" type="dimen">0.8</item>
+    <item name="stock_image_base_alpha" format="float" type="dimen">0.5</item>
+</resources>

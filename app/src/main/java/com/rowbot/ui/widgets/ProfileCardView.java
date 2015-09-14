@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.rowbot.R;
 import com.concept2.api.rowbot.profile.Profile;
+import com.rowbot.utils.StockImageUtils;
 
 import java.text.NumberFormat;
 
@@ -44,7 +45,7 @@ public class ProfileCardView extends CardView {
     }
 
     public void setProfile(Profile profile) {
-        mProfileImageView.setImageURI(profile.getImageUri());
+        mProfileImageView.setImageResource(StockImageUtils.getStockImageResId(profile));
         mUserNameView.setText(profile.getName());
         mTeamNameView.setText(profile.getTeamName());
         mSeasonMetersView.setText(getContext().getString(R.string.profile_season_meters,

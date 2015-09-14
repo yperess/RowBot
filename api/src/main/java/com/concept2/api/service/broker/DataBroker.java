@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.pacemonitor.CommandBuilder;
-import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.pacemonitor.internal.CommandImpl;
+import com.concept2.api.rowbot.profile.Profile;
 
 import java.util.List;
 
@@ -38,11 +38,15 @@ public class DataBroker {
     /** The pace monitor agent. */
     private final PaceMonitorAgent mPaceMonitorAgent;
 
+    /** The RowBot agent. */
+    private final RowBotAgent mRowBotAgent;
+
     /**
      * @param context The context used to create the broker and associated databases.
      */
     private DataBroker(Context context) {
         mPaceMonitorAgent = new PaceMonitorAgent();
+        mRowBotAgent = new RowBotAgent();
     }
 
     public DataHolder executePaceMonitorCommand(Context context, CommandImpl command) {
@@ -56,5 +60,17 @@ public class DataBroker {
 
     public DataHolder executePaceMonitorCommandBatch(Context context, int id) {
         return mPaceMonitorAgent.executeCommandBatch(context, id);
+    }
+
+    public DataHolder loadProfiles(Context context, String profileId) {
+        return mRowBotAgent.loadProfiles(context, profileId);
+    }
+
+    public DataHolder createProfile(Context context, Profile profile) {
+        return mRowBotAgent.createProfile(context, profile);
+    }
+
+    public DataHolder updateProfile(Context context, Profile profile) {
+        return mRowBotAgent.updateProfile(context, profile);
     }
 }
