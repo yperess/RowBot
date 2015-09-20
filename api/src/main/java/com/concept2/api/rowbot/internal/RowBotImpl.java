@@ -1,6 +1,7 @@
 package com.concept2.api.rowbot.internal;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.concept2.api.PendingResult;
 import com.concept2.api.Result;
@@ -74,6 +75,15 @@ public class RowBotImpl implements RowBot {
         Preconditions.assertNotNull(newProfile, "New profile cannot be null");
         PendingResultImpl<LoadProfilesResult> pendingResult = new LoadProfilePendingResult();
         Concept2AsyncTaskService.updateProfile(context, pendingResult, newProfile);
+        return pendingResult;
+    }
+
+    @Override
+    public PendingResult<Result> deleteProfile(Context context, String profileId) {
+        Preconditions.assertNotNull(context, "Context cannot be null");
+        Preconditions.assertTrue(!TextUtils.isEmpty(profileId), "Profile ID cannot be empty");
+        PendingResultImpl<Result> pendingResult = new StatusPendingResult();
+        Concept2AsyncTaskService.deleteProfile(context, pendingResult, profileId);
         return pendingResult;
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="stock_avatar_images">
+        <item>@drawable/stock_avatar_0</item>
+        <item>@drawable/stock_avatar_1</item>
+        <item>@drawable/stock_avatar_2</item>
+        <item>@drawable/stock_avatar_3</item>
+        <item>@drawable/stock_avatar_4</item>
+        <item>@drawable/stock_avatar_5</item>
+        <item>@drawable/stock_avatar_6</item>
+        <item>@drawable/stock_avatar_7</item>
+        <item>@drawable/stock_avatar_8</item>
+        <item>@drawable/stock_avatar_9</item>
+        <item>@drawable/stock_avatar_10</item>
+        <item>@drawable/stock_avatar_11</item>
+    </integer-array>
+</resources>

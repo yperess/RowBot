@@ -69,6 +69,29 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
         selectProfile(profile.getProfileId());
     }
 
+    public static void deleteProfile(String profileId) {
+        Iterator<Profile> iterator = sProfiles.iterator();
+        while (iterator.hasNext()) {
+            Profile profile = iterator.next();
+            if (profileId.equals(profile.getProfileId())) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        if (sProfiles.isEmpty()) {
+            // Force user to create a new profile.
+            synchronized (sInstanceLock) {
+                if (sInstance != null) {
+                    sInstance.mContext.showHome();
+                    sInstance.mContext.showCreateProfileDialog();
+                }
+            }
+        } else {
+            selectProfile(sProfiles.get(0).getProfileId());
+        }
+    }
+
     public static void updateProfile(Profile profile) {
         for (int i = 0, size = sProfiles.size(); i < size; ++i) {
             if (sProfiles.get(i).getProfileId().equals(profile.getProfileId())) {
@@ -221,7 +244,15 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
 
     @Override
     public void update(Observable observable, Object data) {
-        if (data != null) {
+        if (data != null && data instanceof Profile) {
+            // Update the profile object, then select it.
+            Profile profile = (Profile) data;
+            for (int i = 0, size = sProfiles.size(); i < size; ++i) {
+                if (sProfiles.get(i).getProfileId().equals(profile.getProfileId())) {
+                    sProfiles.set(i, profile);
+                    break;
+                }
+            }
             selectProfile(((Profile) data).getProfileId());
         }
     }

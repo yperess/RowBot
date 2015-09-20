@@ -2,6 +2,7 @@ package com.rowbot.ui.widgets;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,20 +33,25 @@ public class ImageRailView extends HorizontalScrollView implements View.OnClickL
 
     public ImageRailView(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public ImageRailView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
     public ImageRailView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(attrs);
     }
 
-    private void init() {
+    private void init(AttributeSet attrs) {
+        TypedArray attrValues = getContext().getTheme().obtainStyledAttributes(attrs,
+                R.styleable.ImageRailView, 0, 0);
+        int imagesArrayResId = attrValues.getResourceId(R.styleable.ImageRailView_images, 0);
+        attrValues.recycle();
+
         View root = inflate(getContext(), R.layout.widget_image_rail, this);
         mContainer = (LinearLayout) root.findViewById(R.id.container);
 
@@ -65,6 +71,13 @@ public class ImageRailView extends HorizontalScrollView implements View.OnClickL
         mAlpha[1] = value.getFloat();
         getResources().getValue(R.dimen.stock_image_base_alpha, value, false);
         mAlpha[2] = value.getFloat();
+
+        if (imagesArrayResId != 0) {
+            int[] images = getResources().getIntArray(imagesArrayResId);
+            if (images != null) {
+                setImages(images);
+            }
+        }
     }
 
     @Override

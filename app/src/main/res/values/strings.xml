@@ -100,6 +100,10 @@
     <string name="settings_share_data_description">Send use statistics and gathered data (over WiFi)
         to the developers. Data collected this way will be used to provide new and more accurate
         features in future releases of this application.</string>
+    <string name="settings_delete_button">Delete Profile</string>
+    <string name="settings_delete_dialog_title">Delete Profile?</string>
+    <string name="settings_delete_dialog_message">Are you sure you want to delete profile \'%1$s\'?
+        This action cannot be undone.</string>
 
     <!-- Debug page -->
     <string-array name="debug_command_list">

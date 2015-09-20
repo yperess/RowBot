@@ -9,23 +9,28 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:editTextColor">@android:color/background_dark</item>
         <item name="android:textColor">@android:color/background_dark</item>
-        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlNormal">@color/control_normal</item>
         <item name="colorControlActivated">@color/control_activated</item>
         <item name="colorControlHighlight">@color/control_highlighted</item>
         <item name="drawerArrowStyle">@style/RowBot.DrawerArrowStyle</item>
         <item name="android:buttonStyle">@style/RowBot.ButtonStyle</item>
         <item name="alertDialogTheme">@style/RowBot.AlertDialogTheme</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="RowBot"/>
 
-    <style name="RowBot.ActionBar"
-        parent="style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="RowBot.ActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/primary</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="color">@android:color/white</item>
         <item name="android:textStyle">bold</item>
+        <item name="drawerArrowStyle">@style/RowBot.DrawerArrowStyle</item>
     </style>
 
     <style name="RowBot.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/primary</item>
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
@@ -35,6 +40,7 @@
         <item name="android:background">@drawable/ripple</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
     <style name="RowBot.Card">

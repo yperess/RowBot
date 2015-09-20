@@ -20,4 +20,5 @@ public interface RowBot {
 
     PendingResult<LoadProfilesResult> createNewProfile(Context context, ProfileCreator newProfile);
     PendingResult<LoadProfilesResult> updateProfile(Context context, ProfileCreator newProfile);
+    PendingResult<Result> deleteProfile(Context context, String profileId);
 }

@@ -1,6 +1,7 @@
 package com.rowbot;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     private SharedPreferences mPreferences;
     private int mLastRunVersion;
 
+    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavDrawerAdapter mNavDrawerAdapter;
@@ -50,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        Constants.VERSION.update(this);
         mPreferences = getSharedPreferences(Constants.SHARED_PREF_FILE, MODE_PRIVATE);
         int lastRunVersion = mPreferences.getInt(Constants.SHARED_PREF_LAST_RUN_VERSION, -1);
         mLastRunVersion = lastRunVersion;
@@ -82,15 +83,26 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
-        if (mLastRunVersion == -1 || mLastRunVersion < Constants.VERSION.getVersionCode()) {
+        int currentVersionCode = getRowBotApplication().getCurrentVersion().getVersionCode();
+        if (mLastRunVersion == -1 || mLastRunVersion < currentVersionCode) {
             // Either never run or an update was issued. Show the dialog.
             showWelcomeDialog();
         } else {
             onReady();
         }
+    }
+
+    public RowBotApplication getRowBotApplication() {
+        return (RowBotApplication) getApplication();
     }
 
     protected void onReady() {
@@ -101,14 +113,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
                         if (result.getStatus() == Concept2StatusCodes.OK) {
                             if (result.getProfiles().isEmpty()) {
                                 // Force the user to create a profile.
-                                if (getSupportFragmentManager()
-                                        .findFragmentByTag(ProfileEditDialogFragment.TAG) == null) {
-                                    // Only show the fragment if not already showing.
-                                    ProfileEditDialogFragment.createInstance(false /* isEdit */,
-                                            false /* cancelable */)
-                                            .show(getSupportFragmentManager(),
-                                                    ProfileEditDialogFragment.TAG);
-                                }
+                                showCreateProfileDialog();
                             } else {
                                 // TODO add freeze concept to profile then release the loaded
                                 // profile.
@@ -121,6 +126,14 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
                         }
                     }
                 });
+    }
+
+    public void showCreateProfileDialog() {
+        if (getSupportFragmentManager().findFragmentByTag(ProfileEditDialogFragment.TAG) == null) {
+            // Only show the fragment if not already showing.
+            ProfileEditDialogFragment.createInstance(false /* isEdit */, false /* cancelable */)
+                    .show(getSupportFragmentManager(), ProfileEditDialogFragment.TAG);
+        }
     }
 
     private List<Profile> sortLoadedProfiles(List<Profile> profiles) {
@@ -185,8 +198,19 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
                 .commit();
-        mDrawerToggle.setDrawerIndicatorEnabled(hasNavDrawer);
-        mDrawerLayout.closeDrawers();
+        if (hasNavDrawer) {
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+        } else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        closeDrawers();
+    }
+
+    public void showHome() {
+        getSupportFragmentManager().popBackStack();
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 
     public void closeDrawers() {
@@ -198,8 +222,9 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
     }
 
     private void initNavigationDrawer() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, 0, 0);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mNavDrawerAdapter = NavDrawerAdapter.getInstance(this);
@@ -227,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         if (dialog == mWelcomeDialog) {
             mWelcomeDialog.getDialog().dismiss();
             mWelcomeDialog = null;
-            mLastRunVersion = Constants.VERSION.getVersionCode();
+            mLastRunVersion = getRowBotApplication().getCurrentVersion().getVersionCode();
             mPreferences.edit()
                     .putInt(Constants.SHARED_PREF_LAST_RUN_VERSION, mLastRunVersion)
                     .apply();

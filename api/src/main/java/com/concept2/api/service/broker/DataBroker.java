@@ -73,4 +73,8 @@ public class DataBroker {
     public DataHolder updateProfile(Context context, Profile profile) {
         return mRowBotAgent.updateProfile(context, profile);
     }
+
+    public int deleteProfile(Context context, String profileId) {
+        return mRowBotAgent.deleteProfile(context, profileId);
+    }
 }

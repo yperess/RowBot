@@ -5,8 +5,11 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.concept2.api.Concept2StatusCodes;
+import com.concept2.api.PendingResult;
+import com.concept2.api.Result;
 import com.concept2.api.internal.DataHolder;
 import com.concept2.api.internal.PendingResultImpl;
+import com.concept2.api.internal.ResultImpl;
 import com.concept2.api.pacemonitor.CommandBuilder;
 import com.concept2.api.pacemonitor.PaceMonitor;
 import com.concept2.api.pacemonitor.PaceMonitorResult;
@@ -222,5 +225,21 @@ public class Concept2AsyncTaskService {
             protected void onResult(DataHolder data) {
                 pendingResult.setResult(new LoadProfilesResultRef(data));
             }
-        });}
+        });
+    }
+
+    public static void deleteProfile(Context context, final PendingResultImpl<Result> pendingResult,
+            final String profileId) {
+        execute(context, Affinity.ROW_BOT, new BaseOperation() {
+            @Override
+            protected int execute(DataBroker dataBroker, Context context) {
+                return dataBroker.deleteProfile(context, profileId);
+            }
+
+            @Override
+            protected void onResult(int status) {
+                pendingResult.setResult(new ResultImpl(status));
+            }
+        });
+    }
 }

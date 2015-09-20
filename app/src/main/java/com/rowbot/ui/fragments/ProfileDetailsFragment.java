@@ -21,6 +21,7 @@ import com.concept2.api.rowbot.profile.Profile;
 import com.rowbot.model.RowBotActivity;
 import com.rowbot.ui.adapters.BasePrAdapter;
 import com.rowbot.ui.dialogs.ProfileEditDialogFragment;
+import com.rowbot.ui.fragments.BaseFragment;
 import com.rowbot.utils.StockImageUtils;
 
 import java.text.NumberFormat;

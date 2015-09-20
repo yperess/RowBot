@@ -5,4 +5,8 @@
         <attr name="valueText" format="string"/>
         <attr name="unitsText" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="ImageRailView">
+        <attr name="images" format="reference"/>
+    </declare-styleable>
 </resources>
