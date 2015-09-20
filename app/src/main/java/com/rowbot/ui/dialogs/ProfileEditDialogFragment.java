@@ -38,6 +38,7 @@ public class ProfileEditDialogFragment extends BaseDialogFragment
         args.putBoolean(ARG_CANCELABLE, cancelable);
         ProfileEditDialogFragment dialogFragment = new ProfileEditDialogFragment();
         dialogFragment.setArguments(args);
+        dialogFragment.setCancelable(cancelable);
         return dialogFragment;
     }
 

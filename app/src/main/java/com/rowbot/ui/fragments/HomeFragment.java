@@ -42,8 +42,6 @@ public class HomeFragment extends BasePageFragment implements Observer {
 
     @Override
     public void update(Observable observable, Object data) {
-        if (RowBotActivity.CURRENT_PROFILE.equals(observable)) {
-            mHomePageAdapter.updateProfile((Profile) data);
-        }
+        mHomePageAdapter.updateProfile((Profile) data);
     }
 }

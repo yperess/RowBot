@@ -81,6 +81,7 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
 
         if (sProfiles.isEmpty()) {
             // Force user to create a new profile.
+            RowBotActivity.CURRENT_PROFILE.setValue(null).notifyObservers();
             synchronized (sInstanceLock) {
                 if (sInstance != null) {
                     sInstance.mContext.showHome();

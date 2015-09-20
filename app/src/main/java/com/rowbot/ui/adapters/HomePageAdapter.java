@@ -45,7 +45,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
 
     public void updateProfile(Profile profile) {
         mProfile = profile;
-        notifyItemChanged(PROFILE_SUMMARY_CARD_POSITION);
+        notifyDataSetChanged();
     }
 
     public void updatePersonalRecords(Collection<PersonalRecord> personalRecords) {
@@ -79,6 +79,12 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case R.id.home_null_state_card: {
+                View view = LayoutInflater.from(mActivity)
+                        .inflate(R.layout.home_null_state_card, parent, false);
+                view.setId(R.id.home_null_state_card);
+                return new BaseViewHolder(view);
+            }
             case R.id.profile_summary_card: {
                 View view = LayoutInflater.from(mActivity)
                         .inflate(R.layout.profile_card, parent, false);
@@ -119,11 +125,15 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
     @Override
     public int getItemCount() {
         // Profile summary, PR summary, Workout history, see more.
-        return 2 + mWorkoutSummaryCards.size() + (mShowSeeMoreWorkouts ? 1 : 0);
+        return mProfile == null ? 1
+                : 2 + mWorkoutSummaryCards.size() + (mShowSeeMoreWorkouts ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (mProfile == null) {
+            return R.id.home_null_state_card;
+        }
         switch (position){
             case PROFILE_SUMMARY_CARD_POSITION:
                 return R.id.profile_summary_card;
@@ -142,6 +152,13 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
             case R.id.profile_summary_card:
                 mActivity.showFragment(new ProfileDetailsFragment(), false /* hasNavDrawer */);
                 break;
+        }
+    }
+
+    public class BaseViewHolder extends ViewHolder {
+
+        public BaseViewHolder(View itemView) {
+            super(itemView);
         }
     }
 

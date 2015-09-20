@@ -7,6 +7,7 @@
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
+    <string name="no_profile_found">No profile found.</string>
 
     <!-- Navigation drawer text -->
     <string name="rowbot_nav_drawer_home">Home</string>
