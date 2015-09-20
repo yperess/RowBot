@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.concept2.api.rowbot.logbook.Workout;
+import com.concept2.api.rowbot.profile.Profile;
 import com.rowbot.MainActivity;
 import com.rowbot.R;
 import com.rowbot.model.PersonalRecord;
-import com.concept2.api.rowbot.profile.Profile;
-import com.concept2.api.rowbot.logbook.Workout;
 import com.rowbot.ui.fragments.ProfileDetailsFragment;
 import com.rowbot.utils.StockImageUtils;
 
