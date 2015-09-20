@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
         if (hasNavDrawer) {
             mDrawerToggle.setDrawerIndicatorEnabled(true);
         } else {

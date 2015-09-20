@@ -66,12 +66,6 @@ public class ProfileDetailsFragment extends BaseFragment implements Observer {
     };
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mParent.getSupportActionBar().setTitle(R.string.profile_page_title);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -112,6 +106,7 @@ public class ProfileDetailsFragment extends BaseFragment implements Observer {
     @Override
     public void onResume() {
         super.onResume();
+        mParent.getSupportActionBar().setTitle(R.string.profile_page_title);
         RowBotActivity.CURRENT_PROFILE.addObserver(this);
     }
 

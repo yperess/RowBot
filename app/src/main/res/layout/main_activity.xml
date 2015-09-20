@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:theme="@style/RowBot.ActionBar"/>
+            android:theme="@style/RowBot.ActionBar"/>
 
         <!-- The main content view -->
         <FrameLayout

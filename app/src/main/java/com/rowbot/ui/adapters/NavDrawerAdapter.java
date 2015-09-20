@@ -45,7 +45,7 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
 
     public static NavDrawerAdapter getInstance(MainActivity context) {
         synchronized (sInstanceLock) {
-            if (sInstance == null) {
+            if (sInstance == null || !sInstance.mContext.equals(context)) {
                 sInstance = new NavDrawerAdapter(context);
             }
         }
@@ -165,6 +165,7 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
     private NavDrawerAdapter(MainActivity context) {
         mContext = context;
         RowBotActivity.CURRENT_PROFILE.addObserver(this);
+        sItems.clear();
         sItems.add(new LineItem(R.string.rowbot_nav_drawer_home, 0 /* icon */, false));
         sItems.add(new LineItem(R.string.rowbot_nav_drawer_debug, 0 /* icon */, false) {
             @Override
