@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/nav_drawer_margin"
@@ -11,13 +12,13 @@
     android:orientation="horizontal"
     android:gravity="center|center_vertical">
 
-    <ImageView
+    <com.rowbot.ui.widgets.ImageViewCompat
         android:layout_width="@dimen/nav_drawer_profile_select_image_size"
         android:layout_height="@dimen/nav_drawer_profile_select_image_size"
         android:paddingEnd="@dimen/nav_drawer_margin"
         android:paddingRight="@dimen/nav_drawer_margin"
         android:src="@drawable/ic_person_add"
-        android:tint="?attr/colorPrimary"/>
+        app:tint="?attr/colorPrimary"/>
 
     <TextView
         android:layout_width="wrap_content"

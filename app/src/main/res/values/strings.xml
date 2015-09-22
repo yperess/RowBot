@@ -38,7 +38,21 @@
     </string-array>
 
     <!-- Release notes -->
-    <string name="release_notes_0_0_1"><![CDATA[<p>RowBot\'s first release!</p><p>RowBot is intended to provide a cheap platform for rowers and coaches for a fun and productive practice. The project is currently and is intended to remain free (other costs may include the actual hardware required).</p><p>The current version of RowBot is intended to crowd source sensor data to provide the developers a wide set of sample data. We encourage rowers of all ages, genders, skill levels, and boat types to use this application while exercising. Data collected during the use will be sent to the developers for analysis (over WiFi only to avoid using your data plan). This analysis will be used to generate new algorithms that will provide you, the user, with better and more accurate rowing analysis.</p><p>The data we collect:<br/>&bull; Accelerometer Sensor Data<br/>&bull; Gyroscope Sensor Data<br/>&bull; Gravity Sensor Data<br/>The data gathered can be sent completely anonymously. While anonymity is guaranteed to always be an option, some additional data does help us provide you with better analysis. This data includes:<br/>&bull; Gender<br/>&bull; Age<br/>&bull; Boat type (1x, 2-, 2x, 4-, 4+, 4x, 8+, 8x)</p>]]></string>
+    <string name="release_notes_1_0_0"><![CDATA[<p>RowBot\'s first release!</p><p>RowBot is intended
+        to provide a cheap platform for rowers and coaches for a fun and productive practice. The
+        project is currently and is intended to remain free (other costs may include the actual
+        hardware required).</p><p>The current version of RowBot is intended to crowd source sensor
+        data to provide the developers a wide set of sample data. We encourage rowers of all ages,
+        genders, skill levels, and boat types to use this application while exercising. Data
+        collected during the use will be sent to the developers for analysis (over WiFi only to
+        avoid using your data plan). This analysis will be used to generate new algorithms that will
+        provide you, the user, with better and more accurate rowing analysis.</p><p>The data we
+        collect:<br/>&bull; Accelerometer Sensor Data<br/>&bull; Gyroscope Sensor Data<br/>&bull;
+        Gravity Sensor Data<br/>The data gathered can be sent completely anonymously. While
+        anonymity is guaranteed to always be an option, some additional data does help us provide
+        you with better analysis. This data includes:<br/>&bull; Gender<br/>&bull; Age<br/>&bull;
+        Boat type (1x, 2-, 2x, 4-, 4+, 4x, 8+, 8x)</p>]]></string>
+    <string name="release_notes_1_0_1"><![CDATA[&bull; Minor bug fixes.<br/>&bull; Added support for profiles (creation, modification, deletion, and switching).]]></string>
 
     <!-- Help and Feedback page-->
     <string name="help_contact_us_title">Contact Us</string>

@@ -51,12 +51,11 @@
             android:inputType="number"
             android:hint="@string/profile_dialog_weight_hint"/>
 
-        <Switch
+        <android.support.v7.widget.SwitchCompat
             android:id="@+id/weight_units"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:showText="true"
             android:textOff="@string/profile_dialog_weight_units_standard"
             android:textOn="@string/profile_dialog_weight_units_metric"/>
 

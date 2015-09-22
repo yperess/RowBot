@@ -2,13 +2,13 @@ package com.rowbot.ui.widgets;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 import com.concept2.api.rowbot.profile.Profile;
 import com.concept2.api.rowbot.profile.ProfileCreator;
@@ -25,7 +25,7 @@ public class ProfileEditDetailView extends LinearLayout implements
 
     private EditText mBirthdayView;
     private EditText mWeightView;
-    private Switch mWeightUnitsSwitch;
+    private SwitchCompat mWeightUnitsSwitch;
     private Spinner mGenderSpinner;
 
     private Calendar mBirthday;
@@ -48,7 +48,7 @@ public class ProfileEditDetailView extends LinearLayout implements
         View root = inflate(getContext(), R.layout.profile_edit_details_view, this);
         mBirthdayView = (EditText) root.findViewById(R.id.birthday);
         mWeightView = (EditText) root.findViewById(R.id.weight);
-        mWeightUnitsSwitch = (Switch) root.findViewById(R.id.weight_units);
+        mWeightUnitsSwitch = (SwitchCompat) root.findViewById(R.id.weight_units);
         mGenderSpinner = (Spinner) root.findViewById(R.id.gender);
 
         mBirthdayView.setOnClickListener(this);

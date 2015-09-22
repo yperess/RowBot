@@ -14,6 +14,7 @@
         <item name="colorControlHighlight">@color/control_highlighted</item>
         <item name="drawerArrowStyle">@style/RowBot.DrawerArrowStyle</item>
         <item name="android:buttonStyle">@style/RowBot.ButtonStyle</item>
+        <item name="switchStyle">@style/RowBot.SwitchStyle</item>
         <item name="alertDialogTheme">@style/RowBot.AlertDialogTheme</item>
         <item name="windowActionBar">false</item>
     </style>
@@ -41,6 +42,19 @@
         <item name="android:gravity">center</item>
         <item name="android:padding">5dp</item>
         <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="RowBot.SwitchStyle" parent="Base.Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="android:track">@drawable/switch_bg</item>
+        <item name="track">@drawable/switch_bg</item>
+        <item name="showText">true</item>
+        <item name="switchTextAppearance">@style/RowBot.SwitchStyle.TextAppearance</item>
+    </style>
+
+    <style name="RowBot.SwitchStyle.TextAppearance" parent="Base.TextAppearance.AppCompat.Widget.Switch">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="RowBot.Card">

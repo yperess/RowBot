@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <size android:width="1dp" android:height="28sp"/>
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
+    <item>
+        <selector>
+            <item android:state_enabled="false" android:drawable="@drawable/switch_thumb_disabled"/>
+            <item android:state_pressed="true" android:drawable="@drawable/switch_thumb_pressed" />
+            <item android:state_checked="true" android:drawable="@drawable/switch_thumb_activated" />
+            <item android:drawable="@drawable/switch_thumb_default"/>
+        </selector>
+    </item>
+</layer-list>

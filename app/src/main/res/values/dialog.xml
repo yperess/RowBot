@@ -4,6 +4,7 @@
     <style name="RowBot.AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/primary</item>
         <item name="android:windowTitleStyle">@style/RowBot.AlertDialogTheme.Title</item>
+        <item name="switchStyle">@style/RowBot.SwitchStyle</item>
     </style>
 
     <style name="RowBot.AlertDialogTheme.Title">
