@@ -38,7 +38,7 @@
     </string-array>
 
     <!-- Release notes -->
-    <string name="release_notes_1_0_0"><![CDATA[<p>RowBot\'s first release!</p><p>RowBot is intended
+    <string name="release_notes_a_1_0"><![CDATA[<p>RowBot\'s first release!</p><p>RowBot is intended
         to provide a cheap platform for rowers and coaches for a fun and productive practice. The
         project is currently and is intended to remain free (other costs may include the actual
         hardware required).</p><p>The current version of RowBot is intended to crowd source sensor
@@ -52,7 +52,14 @@
         anonymity is guaranteed to always be an option, some additional data does help us provide
         you with better analysis. This data includes:<br/>&bull; Gender<br/>&bull; Age<br/>&bull;
         Boat type (1x, 2-, 2x, 4-, 4+, 4x, 8+, 8x)</p>]]></string>
-    <string name="release_notes_1_0_1"><![CDATA[&bull; Minor bug fixes.<br/>&bull; Added support for profiles (creation, modification, deletion, and switching).]]></string>
+    <string name="release_notes_a_1_1"><![CDATA[
+        &bull; Minor bug fixes.<br/>
+        &bull; Added support for profiles (creation, modification, deletion, and switching).
+        ]]></string>
+    <string name="release_notes_a_1_2"><![CDATA[
+        &bull; Enhances look of switches (can be found in weight units switch in the profile
+                creation/edit dialog).
+        ]]></string>
 
     <!-- Help and Feedback page-->
     <string name="help_contact_us_title">Contact Us</string>

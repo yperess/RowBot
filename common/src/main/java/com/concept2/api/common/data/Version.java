@@ -8,39 +8,39 @@ import android.text.TextUtils;
 import com.concept2.api.common.Constants;
 import com.concept2.api.common.utils.Preconditions;
 
+import java.util.regex.Pattern;
+
 public class Version implements Comparable<Version> {
 
-    private String mVersionName;
-    private int mVersionCode;
+    private static final String VERSION_NAME_REGEX = "([ABab]\\.)?\\d+\\.\\d+";
 
-    private boolean mIsBeta;
+    private final String mVersionName;
+    private final int mVersionCode;
 
-    public Version() {
-        mVersionName = "";
-        mVersionCode = 0;
-        mIsBeta = false;
-    }
+    private final boolean mIsAlpha;
+    private final boolean mIsBeta;
 
     public Version(String versionName, int versionCode) {
-        init(versionName, versionCode);
-    }
-
-    public void update(Context context) {
-        try {
-            PackageInfo info = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            init(info.versionName, info.versionCode);
-        } catch (PackageManager.NameNotFoundException e) {}
-    }
-
-    private void init(String versionName, int versionCode) {
         Preconditions.assertTrue(!TextUtils.isEmpty(versionName));
         String[] versionBits = versionName.split("\\.");
-        Preconditions.assertEqual(3, versionBits.length);
+        Preconditions.assertTrue(versionName.matches(VERSION_NAME_REGEX));
 
-        mIsBeta = versionBits[0].equals("1");
+        if (versionBits.length == 3) {
+            mIsAlpha = versionBits[0].equalsIgnoreCase("a");
+            mIsBeta = versionBits[0].equalsIgnoreCase("b");
+        } else {
+            mIsAlpha = mIsBeta = false;
+        }
         mVersionName = versionName;
         mVersionCode = versionCode;
+    }
+
+    public boolean isProd() {
+        return !(mIsAlpha || mIsBeta);
+    }
+
+    public boolean isAlpha() {
+        return mIsAlpha;
     }
 
     public boolean isBeta() {
