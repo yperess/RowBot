@@ -1,11 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.rowbot">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+    <uses-sdk tools:overrideLibrary="com.alorma.github.sdk" />
 
     <application android:name=".RowBotApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher_beta"
         android:theme="@style/AppTheme">
+
+        <meta-data android:name="com.alorma.github.sdk.client" android:value="59887a5d14946b2b13ac"/>
+        <meta-data android:name="com.alorma.github.sdk.secret" android:value="ed345bb5f2c7f837eb5f8a67f1038eefe1b7acef"/>
+        <meta-data android:name="com.alorma.github.sdk.oauth" android:value="https://groups.google.com/forum/#!forum/rowbot-alpha"/>
 
         <activity android:name=".MainActivity"
             android:label="@string/app_name"

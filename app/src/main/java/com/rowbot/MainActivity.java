@@ -187,10 +187,10 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
 
     @Override
     public void onBackPressed() {
-        if (!mDrawerToggle.isDrawerIndicatorEnabled()) {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             mDrawerToggle.setDrawerIndicatorEnabled(true);
         }
-        super.onBackPressed();
     }
 
     public void showFragment(Fragment fragment, boolean hasNavDrawer) {

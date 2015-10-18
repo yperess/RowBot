@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keepattributes *Annotation*,Signature
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * {
+@retrofit.http.* <methods>; }

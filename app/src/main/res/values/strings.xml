@@ -7,6 +7,7 @@
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
+    <string name="submit">Submit</string>
     <string name="no_profile_found">No profile found.</string>
 
     <!-- Navigation drawer text -->
@@ -20,6 +21,9 @@
     <string name="rowbot_frag_debug">RowBot - Debug</string>
     <string name="rowbot_frag_settings">RowBot - Settings</string>
     <string name="rowbot_frag_help">RowBot - Help &amp; Feedback</string>
+
+    <!-- Send feedback dialog -->
+    <string name="send_feedback_progress_dialog_message">Sending feedback...</string>
 
     <!-- Welcome dialog -->
     <string name="welcome_dialog_title">Welcome to RowBot</string>
@@ -61,10 +65,24 @@
                 creation/edit dialog).
         ]]></string>
 
+    <!-- Buglist page -->
+    <string name="buglist_error_connecting_to_github">Error connecting to GitHub, click here to
+        enter your Alpha-Tester\'s password (hint: the password is on our Google group page)
+        .</string>
+    <string name="buglist_get_github_password_dialog_title">Enter GitHub Password:</string>
+    <string name="buglist_get_github_password_dialog_hint">GitHub Password</string>
+
     <!-- Help and Feedback page-->
     <string name="help_contact_us_title">Contact Us</string>
     <string name="help_feedback">Feedback</string>
     <string name="help_documents_title">Documentation</string>
+    <string-array name="feedback_type">
+        <item>Bug Report</item>
+        <item>Feature Request</item>
+    </string-array>
+    <string name="bug_report_description_hint">What went wrong?</string>
+    <string name="bug_report_repro_hint">How can we reproduce this bug?</string>
+    <string name="feature_request_description_hint">What would you like to see us do better?</string>
 
     <!-- Create profile dialog -->
     <string name="profile_dialog_create_title">Create a Profile</string>

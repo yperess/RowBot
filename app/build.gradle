@@ -9,14 +9,15 @@ android {
             storePassword '1eonardo'
         }
     }
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "21.1.2"
     defaultConfig {
-        applicationId "com.concept2.api.rowbot"
+        applicationId "com.rowbot"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 3
         versionName "A.1.2"
+        multiDexEnabled = true
     }
     buildTypes {
         release {
@@ -24,16 +25,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile 'com.github.alorma:github-sdk:1.2.0'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.github.alorma:github-sdk:1.2.+' exclude module: 'httpclient'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:22.+'
+    compile 'com.android.support:cardview-v7:23.+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.1'
+    compile 'com.google.android.gms:play-services-base:8.1.0'
+    compile 'com.google.api-client:google-api-client:1.20.0'
+    compile 'com.google.api-client:google-api-client-android:1.20.0'
+    compile 'com.google.api-client:google-api-client-gson:1.20.0' exclude module: 'httpclient'
+    compile 'com.google.apis:google-api-services-groupsmigration:v1-rev40-1.20.0'
+    compile 'com.google.apis:google-api-services-gmail:v1-rev29-1.20.0'
     compile project(':common')
     compile project(':api')
 }

@@ -62,7 +62,15 @@ public class HelpAndFeedbackFragment extends BaseFragment implements View.OnClic
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.feedback) {
-            Toast.makeText(getActivity(), "Leaving feedback...", Toast.LENGTH_SHORT).show();
+            // Alpha or Beta versions get to post to their respective Google groups whereas prod
+            // versions can only leave feedback in the play store.
+            if (mParent.getRowBotApplication().getCurrentVersion().isProd()) {
+                Toast.makeText(getActivity(), "Leaving feedback...", Toast.LENGTH_SHORT).show();
+            } else if (mParent.getRowBotApplication().getCurrentVersion().isBeta()){
+                mParent.showFragment(new TesterFeedbackFragment(), false /* hasNavDrawer */);
+            } else if (mParent.getRowBotApplication().getCurrentVersion().isAlpha()) {
+                mParent.showFragment(new BugListFragment(), false /* hasNavDrawer */);
+            }
         }
     }
 

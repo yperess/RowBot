@@ -31,14 +31,18 @@ public class ImageViewCompat extends ImageView {
                 R.styleable.ImageViewCompat, 0, 0);
         if (attrValues.hasValue(R.styleable.ImageViewCompat_tint)) {
             int tint = attrValues.getColor(R.styleable.ImageViewCompat_tint, Color.BLACK);
-            Drawable src = getDrawable();
-            if (src != null) {
-                src = DrawableCompat.wrap(src);
-                DrawableCompat.setTint(src, tint);
-                DrawableCompat.setTintMode(src, PorterDuff.Mode.SRC_ATOP);
-                setImageDrawable(src);
-            }
+            setTint(tint);
         }
         attrValues.recycle();
+    }
+
+    public void setTint(int tint) {
+        Drawable src = getDrawable();
+        if (src != null) {
+            src = DrawableCompat.wrap(src);
+            DrawableCompat.setTint(src, tint);
+            DrawableCompat.setTintMode(src, PorterDuff.Mode.SRC_ATOP);
+            setImageDrawable(src);
+        }
     }
 }

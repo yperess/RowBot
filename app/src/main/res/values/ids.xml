@@ -5,4 +5,7 @@
     <item type="id" name="pr_summary_card"/>
     <item type="id" name="workout_summary_card"/>
     <item type="id" name="more_workout_history_card"/>
+
+    <item type="id" name="github_error"/>
+    <item type="id" name="github_issue"/>
 </resources>
