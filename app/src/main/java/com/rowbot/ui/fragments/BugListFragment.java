@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
     private GitHubIssueListAdapter mIssueAdapter;
 
     private View mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mBugListRecyclerView;
     private View mFab;
 
@@ -97,7 +99,8 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
                         .show();
                 mProgressBar.setVisibility(View.GONE);
                 mIssueAdapter.setIssueList(issues);
-                mBugListRecyclerView.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -107,7 +110,8 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
                 mProgressBar.setVisibility(View.GONE);
                 mIssueAdapter.setLoadingError(R.drawable.github_logo, -1 /* iconTintColor */,
                         retrofitError.getLocalizedMessage());
-                mBugListRecyclerView.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
         refreshIssues();
@@ -119,12 +123,19 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.buglist_fragment, container, false);
         mProgressBar = root.findViewById(R.id.progress);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout);
         mBugListRecyclerView = (RecyclerView) root.findViewById(R.id.bug_list);
         mFab = root.findViewById(R.id.fab);
 
         mBugListRecyclerView.setLayoutManager(new LinearLayoutManager(mParent));
         mBugListRecyclerView.setAdapter(mIssueAdapter);
         mFab.setOnClickListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshIssues();
+            }
+        });
         return root;
     }
 
@@ -134,7 +145,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
             // Need the token.
             mIssueAdapter.setLoadingError(R.drawable.github_logo, -1 /* iconTintColor */,
                     mParent.getString(R.string.buglist_error_connecting_to_github));
-            mBugListRecyclerView.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.GONE);
         }
         mProgressBar.setVisibility(View.VISIBLE);
         mGetIssuesClient.execute();
