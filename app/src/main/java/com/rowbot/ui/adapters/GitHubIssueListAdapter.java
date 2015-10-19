@@ -16,16 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alorma.github.sdk.bean.dto.response.Issue;
+import com.alorma.github.sdk.bean.dto.response.IssueState;
 import com.alorma.github.sdk.bean.dto.response.Label;
 import com.rowbot.R;
 import com.rowbot.ui.widgets.ImageViewCompat;
 import com.rowbot.utils.Cipher;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
-        View.OnClickListener {
+        View.OnClickListener, Comparator<Issue> {
 
     private static final String TAG = "GithubIssueAdapter";
 
@@ -48,6 +51,7 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void setIssueList(List<Issue> issueList) {
+        Collections.sort(issueList, this);
         mIssueList.clear();
         mHasLoadingError = false;
         mIssueList.addAll(issueList);
@@ -55,6 +59,34 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             setLoadingError(R.drawable.ic_check_mark, -1, "No issues found.");
         }
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int compare(Issue lhs, Issue rhs) {
+        // -1 if lhs < rhs, 1 if lhs > rhs, 0 is lhs == rhs.
+
+        // Sort open before closed
+        if (lhs.state != rhs.state) {
+            if (lhs.state == IssueState.open && rhs.state == IssueState.closed) {
+                return -1;
+            } else if (lhs.state == IssueState.closed && rhs.state == IssueState.open) {
+                return 1;
+            }
+        }
+        // Sort by milestone number. (No milestone first)
+        if (lhs.milestone == null && rhs.milestone != null) {
+            return -1;
+        } else if (lhs.milestone != null && rhs.milestone == null) {
+            return 1;
+        } else if (lhs.milestone != null && rhs.milestone != null
+                && lhs.milestone.number != rhs.milestone.number) {
+            if (lhs.milestone.number < rhs.milestone.number) {
+                return -1;
+            } else if (lhs.milestone.number > rhs.milestone.number) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     public void setLoadingError(int iconResId, int iconTintColor, String loadingErrorMessage) {
@@ -146,7 +178,9 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public final class IssueViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
+        private final ImageViewCompat mStatusIcon;
         private final TextView mTitleView;
+        private final TextView mMilestoneView;
         private final TextView mAssignedStatusView;
         private final LinearLayout mLabelList;
         private final ListPopupWindow mLabelPopupWindow;
@@ -154,7 +188,9 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public IssueViewHolder(View itemView) {
             super(itemView);
+            mStatusIcon = (ImageViewCompat) itemView.findViewById(R.id.status);
             mTitleView = (TextView) itemView.findViewById(R.id.title);
+            mMilestoneView = (TextView) itemView.findViewById(R.id.milestone);
             mAssignedStatusView = (TextView) itemView.findViewById(R.id.assigned_status);
             mLabelList = (LinearLayout) itemView.findViewById(R.id.label_list);
 
@@ -166,7 +202,10 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
         public void onBind(Issue issue) {
+            mStatusIcon.setImageResource(issue.state == IssueState.open
+                    ? R.drawable.ic_error_outline : R.drawable.ic_check_mark);
             mTitleView.setText(issue.title);
+            mMilestoneView.setText(issue.milestone == null ? null : issue.milestone.title);
             mAssignedStatusView.setText(issue.assignee == null ? "Not Assigned"
                     : !TextUtils.isEmpty(issue.assignee.name) ? issue.assignee.name
                     : issue.assignee.login);

@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import com.rowbot.R;
 
 public class ImageViewCompat extends ImageView {
+
+    private int mTint = -1;
+
     public ImageViewCompat(Context context) {
         super(context);
     }
@@ -37,6 +40,7 @@ public class ImageViewCompat extends ImageView {
     }
 
     public void setTint(int tint) {
+        mTint = tint;
         Drawable src = getDrawable();
         if (src != null) {
             src = DrawableCompat.wrap(src);
@@ -44,5 +48,11 @@ public class ImageViewCompat extends ImageView {
             DrawableCompat.setTintMode(src, PorterDuff.Mode.SRC_ATOP);
             setImageDrawable(src);
         }
+    }
+
+    @Override
+    public void setImageResource(int resId) {
+        super.setImageResource(resId);
+        setTint(mTint);
     }
 }

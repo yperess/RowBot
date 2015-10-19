@@ -37,14 +37,11 @@ import retrofit.client.Response;
 public class BugListFragment extends BaseFragment implements View.OnClickListener,
         GitHubIssueListAdapter.GitHubTokenListener {
 
-    private static final String PASSWORD = "blablabla";
-    private static final String GITHUB_PERSONAL_ACCESS_TOKEN =
-            "4151b0703efc44f95b7eb1296e883c54ce63dbed";
     private static final HashMap<String, String> GITHUB_ISSUE_FILTER = new HashMap<>();
 
     static {
         GITHUB_ISSUE_FILTER.put("filter", "all");
-        GITHUB_ISSUE_FILTER.put("state", "open");
+        GITHUB_ISSUE_FILTER.put("state", "all");
         GITHUB_ISSUE_FILTER.put("sort", "updated");
     }
 

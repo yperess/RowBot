@@ -96,4 +96,10 @@
         <item name="android:alpha">0.6</item>
     </style>
 
+    <style name="RowBot.GitHub"/>
+
+    <style name="RowBot.GitHub.IssueTitle">
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>
