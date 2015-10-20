@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.rowbot.ui.widgets.ImageRailView
+    <org.uvdev.rowbot.ui.widgets.ImageRailView
         android:id="@+id/image_rail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

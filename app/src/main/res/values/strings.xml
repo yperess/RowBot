@@ -67,8 +67,8 @@
 
     <!-- Buglist page -->
     <string name="buglist_error_connecting_to_github">Error connecting to GitHub, click here to
-        enter your Alpha-Tester\'s password (hint: the password is on our Google group page)
-        .</string>
+        enter your Alpha-Tester\'s password (hint: the password is on our Google group
+        page).</string>
     <string name="buglist_get_github_password_dialog_title">Enter GitHub Password:</string>
     <string name="buglist_get_github_password_dialog_hint">GitHub Password</string>
 

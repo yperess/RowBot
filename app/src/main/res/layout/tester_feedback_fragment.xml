@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <com.rowbot.ui.widgets.ImageViewCompat
+        <org.uvdev.rowbot.ui.widgets.ImageViewCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_drop_down"

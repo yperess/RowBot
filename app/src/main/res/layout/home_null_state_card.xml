@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         android:gravity="center">
 
-        <com.rowbot.ui.widgets.ImageViewCompat
+        <org.uvdev.rowbot.ui.widgets.ImageViewCompat
             android:id="@+id/icon"
             android:layout_width="64dp"
             android:layout_height="64dp"

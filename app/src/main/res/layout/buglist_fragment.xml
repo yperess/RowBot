@@ -7,8 +7,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/bug_list"
@@ -17,15 +16,7 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/progress"
-        style="@android:style/Widget.ProgressBar.Large"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"/>
-
-    <com.rowbot.ui.widgets.ImageViewCompat
+    <org.uvdev.rowbot.ui.widgets.ImageViewCompat
         android:id="@+id/fab"
         android:layout_width="60dp"
         android:layout_height="60dp"

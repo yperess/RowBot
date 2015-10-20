@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <com.rowbot.ui.widgets.ImageViewCompat
+        <org.uvdev.rowbot.ui.widgets.ImageViewCompat
             android:id="@+id/status"
             android:layout_width="24dp"
             android:layout_height="24dp"

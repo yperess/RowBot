@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.rowbot.ui.widgets.ProfileEditMainView
+    <org.uvdev.rowbot.ui.widgets.ProfileEditMainView
         android:id="@+id/basic_info_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.rowbot.ui.widgets.ProfileEditDetailView
+    <org.uvdev.rowbot.ui.widgets.ProfileEditDetailView
         android:id="@+id/detail_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

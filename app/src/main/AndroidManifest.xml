@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.rowbot">
+    package="org.uvdev.rowbot">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,7 +10,7 @@
 
     <uses-sdk tools:overrideLibrary="com.alorma.github.sdk" />
 
-    <application android:name=".RowBotApplication"
+    <application android:name="org.uvdev.rowbot.RowBotApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher_beta"
@@ -20,7 +20,7 @@
         <meta-data android:name="com.alorma.github.sdk.secret" android:value="ed345bb5f2c7f837eb5f8a67f1038eefe1b7acef"/>
         <meta-data android:name="com.alorma.github.sdk.oauth" android:value="https://groups.google.com/forum/#!forum/rowbot-alpha"/>
 
-        <activity android:name=".MainActivity"
+        <activity android:name="org.uvdev.rowbot.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -36,7 +36,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
-        <activity android:name=".ui.activities.ReleaseNotesActivity">
+        <activity android:name="org.uvdev.rowbot.ui.activities.ReleaseNotesActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>

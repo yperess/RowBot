@@ -1,14 +1,8 @@
 package com.concept2.api.common.data;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
-import com.concept2.api.common.Constants;
 import com.concept2.api.common.utils.Preconditions;
-
-import java.util.regex.Pattern;
 
 public class Version implements Comparable<Version> {
 
