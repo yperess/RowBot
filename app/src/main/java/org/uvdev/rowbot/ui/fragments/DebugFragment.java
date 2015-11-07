@@ -43,6 +43,11 @@ public class DebugFragment extends BaseFragment implements View.OnClickListener,
     private int mDataCollectBatchId = -1;
 
     @Override
+    protected Boolean hasNavDrawer() {
+        return false;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mResultAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);

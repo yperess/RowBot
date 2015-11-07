@@ -84,6 +84,11 @@ public class TesterFeedbackFragment extends BaseFragment implements View.OnClick
     private final JsonFactory mJsonFactory = GsonFactory.getDefaultInstance();
 
     @Override
+    protected Boolean hasNavDrawer() {
+        return false;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO get the account name from the profile.

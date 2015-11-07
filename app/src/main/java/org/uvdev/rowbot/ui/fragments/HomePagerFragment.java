@@ -1,5 +1,6 @@
 package org.uvdev.rowbot.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +27,11 @@ public class HomePagerFragment extends BaseFragment {
         mFragments = new BasePageFragment[] {
                 new HomeFragment(), new NewWorkoutFragment()
         };
+    }
+
+    @Override
+    protected Boolean hasNavDrawer() {
+        return true;
     }
 
     @Override

@@ -26,6 +26,11 @@ public class HelpAndFeedbackFragment extends BaseFragment implements View.OnClic
     HashMap<String, Runnable> mActionMap;
 
     @Override
+    protected Boolean hasNavDrawer() {
+        return false;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

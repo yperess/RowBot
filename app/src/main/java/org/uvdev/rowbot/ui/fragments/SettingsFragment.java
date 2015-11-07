@@ -41,6 +41,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private Button mDeleteProfileButton;
 
     @Override
+    protected Boolean hasNavDrawer() {
+        return false;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mParent.setActionBarTitle(R.string.rowbot_frag_settings);

@@ -50,6 +50,11 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
     private View mFab;
 
     @Override
+    protected Boolean hasNavDrawer() {
+        return false;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

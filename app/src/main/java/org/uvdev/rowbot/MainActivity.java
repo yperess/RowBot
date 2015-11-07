@@ -201,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
+        setHasNavDrawer(hasNavDrawer);
+        closeDrawers();
+    }
+
+    public void setHasNavDrawer(boolean hasNavDrawer) {
         if (hasNavDrawer) {
             mDrawerToggle.setDrawerIndicatorEnabled(true);
         } else {
@@ -208,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
             mDrawerToggle.setDrawerIndicatorEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        closeDrawers();
     }
 
     public void showHome() {

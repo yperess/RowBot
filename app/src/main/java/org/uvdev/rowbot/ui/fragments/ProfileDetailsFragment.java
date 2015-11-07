@@ -64,6 +64,11 @@ public class ProfileDetailsFragment extends BaseFragment implements Observer {
     };
 
     @Override
+    protected Boolean hasNavDrawer() {
+        return false;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
