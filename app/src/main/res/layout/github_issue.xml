@@ -9,18 +9,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="8dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <org.uvdev.rowbot.ui.widgets.ImageViewCompat
+        <ImageView
             android:id="@+id/status"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginRight="8dp"
             android:src="@null"
-            app:tint="?attr/colorAccent"/>
+            android:tint="?attr/colorAccent"/>
 
         <LinearLayout
             android:layout_width="0dp"

@@ -5,12 +5,12 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.alorma.github.sdk.bean.dto.response.Label;
 import org.uvdev.rowbot.R;
-import org.uvdev.rowbot.ui.widgets.ImageViewCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +74,8 @@ public class GithubLabelListAdapter implements ListAdapter {
 
         Label label = getItem(position);
         ((TextView) view.findViewById(R.id.name)).setText(label.name);
-        ((ImageViewCompat) view.findViewById(R.id.color))
-                .setTint(Color.parseColor("#" + label.color));
+        ((ImageView) view.findViewById(R.id.color))
+                .setColorFilter(Color.parseColor("#" + label.color));
         return view;
     }
 

@@ -12,13 +12,13 @@
     android:orientation="horizontal"
     android:gravity="center|center_vertical">
 
-    <org.uvdev.rowbot.ui.widgets.ImageViewCompat
+    <ImageView
         android:layout_width="@dimen/nav_drawer_profile_select_image_size"
         android:layout_height="@dimen/nav_drawer_profile_select_image_size"
         android:paddingEnd="@dimen/nav_drawer_margin"
         android:paddingRight="@dimen/nav_drawer_margin"
         android:src="@drawable/ic_person_add"
-        app:tint="?attr/colorPrimary"/>
+        android:tint="?attr/colorPrimary"/>
 
     <TextView
         android:layout_width="wrap_content"

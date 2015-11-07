@@ -16,12 +16,12 @@
         android:layout_gravity="center"
         android:gravity="center">
 
-        <org.uvdev.rowbot.ui.widgets.ImageViewCompat
+        <ImageView
             android:id="@+id/icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:src="@drawable/ic_cloud_off"
-            app:tint="@android:color/darker_gray"/>
+            android:tint="@android:color/darker_gray"/>
 
         <TextView
             android:layout_width="wrap_content"

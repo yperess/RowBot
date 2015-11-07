@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <org.uvdev.rowbot.ui.widgets.ImageViewCompat
+    <ImageView
         android:id="@+id/color"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginLeft="8dp"
-        android:src="@drawable/ic_github_label"/>
+        android:src="@drawable/circle"/>
 </LinearLayout>

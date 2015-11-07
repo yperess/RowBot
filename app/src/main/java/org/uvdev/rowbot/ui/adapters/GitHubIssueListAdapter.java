@@ -7,11 +7,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,7 +19,6 @@ import com.alorma.github.sdk.bean.dto.response.Issue;
 import com.alorma.github.sdk.bean.dto.response.IssueState;
 import com.alorma.github.sdk.bean.dto.response.Label;
 import org.uvdev.rowbot.R;
-import org.uvdev.rowbot.ui.widgets.ImageViewCompat;
 import org.uvdev.rowbot.utils.Cipher;
 
 import java.util.ArrayList;
@@ -27,10 +26,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
+public class GitHubIssueListAdapter extends StateRecyclerAdapter<RecyclerView.ViewHolder> implements
         View.OnClickListener, Comparator<Issue> {
 
     private static final String TAG = "GithubIssueAdapter";
+
+    private static final int STATE_EMPTY = 1000;
+    public static final int STATE_LOGIN_ERROR = 1001;
+    public static final int STATE_LOADING_ERROR = 1002;
 
     public interface GitHubTokenListener {
         void onNewGithubToken(String token);
@@ -38,14 +41,12 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private final Context mContext;
     private final GitHubTokenListener mGitHubTokenListener;
-    private boolean mHasLoadingError = false;
-    private String mLoadingErrorMessage = null;
-    private int mErrorIconResId = 0;
-    private int mErrorIconTintColor = -1;
+    private String mErrorStatusMessage = null;
 
     private final List<Issue> mIssueList = new ArrayList<>();
 
-    public GitHubIssueListAdapter(Context context, GitHubTokenListener listener) {
+    public GitHubIssueListAdapter(View container, Context context, GitHubTokenListener listener) {
+        super(container);
         mContext = context;
         mGitHubTokenListener = listener;
     }
@@ -53,12 +54,18 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void setIssueList(List<Issue> issueList) {
         Collections.sort(issueList, this);
         mIssueList.clear();
-        mHasLoadingError = false;
         mIssueList.addAll(issueList);
         if (mIssueList.isEmpty()) {
-            setLoadingError(R.drawable.ic_check_mark, -1, "No issues found.");
+            setState(STATE_EMPTY);
+            return;
         }
+        setState(STATE_OK);
         notifyDataSetChanged();
+    }
+
+    public void setState(int statusCode, String errorStatusMessage) {
+        mErrorStatusMessage = errorStatusMessage;
+        setState(statusCode);
     }
 
     @Override
@@ -89,14 +96,6 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return 0;
     }
 
-    public void setLoadingError(int iconResId, int iconTintColor, String loadingErrorMessage) {
-        mHasLoadingError = true;
-        mLoadingErrorMessage = loadingErrorMessage;
-        mErrorIconResId = iconResId;
-        mErrorIconTintColor = iconTintColor;
-        notifyDataSetChanged();
-    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
@@ -115,28 +114,27 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int state, int position) {
         if (holder instanceof IssueViewHolder) {
             ((IssueViewHolder) holder).onBind(mIssueList.get(position));
         } else if (holder instanceof ErrorViewHolder) {
-            ((ErrorViewHolder) holder).onBind();
+            ((ErrorViewHolder) holder).onBind(getState());
         }
     }
 
     @Override
-    public int getItemCount() {
-        return mHasLoadingError || mIssueList.isEmpty() ? 1 : mIssueList.size();
+    public int getItemCount(int state) {
+        return state == STATE_OK ? mIssueList.size() : 1;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return mHasLoadingError || mIssueList.isEmpty() ? R.id.github_error
-                : R.id.github_issue;
+    public int getItemViewType(int state, int position) {
+        return state == STATE_OK ? R.id.github_issue : R.id.github_error;
     }
 
     @Override
     public void onClick(View v) {
-        if (mHasLoadingError && !mIssueList.isEmpty()) {
+        if (getState() == STATE_LOGIN_ERROR) {
             new AlertDialog.Builder(mContext)
                     .setTitle(R.string.buglist_get_github_password_dialog_title)
                     .setView(R.layout.github_password_dialog)
@@ -155,32 +153,47 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public final class ErrorViewHolder extends RecyclerView.ViewHolder {
+    public final class ErrorViewHolder extends RecyclerView.ViewHolder implements StateViewHolder {
 
-        private final ImageViewCompat mIcon;
+        private final ImageView mIcon;
         private final TextView mErrorText;
 
         public ErrorViewHolder(View itemView) {
             super(itemView);
-            mIcon = (ImageViewCompat) itemView.findViewById(R.id.icon);
+            mIcon = (ImageView) itemView.findViewById(R.id.icon);
             mErrorText = (TextView) itemView.findViewById(R.id.text);
             itemView.setOnClickListener(GitHubIssueListAdapter.this);
         }
 
-        public void onBind() {
-            mErrorText.setText(mLoadingErrorMessage);
-            mIcon.setImageResource(mErrorIconResId);
-            if (mErrorIconTintColor >= 0) {
-                // Tint the icon.
-                mIcon.setTint(mErrorIconTintColor);
+        public void onBind(int state) {
+            switch (state) {
+                case STATE_EMPTY:
+                    mErrorText.setText("No issues found.");
+                    mIcon.setImageResource(R.drawable.ic_check_mark);
+                    break;
+                case STATE_LOGIN_ERROR:
+                    // Should tell the user that the password is needed.
+                    mErrorText.setText(R.string.buglist_error_connecting_to_github);
+                    mIcon.setImageResource(R.drawable.github_logo);
+                    break;
+                case STATE_LOADING_ERROR:
+                    // Connection to github failed (network issue?).
+                    mErrorText.setText(mErrorStatusMessage);
+                    mIcon.setImageResource(R.drawable.github_logo);
+                    break;
             }
+        }
+
+        @Override
+        public boolean fillViewPort() {
+            return true;
         }
     }
 
     public final class IssueViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        private final ImageViewCompat mStatusIcon;
+        private final ImageView mStatusIcon;
         private final TextView mTitleView;
         private final TextView mMilestoneView;
         private final TextView mAssignedStatusView;
@@ -190,7 +203,7 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public IssueViewHolder(View itemView) {
             super(itemView);
-            mStatusIcon = (ImageViewCompat) itemView.findViewById(R.id.status);
+            mStatusIcon = (ImageView) itemView.findViewById(R.id.status);
             mTitleView = (TextView) itemView.findViewById(R.id.title);
             mMilestoneView = (TextView) itemView.findViewById(R.id.milestone);
             mAssignedStatusView = (TextView) itemView.findViewById(R.id.assigned_status);
@@ -214,11 +227,11 @@ public class GitHubIssueListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mLabelList.removeAllViews();
             for (int i = 0, size = issue.labels.size(); i < size; ++i) {
                 Label label = issue.labels.get(i);
-                ImageViewCompat image = new ImageViewCompat(mContext);
+                ImageView image = new ImageView(mContext);
                 image.setLayoutParams(new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                image.setImageResource(R.drawable.ic_github_label);
-                image.setTint(Color.parseColor("#" + label.color));
+                image.setImageResource(R.drawable.circle);
+                image.setColorFilter(Color.parseColor("#" + label.color));
                 mLabelList.addView(image);
             }
             mLabelListAdapter.setLabels(issue.labels);

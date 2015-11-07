@@ -22,11 +22,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <org.uvdev.rowbot.ui.widgets.ImageViewCompat
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_drop_down"
-            app:tint="?attr/colorControlNormal"/>
+            android:tint="?attr/colorControlNormal"/>
 
     </LinearLayout>
 

@@ -46,7 +46,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
     private GitHubIssueListAdapter mIssueAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mBugListRecyclerView;
+    private RecyclerView mRecyclerView;
     private View mFab;
 
     @Override
@@ -58,7 +58,6 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
             // TODO (#20) Leave this fragment and launch TesterFeedbackFragment instead.
         }
 
-        mIssueAdapter = new GitHubIssueListAdapter(mParent, this);
         mCredentials = new StoreCredentials(mParent);
     }
 
@@ -99,7 +98,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
             public void onFail(RetrofitError retrofitError) {
                 Log.e("GitHub", retrofitError.getLocalizedMessage());
                 Log.e("GitHub", retrofitError.getBody().toString());
-                mIssueAdapter.setLoadingError(R.drawable.github_logo, -1 /* iconTintColor */,
+                mIssueAdapter.setState(GitHubIssueListAdapter.STATE_LOADING_ERROR,
                         retrofitError.getLocalizedMessage());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
@@ -113,11 +112,12 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.buglist_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout);
-        mBugListRecyclerView = (RecyclerView) root.findViewById(R.id.bug_list);
+        mRecyclerView = (RecyclerView) root.findViewById(R.id.bug_list);
         mFab = root.findViewById(R.id.fab);
 
-        mBugListRecyclerView.setLayoutManager(new LinearLayoutManager(mParent));
-        mBugListRecyclerView.setAdapter(mIssueAdapter);
+        mIssueAdapter = new GitHubIssueListAdapter(mRecyclerView, mParent, this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mIssueAdapter);
         mFab.setOnClickListener(this);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -132,8 +132,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
         if (TextUtils.isEmpty(mCredentials.token())) {
             // Need the token.
             Log.d("GitHub", "Token is empty");
-            mIssueAdapter.setLoadingError(R.drawable.github_logo, -1 /* iconTintColor */,
-                    mParent.getString(R.string.buglist_error_connecting_to_github));
+            mIssueAdapter.setState(GitHubIssueListAdapter.STATE_LOGIN_ERROR);
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }

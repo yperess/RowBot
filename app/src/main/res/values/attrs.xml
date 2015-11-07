@@ -9,7 +9,4 @@
     <declare-styleable name="ImageRailView">
         <attr name="images" format="reference"/>
     </declare-styleable>
-    <declare-styleable name="ImageViewCompat">
-        <attr name="tint" format="color"/>
-    </declare-styleable>
 </resources>
