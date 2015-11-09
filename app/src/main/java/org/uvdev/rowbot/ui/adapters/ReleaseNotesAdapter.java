@@ -46,7 +46,7 @@ public class ReleaseNotesAdapter extends
         }
 
         public void setTitle(Version version) {
-            mTitle.setText("V" + version.toString() + (version.isBeta() ? " (BETA)" : ""));
+            mTitle.setText("Version " + version.toString());
         }
 
         public void setContent(String content) {

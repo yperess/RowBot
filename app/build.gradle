@@ -15,8 +15,8 @@ android {
         applicationId "com.rowbot"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 3
-        versionName "A.1.2"
+        versionCode 4
+        versionName "A.1.3"
         multiDexEnabled = true
     }
     buildTypes {

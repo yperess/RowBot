@@ -196,12 +196,11 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         }
     }
 
-    public void showFragment(Fragment fragment, boolean hasNavDrawer) {
+    public void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
-        setHasNavDrawer(hasNavDrawer);
         closeDrawers();
     }
 

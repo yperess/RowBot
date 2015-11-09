@@ -72,9 +72,9 @@ public class HelpAndFeedbackFragment extends BaseFragment implements View.OnClic
             if (mParent.getRowBotApplication().getCurrentVersion().isProd()) {
                 Toast.makeText(getActivity(), "Leaving feedback...", Toast.LENGTH_SHORT).show();
             } else if (mParent.getRowBotApplication().getCurrentVersion().isBeta()){
-                mParent.showFragment(new TesterFeedbackFragment(), false /* hasNavDrawer */);
+                mParent.showFragment(new TesterFeedbackFragment());
             } else if (mParent.getRowBotApplication().getCurrentVersion().isAlpha()) {
-                mParent.showFragment(new BugListFragment(), false /* hasNavDrawer */);
+                mParent.showFragment(new BugListFragment());
             }
         }
     }

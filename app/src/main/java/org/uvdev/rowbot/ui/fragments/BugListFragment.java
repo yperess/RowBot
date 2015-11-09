@@ -60,7 +60,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
 
         // This fragment requires API level 15, trampoline if lower.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            // TODO (#20) Leave this fragment and launch TesterFeedbackFragment instead.
+            mParent.showFragment(new TesterFeedbackFragment());
         }
 
         mCredentials = new StoreCredentials(mParent);
@@ -150,7 +150,7 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
-                mParent.showFragment(new TesterFeedbackFragment(), false /* showNav */);
+                mParent.showFragment(new TesterFeedbackFragment());
                 break;
         }
     }

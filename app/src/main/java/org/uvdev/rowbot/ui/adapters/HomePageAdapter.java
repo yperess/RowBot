@@ -150,7 +150,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_summary_card:
-                mActivity.showFragment(new ProfileDetailsFragment(), false /* hasNavDrawer */);
+                mActivity.showFragment(new ProfileDetailsFragment());
                 break;
         }
     }
@@ -193,7 +193,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<ViewHolder> implements
 
         @Override
         public void onClick(View view) {
-            mActivity.showFragment(new ProfileDetailsFragment(), false /* hasNavDrawer */);
+            mActivity.showFragment(new ProfileDetailsFragment());
         }
     }
 

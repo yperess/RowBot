@@ -64,6 +64,10 @@
         &bull; Enhances look of switches (can be found in weight units switch in the profile
                 creation/edit dialog).
         ]]></string>
+    <string name="release_notes_a_1_3"><![CDATA[
+        &bull; Fixes for screen rotation.<br/>
+        &bull; Added access to current bugs for Alpha users.
+        ]]></string>
 
     <!-- Buglist page -->
     <string name="buglist_error_connecting_to_github">Error connecting to GitHub, click here to

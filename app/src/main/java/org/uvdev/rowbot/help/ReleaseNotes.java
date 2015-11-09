@@ -22,6 +22,7 @@ public class ReleaseNotes {
         addReleaseNotes(new Version("A.1.0", 1), res.getString(R.string.release_notes_a_1_0));
         addReleaseNotes(new Version("A.1.1", 2), res.getString(R.string.release_notes_a_1_1));
         addReleaseNotes(new Version("A.1.2", 3), res.getString(R.string.release_notes_a_1_2));
+        addReleaseNotes(new Version("A.1.3", 4), res.getString(R.string.release_notes_a_1_3));
 
         // Sort the release note versions in descending order.
         Collections.sort(sReleaseVersions, new Comparator<Version>() {

@@ -171,21 +171,21 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
         sItems.add(new LineItem(R.string.rowbot_nav_drawer_debug, 0 /* icon */, false) {
             @Override
             public void run() {
-                mContext.showFragment(new DebugFragment(), false);
+                mContext.showFragment(new DebugFragment());
             }
         });
         sItems.add(new LineItem(R.string.rowbot_nav_drawer_settings,
                 R.drawable.ic_action_settings, true) {
             @Override
             public void run() {
-                mContext.showFragment(new SettingsFragment(), false);
+                mContext.showFragment(new SettingsFragment());
             }
         });
         sItems.add(new LineItem(R.string.rowbot_nav_drawer_help_and_feedback,
                 R.drawable.ic_action_help, false) {
             @Override
             public void run() {
-                mContext.showFragment(new HelpAndFeedbackFragment(), false);
+                mContext.showFragment(new HelpAndFeedbackFragment());
             }
         });
 
