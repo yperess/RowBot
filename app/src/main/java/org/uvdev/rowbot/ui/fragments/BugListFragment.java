@@ -93,8 +93,6 @@ public class BugListFragment extends BaseFragment implements View.OnClickListene
                     }
                     Log.d("GitHub", builder.append("]").toString());
                 }
-                Toast.makeText(mParent, "Got " + issues.size() + " issues", Toast.LENGTH_LONG)
-                        .show();
                 mIssueAdapter.setIssueList(issues);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
