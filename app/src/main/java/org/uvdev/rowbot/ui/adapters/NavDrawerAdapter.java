@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.concept2.api.common.Constants;
+import org.uvdev.rowbot.common.Constants;
 import org.uvdev.rowbot.concept2api.rowbot.profile.Profile;
 import org.uvdev.rowbot.MainActivity;
 import org.uvdev.rowbot.R;

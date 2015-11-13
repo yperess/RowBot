@@ -1,8 +1,8 @@
-package com.concept2.api.common.data;
+package org.uvdev.rowbot.common.data;
 
 import android.text.TextUtils;
 
-import com.concept2.api.common.utils.Preconditions;
+import org.uvdev.rowbot.common.utils.Preconditions;
 
 public class Version implements Comparable<Version> {
 

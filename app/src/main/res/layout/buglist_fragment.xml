@@ -17,18 +17,9 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <ImageView
+        style="@style/RowBot.FAB"
         android:id="@+id/fab"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_add_circle"
-        android:background="@drawable/circle"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:tint="?attr/colorControlNormal"/>
+        android:src="@drawable/ic_add"
+        android:background="@drawable/circle"/>
 
 </RelativeLayout>

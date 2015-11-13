@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.uvdev.rowbot.concept2api.Concept2StatusCodes;
-import com.concept2.api.common.Constants;
+import org.uvdev.rowbot.common.Constants;
 import org.uvdev.rowbot.concept2api.DataHolder;
 import org.uvdev.rowbot.concept2api.pacemonitor.CommandBuilder;
 import org.uvdev.rowbot.concept2api.pacemonitor.internal.CommandImpl;

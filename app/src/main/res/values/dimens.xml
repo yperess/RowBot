@@ -44,4 +44,16 @@
 
     <!-- PR list item-->
     <dimen name="pr_list_item_image_size">60dp</dimen>
+
+    <!-- FAB -->
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_full_size">60dp</dimen>
+    <dimen name="fab_full_size_padding">8dp</dimen>
+    <dimen name="fab_full_size_margin">16dp</dimen>
+    <dimen name="fab_full_size_image_text_font_size">40dp</dimen>
+    <dimen name="fab_small_size">40dp</dimen>
+    <dimen name="fab_small_size_padding">4dp</dimen>
+    <dimen name="fab_small_size_margin">26dp</dimen>
+    <dimen name="fab_small_size_bottom_margin">10dp</dimen>
+    <dimen name="fab_small_size_image_text_font_size">20dp</dimen>
 </resources>

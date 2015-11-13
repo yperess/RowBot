@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RowBot.FabListDialog" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/RowBot.FabListDialog.WindowAnimation</item>
+    </style>
+
+    <style name="RowBot.FabListDialog.WindowAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/grow_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/abc_shrink_fade_out_from_bottom</item>
+    </style>
+</resources>

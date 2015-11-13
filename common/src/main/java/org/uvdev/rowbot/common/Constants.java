@@ -1,4 +1,4 @@
-package com.concept2.api.common;
+package org.uvdev.rowbot.common;
 
 public interface Constants {
     boolean DBG = true;

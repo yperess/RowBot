@@ -7,8 +7,10 @@
     <color name="control_activated">#FF0043C5</color>
     <color name="control_highlighted">#FFD0F3FF</color>
 
-    <color name="rowbot_nav_selected_background">#fff3f3f3</color>
+    <color name="rowbot_nav_selected_background">#FFF3F3F3</color>
 
-    <color name="rowbot_value_widget_background">#ffedfaff</color>
+    <color name="rowbot_value_widget_background">#FFEDFAFF</color>
     <color name="rowbot_dark_gray">#FF666666</color>
+
+    <color name="overlay_dialog_background">#B3BBBBBB</color>
 </resources>

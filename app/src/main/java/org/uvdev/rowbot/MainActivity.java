@@ -20,17 +20,15 @@ import android.widget.Toast;
 import org.uvdev.rowbot.concept2api.Concept2;
 import org.uvdev.rowbot.concept2api.Concept2StatusCodes;
 import org.uvdev.rowbot.concept2api.ResultCallback;
-import com.concept2.api.common.Constants;
+import org.uvdev.rowbot.common.Constants;
 import org.uvdev.rowbot.concept2api.rowbot.RowBot;
 import org.uvdev.rowbot.concept2api.rowbot.profile.Profile;
-
-import org.uvdev.rowbot.R;
 
 import org.uvdev.rowbot.ui.dialogs.ProfileEditDialogFragment;
 import org.uvdev.rowbot.ui.dialogs.WelcomeDialogFragment;
 import org.uvdev.rowbot.model.RowBotActivity;
 import org.uvdev.rowbot.ui.adapters.NavDrawerAdapter;
-import org.uvdev.rowbot.ui.fragments.HomePagerFragment;
+import org.uvdev.rowbot.ui.fragments.HomeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, new HomePagerFragment(), "HOME")
+                    .add(R.id.content_frame, new HomeFragment(), "HOME")
                     .commit();
         }
     }

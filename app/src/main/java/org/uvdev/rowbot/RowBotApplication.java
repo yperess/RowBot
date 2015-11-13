@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.concept2.api.common.data.Version;
+import org.uvdev.rowbot.common.data.Version;
 
 public class RowBotApplication extends Application {
 

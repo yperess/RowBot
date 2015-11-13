@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RowBot.FAB" parent="RowBot.FAB">
+        <item name="android:layout_width">@dimen/fab_full_size</item>
+        <item name="android:layout_height">@dimen/fab_full_size</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:background">@drawable/circle</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_marginBottom">@dimen/fab_full_size_margin</item>
+        <item name="android:layout_marginRight">@dimen/fab_full_size_margin</item>
+        <item name="android:layout_marginEnd">@dimen/fab_full_size_margin</item>
+    </style>
+
+</resources>

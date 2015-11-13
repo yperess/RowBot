@@ -9,4 +9,11 @@
     <declare-styleable name="ImageRailView">
         <attr name="images" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="FabActionView">
+        <attr name="fullSize" format="boolean"/>
+        <attr name="src" format="reference"/>
+        <attr name="text" format="string|reference"/>
+        <attr name="imageText" format="string|reference"/>
+    </declare-styleable>
 </resources>

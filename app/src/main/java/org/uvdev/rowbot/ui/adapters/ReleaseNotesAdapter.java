@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.concept2.api.common.data.Version;
+import org.uvdev.rowbot.common.data.Version;
 import org.uvdev.rowbot.R;
 import org.uvdev.rowbot.help.ReleaseNotes;
 

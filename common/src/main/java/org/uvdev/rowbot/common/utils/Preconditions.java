@@ -1,4 +1,4 @@
-package com.concept2.api.common.utils;
+package org.uvdev.rowbot.common.utils;
 
 public class Preconditions {
 

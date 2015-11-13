@@ -1,7 +1,7 @@
 package org.uvdev.rowbot.help;
 import android.content.res.Resources;
 
-import com.concept2.api.common.data.Version;
+import org.uvdev.rowbot.common.data.Version;
 import org.uvdev.rowbot.R;
 
 import java.util.ArrayList;

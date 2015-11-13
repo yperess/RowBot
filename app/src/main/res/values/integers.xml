@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="fab_list_animation_delay_delta">50</integer>
+</resources>

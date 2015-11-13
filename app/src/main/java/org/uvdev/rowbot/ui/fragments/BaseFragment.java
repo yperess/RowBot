@@ -3,7 +3,7 @@ package org.uvdev.rowbot.ui.fragments;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import com.concept2.api.common.data.Version;
+import org.uvdev.rowbot.common.data.Version;
 
 import org.uvdev.rowbot.MainActivity;
 
