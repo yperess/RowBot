@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UV-dev</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="css/uvdev.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/uvdev.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=clientInit"></script>
+</head>
+<body role="document">
+
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="uvdev-header mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title"><img src="assets/logo.jpg"></span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="uvdev-navigation mdl-navigation mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#mission">mission</a>
+                <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#team">team</a>
+            </nav>
+            <!-- Navigation (overflow style). We hide it in large screens. -->
+            <button id="demo-menu-lower-right"
+                    class="mdl-button mdl-js-button mdl-button--icon mdl-layout--small-screen-only">
+                <i class="material-icons">more_vert</i>
+            </button>
+
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-layout--small-screen-only"
+                for="demo-menu-lower-right">
+                <li class="mdl-menu__item">Mission</li>
+                <li class="mdl-menu__item">Team</li>
+            </ul>
+        </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Our Projects</span>
+        <nav class="uvdev-navigation mdl-navigation">
+            <a class="mdl-navigation__link mdl-typography--text-uppercase" href="rowbot.html">rowbot</a>
+        </nav>
+    </div>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div class="uvdev-dream-beyond-section mdl-typography--text-center">
+                <div class="logo-font uvdev-slogan">dream beyond the spectrum.</div>
+                <div class="logo-font uvdev-sub-slogan">welcome to uvdev... doing things because we can.</div>
+            </div>
+            <div id="mission">
+                <div class="uvdev-mission-section-text mdl-typography--text-center">
+                    <div class="mdl-typography--font-light mdl-typography--display-1-color-contrast">Develop tools and ideas that enrich the human experience...</div>
+                    <p class="mdl-typography--font-light">
+                        Our goal at UV Developments is to make learning more accessible to everyone. Our various projects are carefully selected to leverage our team's strengths and provide the world with tools through which they may enrich their lives.
+                    </p>
+                </div>
+                <div class="uvdev-mission-section-image"></div>
+            </div>
+            <div id="team" class="uvdev-team-section">
+                <div class="uvdev-section-title mdl-typography--display-1-color-contrast">Our team</div>
+                <div class="uvdev-card-container mdl-grid">
+                    <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--3dp">
+                        <div class="mdl-card__media">
+                            <img src="assets/profile_yuval.jpg">
+                        </div>
+                        <div class="mdl-card__title mdl-card--expand">
+                            <h4 class="mdl-card__title-text">Yuval Peress</h4>
+                            <h4 class="mdl-card__subtitle-text">Founder</h4>
+                        </div>
+                        <div class="mdl-card__supporting-text">
+                            <span class="uvdev-typography--font-italic mdl-typography--font-light mdl-typography--subhead">"Strive to achieve the impossible and you'll find success beneath your feet."</span>
+                        </div>
+                        <div class="mdl-card__actions mdl-card--border">
+                            <button id="read_more_yuval"
+                                    class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="" data-upgraded=",MaterialButton">
+                                Read More
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--3dp">
+                        <div class="mdl-card__media">
+                            <img src="assets/profile_lundberg.jpg">
+                        </div>
+                        <div class="mdl-card__title mdl-card--expand">
+                            <h4 class="mdl-card__title-text">Matthew Lundberg</h4>
+                            <h4 class="mdl-card__subtitle-text">Technical Consultant</h4>
+                        </div>
+                        <div class="mdl-card__supporting-text">
+                            <span class="uvdev-typography--font-italic mdl-typography--font-light mdl-typography--subhead">"Quote..."</span>
+                        </div>
+                        <div class="mdl-card__actions mdl-card--border">
+                            <button id="read_more_lundberg"
+                                    class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="" data-upgraded=",MaterialButton">
+                                Read More
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--3dp">
+                        <div class="mdl-card__media">
+                            <img src="assets/profile_cowdery.jpg">
+                        </div>
+                        <div class="mdl-card__title mdl-card--expand">
+                            <h4 class="mdl-card__title-text">Matthew Cowdery</h4>
+                            <h4 class="mdl-card__subtitle-text">Graphic Designer</h4>
+                        </div>
+                        <div class="mdl-card__supporting-text">
+                            <span class="uvdev-typography--font-italic mdl-typography--font-light mdl-typography--subhead">"Quote..."</span>
+                        </div>
+                        <div class="mdl-card__actions mdl-card--border">
+                            <button id="read_more_cowdery"
+                                    class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="" data-upgraded=",MaterialButton">
+                                Read More
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                    <ul class="mdl-mini-footer__link-list">
+                        <li><button id="contact_us" class="android-link mdl-button mdl-js-button" mailtoTarget='{"target": "contact", "title": "Contact Us", "footnote": ""}'>Contact Us</button></li>
+                        <li><button id="privacy_and_terms" class="android-link mdl-button mdl-js-button">Privacy & Terms</button></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<div id="email_dialog" class="uvdev-dialog">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Contact Us</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            Your name:<br/>
+            <input type="text" name="fromName"><br/>
+            Your email:<br/>
+            <input type="email" name="fromEmail"><br/>
+            Your message:<br/>
+            <textarea name="message"></textarea><br/>
+            <p id="email_dialog_footnote"></p>
+        </div>
+        <div class="mdl-card__actions">
+            <button id="send_mail" class="uvdev-button-positive android-link mdl-button mdl-js-button mdl-typography--text-uppercase" data-upgraded=",MaterialButton" mailtoTarget="contact">
+                Send <i class="material-icons">send</i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="uvdev-dialog" for="read_more_yuval">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Yuval Peress</h4>
+            <h4 class="mdl-card__subtitle-text">Founder</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <div class="rowbot-avatar" style="background: url('assets/profile_yuval.jpg') center center no-repeat;"></div>
+            <span class="mdl-typography--font-light mdl-typography--subhead">Some bio information here.<br/>If I make it long enough it should wrap the image.<br/>Lets find out shall we?<br/>Just a little bit more...<br/>Almost...<br/>There we go!</span>
+        </div>
+        <div class="mdl-card__actions">
+            <a mailtoTarget='{"target": "yuval", "title": "Contact Yuval", "footnote": ""}' class="uvdev-button-positive android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="" data-upgraded=",MaterialButton">
+                Contact
+                <i class="material-icons">email</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="uvdev-dialog" for="read_more_lundberg">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Matthew Lundberg</h4>
+            <h4 class="mdl-card__subtitle-text">Technical Consultant</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <div class="rowbot-avatar" style="background: url('assets/profile_lundberg.jpg') center center no-repeat;"></div>
+            <span class="mdl-typography--font-light mdl-typography--subhead">Matt Lundberg is a rower-turned-coach who, during his rowing career he competed on the national stage in both sculling and sweep.  Now he only rows recreationally and passes on what knowledge he can to those who will listen. Matt has worked with rowers from middle school through retirement and from healthy-hobbyist to nationally competitive.</span>
+        </div>
+        <div class="mdl-card__actions">
+            <a mailtoTarget='{"target": "lundberg", "title": "Contact M. Lundberg", "footnote": ""}' class="uvdev-button-positive android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="" data-upgraded=",MaterialButton">
+                Contact
+                <i class="material-icons">email</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="uvdev-dialog" for="read_more_cowdery">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Matthew Cowdery</h4>
+            <h4 class="mdl-card__subtitle-text">Graphic Designer</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <div class="rowbot-avatar" style="background: url('assets/profile_cowdery.jpg') center center no-repeat;"></div>
+            <span class="mdl-typography--font-light mdl-typography--subhead">Matt Cowdery is a freelance Illustrator working out of Seattle Washington. Working primarily as a Fantasy and Sci-Fi artist, he has done art for tabletop games for such clients as Fantasy Flight Games, Starlit Games, Polaris, and more. his works are visible at <a href="www.mattcowdery.com">MattCowdery.com</a>.</span>
+        </div>
+        <div class="mdl-card__actions">
+            <a mailtoTarget='{"target": "cowdery", "title": "Contact M. Cowdery", "footnote": ""}' class="uvdev-button-positive android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="" data-upgraded=",MaterialButton">
+                Contact
+                <i class="material-icons">email</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="uvdev-dialog" for="privacy_and_terms">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Privacy & Terms</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            At UV-dev we are fully committed to provide all of our users with a great experience and full anonymity. We'll never share any of your personal information with 3rd parties or even look at any personally identifiable information ourselves. Any data that is collected will remain anonymous and will only be used to improve the product.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

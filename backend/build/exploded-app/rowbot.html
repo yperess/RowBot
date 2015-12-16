@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello, App Engine!</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="css/uvdev.css">
+    <link rel="stylesheet" href="css/rowbot.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/uvdev.js"></script>
+    <script src="js/rowbot.js"></script>
+</head>
+<body role="document">
+
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="uvdev-header mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title"><img src="assets/rowbot_title.jpg"></span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="uvdev-navigation mdl-navigation mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#mission">Features</a>
+                <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#screens">Screens</a>
+                <a class="mdl-navigation__link mdl-typography--text-uppercase" href="#download">Download</a>
+            </nav>
+            <!-- Navigation (overflow style). We hide it in large screens. -->
+            <button id="demo-menu-lower-right"
+                    class="mdl-button mdl-js-button mdl-button--icon mdl-layout--small-screen-only">
+                <i class="material-icons">more_vert</i>
+            </button>
+
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-layout--small-screen-only"
+                for="demo-menu-lower-right">
+                <li class="mdl-menu__item">Features</li>
+                <li class="mdl-menu__item">Screens</li>
+                <li class="mdl-menu__item">Download</li>
+            </ul>
+        </div>
+        <a href="hello.html">
+            <button class="mdl-layout__drawer-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+                <i class="material-icons">arrow_back</i>
+            </button>
+        </a>
+    </header>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div id="title" class="rowbot-banner-section mdl-typography--text-center">
+                <div class="logo-font uvdev-slogan">RowBot</div>
+                <div class="logo-font uvdev-sub-slogan">your ultimate training partner!</div>
+            </div>
+            <div class="mdl-typography--text-center mdl-typography--font-light mdl-typography--display-1-color-contrast">Train... Learn... Evolve!</div>
+            <div id="mission" class="rowbot-mission-section">
+                <div class="rowbot-mission-erg">
+                    <ul>
+                        <li id="feature_track_progress">
+                            <h5 class="mdl-typography--title">Track your progress</h5>
+                        </li>
+                        <p for="feature_track_progress" class="mdl-tooltip mdl-tooltip--large">
+                            Track your progress over time and seasons.</p>
+                        <li id="feature_leaderboards">
+                            <h5 class="mdl-typography--title">Compete in leaderboards</h5>
+                        </li>
+                        <p for="feature_leaderboards" class="mdl-tooltip mdl-tooltip--large">
+                            Compete in global and social leaderboards in various categories.</p>
+                        <li id="feature_achievements">
+                            <h5 class="mdl-typography--title">Earn achievements</h5>
+                        </li>
+                        <p for="feature_achievements" class="mdl-tooltip mdl-tooltip--large">
+                            Earn achievements as you train.</p>
+                        <li id="feature_xtraining">
+                            <h5 class="mdl-typography--title">Cross training</h5>
+                        </li>
+                        <p for="feature_xtraining" class="mdl-tooltip mdl-tooltip--large">
+                            Change things up with rowing specific cross training.</p>
+                        <li id="feature_score_adjust">
+                            <h5 class="mdl-typography--title">Real time score adjustment</h5>
+                        </li>
+                        <p for="feature_score_adjust" class="mdl-tooltip mdl-tooltip--large">
+                            Watch your split reflective of your weight and boat type.</p>
+                        <li id="feature_save_share">
+                            <h5 class="mdl-typography--title">Save & share workouts</h5>
+                        </li>
+                        <p for="feature_save_share" class="mdl-tooltip mdl-tooltip--large">
+                            Is there a workout you like? Save it.<br/>Do something you're proud of? Send it to your friend.</p>
+                        <li id="feature_racing">
+                            <h5 class="mdl-typography--title">On your time racing</h5>
+                        </li>
+                        <p for="feature_racing" class="mdl-tooltip mdl-tooltip--large">
+                            Race with your friends; any place any time.</p>
+                    </ul>
+                </div>
+                <div class="rowbot-mission-boat">
+                    <ul>
+                        <li id="feature_stroke_analysis">
+                            <h5 class="mdl-typography--title">Stroke analysis</h5>
+                        </li>
+                        <p for="feature_stroke_analysis" class="mdl-tooltip mdl-tooltip--large">
+                            Get the most out of your stroke.</p>
+                        <li id="feature_boat_analysis">
+                            <h5 class="mdl-typography--title">Boat analysis</h5>
+                        </li>
+                        <p for="feature_boat_analysis" class="mdl-tooltip mdl-tooltip--large">
+                            Get accurate timing and power analysis for your boat.</p>
+                        <li id="feature_water_racing">
+                            <h5 class="mdl-typography--title">Accurate real time racing</h5>
+                        </li>
+                        <p for="feature_water_racing" class="mdl-tooltip mdl-tooltip--large">
+                            Race with your team using a virtual race course.</p>
+                        <li id="feature_rigging">
+                            <h5 class="mdl-typography--title">Automated rigging</h5>
+                        </li>
+                        <p for="feature_rigging" class="mdl-tooltip mdl-tooltip--large">
+                            More info about score adjustment...</p>
+                    </ul>
+                </div>
+            </div>
+            <div id="download" class="mdl-typography--text-center">
+                <div class="mdl-typography--font-light mdl-typography--display-1-color-contrast">
+                    Request Beta Access
+                </div>
+                <p class="mdl-typography--font-light">
+                    To get beta access to RowBot please request to join the RowBot-beta Google group via this <a href="https://groups.google.com/forum/#!forum/rowbot-beta">LINK</a>. In your message, please include your team name, location, and contact information for yourself and your coach.
+                </p>
+            </div>
+            <div id="screens" class="rowbot-screens-section">
+                <div id="rowbot-wear" class="rowbot-wear rowbot-screen">
+                    <a class="uvdev-image-link">
+                        <img class="rowbot-screen-image" src="assets/android-wear-round.png">
+                        <img class="rowbot-screen-image" src="assets/android-wear-square.png">
+                    </a>
+                    <a class="android-link mdl-typography--font-regular mdl-typography--text-uppercase">Android Wear</a>
+                </div>
+                <p for="rowbot-wear" class="mdl-tooltip mdl-tooltip--large mdl-typography--text-uppercase">
+                    Coming Soon</p>
+                <div id="rowbot-phone" class="rowbot-phone rowbot-screen">
+                    <a class="uvdev-image-link">
+                        <img class="rowbot-screen-image" src="assets/android-phone.jpg">
+                    </a>
+                    <a class="android-link mdl-typography--font-regular mdl-typography--text-uppercase">Phones</a>
+                </div>
+                <p for="rowbot-phone" class="mdl-tooltip mdl-tooltip--large mdl-typography--text-uppercase">
+                    Coming Soon</p>
+                <div id="rowbot-tablet" class="rowbot-tablet rowbot-screen">
+                    <a class="uvdev-image-link">
+                        <img class="rowbot-screen-image" src="assets/android-tablet.jpg">
+                    </a>
+                    <a class="android-link mdl-typography--font-regular mdl-typography--text-uppercase">Tablets</a>
+                </div>
+                <p for="rowbot-tablet" class="mdl-tooltip mdl-tooltip--large mdl-typography--text-uppercase">
+                    Coming Soon</p>
+                <div id="rowbot-tv" class="rowbot-tv rowbot-screen">
+                    <a class="uvdev-image-link">
+                        <img class="rowbot-screen-image" src="assets/android-tv.jpg">
+                    </a>
+                    <a class="android-link mdl-typography--font-regular mdl-typography--text-uppercase">Android TV</a>
+                </div>
+                <p for="rowbot-tv" class="mdl-tooltip mdl-tooltip--large mdl-typography--text-uppercase">
+                    Coming Soon</p>
+            </div>
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                    <ul class="mdl-mini-footer__link-list">
+                        <li><button id="contact_us" class="android-link mdl-button mdl-js-button" mailtoTarget='{"target": "contact", "title": "Contact Us", "footnote": ""}'>Contact Us</button></li>
+                        <li><button id="privacy_and_terms" class="android-link mdl-button mdl-js-button">Privacy & Terms</button></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<div id="email_dialog" class="uvdev-dialog">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Contact Us</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            Your name:<br/>
+            <input type="text" name="fromName"><br/>
+            Your email:<br/>
+            <input type="email" name="fromEmail"><br/>
+            Your message:<br/>
+            <textarea name="message"></textarea><br/>
+            <p id="email_dialog_footnote"></p>
+        </div>
+        <div class="mdl-card__actions">
+            <button id="send_mail" class="uvdev-button-positive android-link mdl-button mdl-js-button mdl-typography--text-uppercase" data-upgraded=",MaterialButton" mailtoTarget="contact">
+                Send <i class="material-icons">send</i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="uvdev-dialog" for="privacy_and_terms">
+    <div class="mdl-card mdl-shadow--3dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Privacy & Terms</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            At UV-dev we are fully committed to provide all of our users with a great experience and full anonymity. We'll never share any of your personal information with 3rd parties or even look at any personally identifiable information ourselves. Any data that is collected will remain anonymous and will only be used to improve the product.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+.rowbot-banner-section {
+    position: relative;
+    height: 800px;
+    width: auto;
+    background-color: #f3f3f3;
+    background: url('../assets/rowbot_banner.jpg') center 90% no-repeat;
+    background-size: contain;
+    margin-bottom: 50px;
+}
+
+.rowbot-mission-section {
+    position: relative;
+    height: 350px;
+    width: auto;
+    max-width: 1000px;
+    background-color: #f3f3f3;
+    background: url('../assets/rowbot_features.jpg') center 50% no-repeat;
+    background-size: cover;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rowbot-mission-erg,.rowbot-mission-boat {
+    margin-top: 10px;
+    color: #FFF;
+}
+
+.rowbot-mission-erg {
+    width: 50%;
+    float: right;
+    text-align: right;
+}
+
+.rowbot-mission-erg ul {
+    padding-right: 40px !important;
+}
+
+.rowbot-mission-boat {
+    float: left;
+    width: 50%;
+}
+
+.rowbot-mission-boat ul {
+    padding-left: 40px !important;
+}
+
+.rowbot-mission-boat li, .rowbot-mission-erg li {
+    list-style-type: none;
+    cursor: pointer;
+}
+
+.rowbot-mission-erg li:hover {
+    transform: translate(-25px, 0px);
+    text-shadow: 5px 5px 10px #3e0694;
+}
+
+.rowbot-mission-boat li:hover {
+    transform: translate(25px, 0px);
+    text-shadow: -5px 5px 10px #3e0694;
+}
+
+.rowbot-screens-section {
+    text-align: center;
+}
+
+.rowbot-screen {
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 0px;
+}
+
+.rowbot-wear {
+    display: inline-block;
+    width: 160px;
+    margin-right: 32px;
+}
+
+.rowbot-phone {
+    display: inline-block;
+    width: 64px;
+    margin-right: 48px;
+}
+
+.rowbot-tablet {
+    display: inline-block;
+    width: 110px;
+    margin-right: 64px;
+}
+
+.rowbot-tv {
+    display: inline-block;
+    width: 300px;
+}
+
+.rowbot-wear .rowbot-screen-image {
+    width: 40%;
+    z-index: 1;
+}
+
+.rowbot-phone .rowbot-screen-image {
+    width: 100%;
+    z-index: 1;
+}
+
+.rowbot-tablet .rowbot-screen-image {
+    width: 100%;
+    z-index: 1;
+}
+
+.rowbot-tv .rowbot-screen-image {
+    width: 100%;
+    z-index: 1;
+}
+
+#download {
+    margin-top: 80px;
+}
+
+#download > p {
+    max-width: 500px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}

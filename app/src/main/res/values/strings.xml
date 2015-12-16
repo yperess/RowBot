@@ -66,7 +66,8 @@
         ]]></string>
     <string name="release_notes_a_1_3"><![CDATA[
         &bull; Fixes for screen rotation.<br/>
-        &bull; Added access to current bugs for Alpha users.
+        &bull; Added access to current bugs for Alpha users.<br/>
+        &bull; Replaced tabs in home page with FAB.
         ]]></string>
 
     <!-- Buglist page -->

@@ -1,47 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.uvdev.rowbot">
+    package="org.uvdev.rowbot" >
+
+    <uses-sdk tools:overrideLibrary="com.alorma.github.sdk" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <uses-sdk tools:overrideLibrary="com.alorma.github.sdk" />
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
-    <application android:name="org.uvdev.rowbot.RowBotApplication"
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+
+    <application
+        android:name=".RowBotApplication"
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher_beta"
-        android:theme="@style/AppTheme">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.alorma.github.sdk.client"
+            android:value="59887a5d14946b2b13ac" />
+        <meta-data
+            android:name="com.alorma.github.sdk.secret"
+            android:value="ed345bb5f2c7f837eb5f8a67f1038eefe1b7acef" />
+        <meta-data
+            android:name="com.alorma.github.sdk.oauth"
+            android:value="https://groups.google.com/forum/#!forum/rowbot-alpha" />
 
-        <meta-data android:name="com.alorma.github.sdk.client" android:value="59887a5d14946b2b13ac"/>
-        <meta-data android:name="com.alorma.github.sdk.secret" android:value="ed345bb5f2c7f837eb5f8a67f1038eefe1b7acef"/>
-        <meta-data android:name="com.alorma.github.sdk.oauth" android:value="https://groups.google.com/forum/#!forum/rowbot-alpha"/>
-
-        <activity android:name="org.uvdev.rowbot.MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
 
-            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-
-        <activity android:name="org.uvdev.rowbot.ui.activities.ReleaseNotesActivity">
+        <activity android:name=".ui.activities.ReleaseNotesActivity" >
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
