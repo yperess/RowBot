@@ -15,7 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.android.gms.common.SignInButton;
 
 import org.uvdev.rowbot.concept2api.Concept2;
 import org.uvdev.rowbot.concept2api.Concept2StatusCodes;
@@ -232,10 +235,15 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mNavDrawerAdapter = NavDrawerAdapter.getInstance(this);
-        RecyclerView drawerList = (RecyclerView) findViewById(R.id.left_drawer);
+        ViewGroup drawer = (ViewGroup) findViewById(R.id.left_drawer);
+
+        RecyclerView drawerList = (RecyclerView) drawer.findViewById(R.id.navigation);
         drawerList.setHasFixedSize(true);
         drawerList.setAdapter(mNavDrawerAdapter);
         drawerList.setLayoutManager(new LinearLayoutManager(this));
+
+        SignInButton signInButton = (SignInButton) drawer.findViewById(R.id.sign_in_button);
+        mNavDrawerAdapter.setSignInButton(signInButton);
     }
 
     private void initActionBar() {

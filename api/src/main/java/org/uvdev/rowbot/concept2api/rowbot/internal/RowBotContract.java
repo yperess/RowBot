@@ -23,6 +23,7 @@ public interface RowBotContract {
         String APPLY_BOAT_ADJUSTMENT = "apply_boat_adjustment";
         String BOAT_TYPE = "boat_type";
         String DATA_RESOLUTION = "data_resolution";
+        String ACCOUNT_NAME = "account_name";
 
         String[] ALL_COLUMNS = new String[] {
                 PROFILE_ID,
@@ -40,6 +41,7 @@ public interface RowBotContract {
                 APPLY_BOAT_ADJUSTMENT,
                 BOAT_TYPE,
                 DATA_RESOLUTION,
+                ACCOUNT_NAME,
         };
     }
 

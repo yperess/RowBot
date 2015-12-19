@@ -10,11 +10,12 @@ import org.uvdev.rowbot.concept2api.rowbot.internal.RowBotContract.SnapshotColum
 import org.uvdev.rowbot.concept2api.rowbot.internal.RowBotContract.WorkoutColumns;
 import org.uvdev.rowbot.concept2api.rowbot.profile.Profile;
 import org.uvdev.rowbot.concept2api.rowbot.profile.ProfileSettings;
+import org.uvdev.rowbot.concept2api.utils.Preconditions;
 
 public class RowBotDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_FILE_NAME = "RowBot.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     private static RowBotDatabaseHelper sInstance = null;
 
@@ -63,7 +64,8 @@ public class RowBotDatabaseHelper extends SQLiteOpenHelper {
                 .append(ProfileColumns.BOAT_TYPE).append(" INTEGER NOT NULL DEFAULT ")
                         .append(ProfileSettings.BoatType.UNSPECIFIED).append(",")
                 .append(ProfileColumns.DATA_RESOLUTION).append(" INTEGER NOT NULL DEFAULT ")
-                        .append(ProfileSettings.DataResolution.MEDIUM)
+                        .append(ProfileSettings.DataResolution.MEDIUM).append(",")
+                .append(ProfileColumns.ACCOUNT_NAME).append(" TEXT")
                 .append(");");
         // Create the WORKOUTS table.
         query.append("CREATE TABLE ").append(Tables.WORKOUTS).append(" (")
@@ -98,5 +100,17 @@ public class RowBotDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion++ == 1) {
+            upgradeTo2(db);
+        }
+
+        Preconditions.assertEqual(oldVersion, newVersion, "Failed to upgrade database");
+    }
+
+    private void upgradeTo2(SQLiteDatabase db) {
+        StringBuilder query = new StringBuilder("ALTER TABLE ")
+                .append(Tables.PROFILES).append(" ADD COLUMN ").append(ProfileColumns.ACCOUNT_NAME)
+                .append(" TEXT");
+        db.execSQL(query.toString());
     }
 }

@@ -31,4 +31,5 @@ public interface ProfileSettings extends Releaseable {
     boolean applyBoatAdjustment();
     int getBoatType();
     int getDataResolution();
+    String getAccountName();
 }

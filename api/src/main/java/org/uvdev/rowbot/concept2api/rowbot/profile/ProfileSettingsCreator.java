@@ -11,23 +11,26 @@ public class ProfileSettingsCreator implements ProfileSettings, Parcelable {
     private boolean mApplyBoatAdjustment = false;
     private int mBoatType = BoatType.UNSPECIFIED;
     private int mDataResolution = DataResolution.MEDIUM;
+    private String mAccountName = null;
 
     public ProfileSettingsCreator() {}
 
     public ProfileSettingsCreator(ProfileSettings base) {
         this(base.provideUseStatistics(), base.applyWeightAdjustment(), base.applyAgeAdjustment(),
-                base.applyBoatAdjustment(), base.getBoatType(), base.getDataResolution());
+                base.applyBoatAdjustment(), base.getBoatType(), base.getDataResolution(),
+                base.getAccountName());
     }
 
     private ProfileSettingsCreator(boolean provideUseStatistics, boolean applyWeightAdjustment,
             boolean applyAgeAdjustment, boolean applyBoatAdjustment, int boatType,
-            int dataResolution) {
+            int dataResolution, String accountName) {
         mProvideUseStatistics = provideUseStatistics;
         mApplyWeightAdjustment = applyWeightAdjustment;
         mApplyAgeAdjustment = applyAgeAdjustment;
         mApplyBoatAdjustment = applyBoatAdjustment;
         mBoatType = boatType;
         mDataResolution = dataResolution;
+        mAccountName = accountName;
     }
 
     public ProfileSettingsCreator setProvideUseStatistics(boolean provideUseStatistics) {
@@ -57,6 +60,11 @@ public class ProfileSettingsCreator implements ProfileSettings, Parcelable {
 
     public ProfileSettingsCreator setDataResolution(int dataResolution) {
         mDataResolution = dataResolution;
+        return this;
+    }
+
+    public ProfileSettingsCreator setAccountName(String accountName) {
+        mAccountName = accountName;
         return this;
     }
 
@@ -91,6 +99,11 @@ public class ProfileSettingsCreator implements ProfileSettings, Parcelable {
     }
 
     @Override
+    public String getAccountName() {
+        return mAccountName;
+    }
+
+    @Override
     public void release() {}
 
     @Override
@@ -106,6 +119,10 @@ public class ProfileSettingsCreator implements ProfileSettings, Parcelable {
         dest.writeByte(toByte(mApplyBoatAdjustment));
         dest.writeInt(mBoatType);
         dest.writeInt(mDataResolution);
+        dest.writeByte(toByte(mAccountName != null));
+        if (mAccountName != null) {
+            dest.writeString(mAccountName);
+        }
     }
 
     private static byte toByte(boolean bool) {
@@ -122,8 +139,9 @@ public class ProfileSettingsCreator implements ProfileSettings, Parcelable {
             boolean applyBoatAdjustment = source.readByte() == 1;
             int boatType = source.readInt();
             int dataResolution = source.readInt();
+            String accountName = source.readByte() == 1 ? source.readString() : null;
             return new ProfileSettingsCreator(provideUseStatistics, applyWeightAdjustment,
-                    applyAgeAdjustment, applyBoatAdjustment, boatType, dataResolution);
+                    applyAgeAdjustment, applyBoatAdjustment, boatType, dataResolution, accountName);
         }
 
         @Override

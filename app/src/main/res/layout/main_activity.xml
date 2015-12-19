@@ -28,12 +28,32 @@
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:id="@+id/left_drawer"
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
-        android:scrollbars="vertical"/>
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            android:scrollbars="vertical"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/nav_drawer_sign_in_margin"
+            android:layout_marginLeft="@dimen/nav_drawer_sign_in_margin">
+
+        </com.google.android.gms.common.SignInButton>
+
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

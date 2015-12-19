@@ -4,11 +4,14 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.SignInButton;
 
 import org.uvdev.rowbot.common.Constants;
 import org.uvdev.rowbot.concept2api.rowbot.profile.Profile;
@@ -158,6 +161,7 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
     private static final int TYPE_NEW_PROFILE = 3;
 
     private MainActivity mContext;
+    private SignInButton mSignInButton;
 
     private final int mSelectedColor;
     private final int mDefaultColor;
@@ -193,6 +197,10 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
         mSelectedColor = res.getColor(R.color.primary);
         mDefaultColor = res.getColor(android.R.color.primary_text_light);
         mSelectedBackgroundColor = res.getColor(R.color.rowbot_nav_selected_background);
+    }
+
+    public void setSignInButton(SignInButton button) {
+        mSignInButton = button;
     }
 
     @Override

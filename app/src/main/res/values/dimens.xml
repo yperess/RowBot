@@ -8,6 +8,7 @@
     <dimen name="nav_drawer_margin">16dp</dimen>
     <dimen name="nav_drawer_item_margin">5dp</dimen>
     <dimen name="nav_drawer_profile_select_image_size">32dp</dimen>
+    <dimen name="nav_drawer_sign_in_margin">12dp</dimen>
 
     <dimen name="button_inset_horizontal_material">4dp</dimen>
     <dimen name="button_inset_vertical_material">6dp</dimen>

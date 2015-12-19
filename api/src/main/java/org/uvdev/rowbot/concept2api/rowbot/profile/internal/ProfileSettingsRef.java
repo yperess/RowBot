@@ -46,6 +46,11 @@ public class ProfileSettingsRef extends DataHolder implements ProfileSettings {
         return getInt(mRow, ProfileColumns.DATA_RESOLUTION, DataResolution.MEDIUM);
     }
 
+    @Override
+    public String getAccountName() {
+        return getString(mRow, ProfileColumns.ACCOUNT_NAME, null);
+    }
+
     public static ContentValues toDatabaseValues(ProfileSettings settings) {
         Preconditions.assertNotNull(settings);
         ContentValues values = new ContentValues();
@@ -55,6 +60,11 @@ public class ProfileSettingsRef extends DataHolder implements ProfileSettings {
         values.put(ProfileColumns.APPLY_BOAT_ADJUSTMENT, settings.applyBoatAdjustment());
         values.put(ProfileColumns.BOAT_TYPE, settings.getBoatType());
         values.put(ProfileColumns.DATA_RESOLUTION, settings.getDataResolution());
+        if (settings.getAccountName() == null) {
+            values.putNull(ProfileColumns.ACCOUNT_NAME);
+        } else {
+            values.put(ProfileColumns.ACCOUNT_NAME, settings.getAccountName());
+        }
         return values;
     }
 }

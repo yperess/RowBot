@@ -10,11 +10,11 @@ android {
         }
     }
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "org.uvdev.rowbot"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 4
         versionName "A.1.3"
         multiDexEnabled = true
