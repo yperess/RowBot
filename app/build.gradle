@@ -29,6 +29,9 @@ android {
             signingConfig signingConfigs.config
         }
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {
@@ -37,6 +40,7 @@ dependencies {
     compile 'com.google.api-client:google-api-client-gson:1.20.0' exclude module: 'httpclient'
     compile project(':common')
     compile project(':api')
+    compile project(path: ':backend', configuration: 'android-endpoints')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
@@ -48,6 +52,8 @@ dependencies {
     compile 'com.google.api-client:google-api-client-android:1.20.0'
     compile 'com.google.apis:google-api-services-groupsmigration:v1-rev40-1.20.0'
     compile 'com.google.apis:google-api-services-gmail:v1-rev29-1.20.0'
-    compile 'com.google.android.gms:play-services:8.3.0'
-    compile project(path: ':backend', configuration: 'android-endpoints')
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-identity:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
 }
