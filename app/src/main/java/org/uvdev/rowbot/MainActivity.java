@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements RowBotActivity,
         drawerList.setLayoutManager(new LinearLayoutManager(this));
 
         SignInButton signInButton = (SignInButton) drawer.findViewById(R.id.sign_in_button);
-        mNavDrawerAdapter.setSignInButton(signInButton);
+        mNavDrawerAdapter.setSignInButton((View) signInButton.getParent());
     }
 
     private void initActionBar() {

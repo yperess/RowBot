@@ -4,19 +4,16 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.SignInButton;
-
-import org.uvdev.rowbot.common.Constants;
-import org.uvdev.rowbot.concept2api.rowbot.profile.Profile;
 import org.uvdev.rowbot.MainActivity;
 import org.uvdev.rowbot.R;
+import org.uvdev.rowbot.common.Constants;
+import org.uvdev.rowbot.concept2api.rowbot.profile.Profile;
 import org.uvdev.rowbot.model.RowBotActivity;
 import org.uvdev.rowbot.ui.dialogs.ProfileEditDialogFragment;
 import org.uvdev.rowbot.ui.fragments.DebugFragment;
@@ -161,7 +158,7 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
     private static final int TYPE_NEW_PROFILE = 3;
 
     private MainActivity mContext;
-    private SignInButton mSignInButton;
+    private View mSignInButton;
 
     private final int mSelectedColor;
     private final int mDefaultColor;
@@ -199,7 +196,7 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
         mSelectedBackgroundColor = res.getColor(R.color.rowbot_nav_selected_background);
     }
 
-    public void setSignInButton(SignInButton button) {
+    public void setSignInButton(View button) {
         mSignInButton = button;
     }
 
@@ -263,7 +260,9 @@ public class NavDrawerAdapter extends RecyclerView.Adapter<NavDrawerAdapter.Base
                     break;
                 }
             }
-            selectProfile(((Profile) data).getProfileId());
+            selectProfile(profile.getProfileId());
+            mSignInButton.setVisibility(profile.getProfileSettings().getAccountName() == null
+                    ? View.VISIBLE : View.GONE);
         }
     }
 

@@ -45,14 +45,18 @@
             android:background="@android:color/white"
             android:scrollbars="vertical"/>
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/nav_drawer_sign_in_margin"
-            android:layout_marginLeft="@dimen/nav_drawer_sign_in_margin">
+            android:background="@color/nav_drawer_sign_in_background">
 
-        </com.google.android.gms.common.SignInButton>
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/nav_drawer_sign_in_margin"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
